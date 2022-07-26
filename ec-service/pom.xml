@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+				 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.dcsa.endorcementchain</groupId>
+		<artifactId>dcsa-ec-parent</artifactId>
+		<version>${revision}${sha1}${changelist}</version>
+	</parent>
+
+	<groupId>org.dcsa.endorcementchain</groupId>
+	<artifactId>ec-service</artifactId>
+	<version>${revision}${sha1}${changelist}</version>
+	<packaging>jar</packaging>
+
+	<description>DCSA Endorcement Chain - Service</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.dcsa.endorcementchain</groupId>
+			<artifactId>dcsa-ec-transfer-obj</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.dcsa.endorcementchain</groupId>
+			<artifactId>dcsa-ec-persistence</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.dcsa.shared-kernel</groupId>
+			<artifactId>dcsa-shared-kernel-errors</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.dcsa.shared-kernel</groupId>
+			<artifactId>dcsa-shared-kernel-infrastructure</artifactId>
+		</dependency>
+<!--		Custom dependencies not managed by DCSA Pom-->
+		<dependency>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>nimbus-jose-jwt</artifactId>
+			<version>9.23</version>
+		</dependency>
+<!--		End custom dependencies-->
+		<dependency>
+			<groupId>org.dcsa.shared-kernel</groupId>
+			<artifactId>dcsa-shared-kernel-test-helpers</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<skip>false</skip>
+					<profiles>
+						<profile>dev</profile>
+					</profiles>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.dcsa.ovs</groupId>
+									<artifactId>dcsa-ovs-service</artifactId>
+									<version>${project.version}</version>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+									<destFileName>dcsa-ovs-service.jar</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
