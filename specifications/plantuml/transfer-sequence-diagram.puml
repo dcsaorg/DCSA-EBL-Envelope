@@ -1,0 +1,11 @@
+@startuml cross platform B/L transfer
+activate platformA
+platformA -> platformA: sign the ebl envelope
+platformA -> platformB: PUT /v1/transferblock
+activate platformB
+platformB -> platformB: verify signature and process ebl envelope
+platformB -> platformB: sign response message
+deactivate platformB
+platformA <-- platformB: send signed response message
+platformA -> platformA: verify response signature
+@enduml
