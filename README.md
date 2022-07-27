@@ -20,6 +20,8 @@ However, for easier collaboration and the ability to add PR's and issues the res
 | 20-07-2022 | In the initial version title and possession will be combined (=control) and transferred simultaneously                                                    |
 | 20-07-2022 | Identity is transferred with internal Identifier of the platform + Platform domain (/name of platform). Formatted as an email address localid@platform.io |
 
+## Contributing
+See [the contributing guide](CONTRIBUTING.md) for detailed instructions on how to get started with our project.
 
 # Transfering BL control to another platform
 Transferring the BL control (Possession & Title) is accomplished by sending a _**"Transferblock"**_ from the sending platform to the receiving platform.
