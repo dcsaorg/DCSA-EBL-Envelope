@@ -11,6 +11,7 @@ However, for easier collaboration and the ability to add PR's and issues the res
 - [ ] response of the PUT transferblock is only the string representation of the encoded JWS (no wrapper JSON object)
 - [ ] transferee is represented with the [DCSA Party object](https://app.swaggerhub.com/domains/dcsaorg/DOCUMENTATION_DOMAIN/2.0.1#/components/schemas/party)
 - [ ] discuss the details of platform authentication OIDC and if further specifications are required
+- [ ] align on the standardized error responses
 
 ## Decision log
 | Date       | Decision                                                                                                                                                  |
@@ -110,9 +111,28 @@ In order to verify the transfer has been successful and the integrity of the mes
 For more information about both the request and response signatures see the [Signatures](README.md#signatures) paragraph below
 
 ## Identity
-ToDo describe the identity resolution _**localid@platformdomain**_
+In order to transfer the B/L to another platform identity information of the receiving party, the transferee, must be known to the sending platform.
+The exchange of identities between users of platforms is out of scope for this reference implementation.
+Next to exchanging the identities the identities must be formatted in a manner understandable and sharable between various platforms.
+
+All transferee identity information is exchanged with an **_eBLPlatformIdentifier_** in combination with the [DCSA Party object](https://app.swaggerhub.com/domains/dcsaorg/DOCUMENTATION_DOMAIN/2.0.1#/components/schemas/party).
+
+### eBLPlatformIdentifier
+The eBLPlatformIdentifier is a combination of the transferee user identification _on the local platform_ and the platform.
+EBLPLatformIdentifiers are formatted similar to email addresses: _**localid@platformdomain.ext**_ for example: **_gV2ZDy0jmae7@dcsaebplatform.org_**
+In this example **_gV2ZDy0jmae7_** is the local identifier on the fictitious **_dcsaebplatform.org_**
+
+### Additional identity information
+While the eBLPlatformIdentifier is required, it is optional but recommended for providing additional identity information regarding the transferee.
+This additional information can be used by the receiving platform to perform additional verification. For providing this additional information the DCSA Party object is used.
+The DCSA Party object allows of the provision of LEI, tax reference and DID and many others documented in the [DCSA Party object](https://app.swaggerhub.com/domains/dcsaorg/DOCUMENTATION_DOMAIN/2.0.1#/components/schemas/party).
 
 ### Service discovery
+The platform domain part of the eBLPLatformIdentifier being a resolvable domain name can be used for DNS based service discovery.
+With this an additional TXT record can be created linking to the API endpoint providing the PUT /v1/transferblock operation.
+
+Example:
+dcsaeblplatform.org can link to a TXT record containing the full API endpoint -> api.dcsaeblplatform.org/v1/transferblocks
 
 ## Security considerations
 
