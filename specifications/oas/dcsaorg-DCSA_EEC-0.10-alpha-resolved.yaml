@@ -156,6 +156,8 @@ components:
           description: base url of the platform which created the transaction
           example: https://exampleblplatform.net
         transferee:
+          required:
+          - eBLPlatformIdentifier
           allOf:
           - type: object
             properties:
