@@ -5,12 +5,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.dcsa.endorcementchain</groupId>
+		<groupId>org.dcsa.endorsementchain</groupId>
 		<artifactId>dcsa-ec-parent</artifactId>
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 
-	<name>DCSA Endorcement Chain - Integration tests</name>
+	<name>DCSA Endorsement Chain - Integration tests</name>
 	<artifactId>dcsa-ec-integration-tests</artifactId>
 	<version>${revision}${sha1}${changelist}</version>
 

@@ -5,25 +5,25 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.dcsa.endorcementchain</groupId>
+		<groupId>org.dcsa.endorsementchain</groupId>
 		<artifactId>dcsa-ec-parent</artifactId>
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 
-	<name>DCSA Endorcement Chain - Service</name>
+	<name>DCSA Endorsement Chain - Service</name>
 	<artifactId>dcsa-ec-service</artifactId>
 	<version>${revision}${sha1}${changelist}</version>
 	<packaging>jar</packaging>
 
-	<description>DCSA Endorcement Chain - Service</description>
+	<description>DCSA Endorsement Chain - Service</description>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.dcsa.endorcementchain</groupId>
+			<groupId>org.dcsa.endorsementchain</groupId>
 			<artifactId>dcsa-ec-transfer-obj</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.dcsa.endorcementchain</groupId>
+			<groupId>org.dcsa.endorsementchain</groupId>
 			<artifactId>dcsa-ec-persistence</artifactId>
 		</dependency>
 		<dependency>

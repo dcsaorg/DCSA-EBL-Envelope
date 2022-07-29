@@ -5,17 +5,17 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.dcsa.endorcementchain</groupId>
+		<groupId>org.dcsa.endorsementchain</groupId>
 		<artifactId>dcsa-ec-parent</artifactId>
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 
-	<name>DCSA Endorcement Chain - Transfer Objects</name>
+	<name>DCSA Endorsement Chain - Transfer Objects</name>
 	<artifactId>dcsa-ec-transfer-obj</artifactId>
 	<version>${revision}${sha1}${changelist}</version>
 	<packaging>jar</packaging>
 
-	<description>DCSA Endorcement Chain - Transfer Objects</description>
+	<description>DCSA Endorsement Chain - Transfer Objects</description>
 
 	<properties>
 		<maven.compiler.source>17</maven.compiler.source>

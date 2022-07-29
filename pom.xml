@@ -11,12 +11,12 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	<groupId>org.dcsa.endorcementchain</groupId>
+	<groupId>org.dcsa.endorsementchain</groupId>
 	<artifactId>dcsa-ec-parent</artifactId>
 	<version>${revision}${sha1}${changelist}</version>
 	<packaging>pom</packaging>
-	<name>DCSA-Endorcement-Chain</name>
-	<description>Endorcement Chain</description>
+	<name>DCSA-Endorsement-Chain</name>
+	<description>Endorsement Chain</description>
 
 	<properties>
 		<!-- Define DCSA-Endorcement-Chain version -->
@@ -51,13 +51,18 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>org.dcsa.endorcementchain</groupId>
+				<groupId>org.dcsa.endorsementchain</groupId>
 				<artifactId>dcsa-ec-transfer-obj</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.dcsa.endorcementchain</groupId>
+				<groupId>org.dcsa.endorsementchain</groupId>
 				<artifactId>dcsa-ec-persistence</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.dcsa.endorsementchain</groupId>
+				<artifactId>dcsa-ec-service</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

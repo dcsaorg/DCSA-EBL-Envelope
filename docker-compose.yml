@@ -1,7 +1,7 @@
 version: '3.5'
 
 services:
-    dcsa-ovs:
+    dcsa-ebl-envelope:
         build:
            .
         ports:
@@ -21,7 +21,5 @@ services:
         container_name: dcsa_db
         environment:
             POSTGRES_PASSWORD: "change_this_password"
-        build:
-            DCSA-Information-Model/datamodel/
         ports:
             - 5432:5432
