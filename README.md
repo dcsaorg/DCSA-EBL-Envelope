@@ -1,5 +1,6 @@
 # eB/L interoperability technical specifications
-
+This document provides the technical description and specifications for transferring eBL documents between platforms using the eBL Envelope.
+General concepts and backgrounds can be found [here](CONCEPTS_AND_BACKGROUND.md).
 the rendered Open API specification for the is available on the [DCSA Swaggerhub](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EEC/0.10-alpha).
 However, for easier collaboration and the ability to add PR's and issues the resolved oas specification can be found in [here](oas/dcsaorg-DCSA_EEC-0.10-alpha-resolved.yaml).
 
@@ -167,3 +168,15 @@ For the response message:
 * the signature is transferred as a JWS (Json Web Signature as described in [RFC 7515](https://datatracker.ietf.org/doc/html/rfc7515)) response body
 * the JWS is tranferred in the compact serialization format (as described in [Section 7 of RFC 7515](https://datatracker.ietf.org/doc/html/rfc7515#section-7.1))
 
+### Additional specifications and requirements around security
+Digital certificate standards are a balance between information security, ease of adoption, and cost. To sign an eBL envelope with a private key of a digital certificate, the following technical minimum requirements MUST be met to guarantee trustworthy eBL envelopes:
+
+|Category| Standard                                                             |
+|---------|----------------------------------------------------------------------|
+|Certificate format| X.509 (<https://www.itu.int/rec/T-REC-X.509>)                        |
+|Minimum requirements signature algorithm| SHA256withRSA or SHA256withECDSA                                     |
+|Minimum key length for signatures| 2048-bit RSA or 256-bit ECDSA                                        |
+|Certificate revocation information method| OCSP (IETF RFC 6960)                                                 |
+|Certificate validity period| Maximum of 2 years (validity MUST be part of the certificate)        |
+|Signature format| See above in the **Signatures** section                                  |
+|Archive period (for certificates & signatures) | Minimum of 10 Years for both sender and receiver of signed documents |
