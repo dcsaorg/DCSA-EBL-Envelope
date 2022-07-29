@@ -1,8 +1,6 @@
 package org.dcsa.endorcementchain.persistence.entity;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.*;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,10 +18,9 @@ public class TransportDocument {
 
   @Id
   @Column(name = "document_hash", length = 64, nullable = false)
-  private String documentHash;
+  private String id;
 
-  @Type(type = "jsonb")
-  @Column(name = "transport_document_json", columnDefinition = "jsonb")
-  private JsonNode transportDocumentJson;
+  @Column(name = "transport_document_json")
+  private String transportDocumentJson;
 
 }

@@ -7,7 +7,7 @@ import java.util.List;
 public record EblEnvelopeTO(
   String previousEblEnvelopeHash,
   String documentHash,
-  List<EndorcementChainEntryTO> endorcementChain
+  List<EndorcementChainTransaction> transactions
 ) {
   @Builder(toBuilder = true)
   public EblEnvelopeTO{}

@@ -10,8 +10,8 @@
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 
-	<groupId>org.dcsa.endorcementchain</groupId>
-	<artifactId>ec-service</artifactId>
+	<name>DCSA Endorcement Chain - Service</name>
+	<artifactId>dcsa-ec-service</artifactId>
 	<version>${revision}${sha1}${changelist}</version>
 	<packaging>jar</packaging>
 
@@ -60,7 +60,13 @@
 			<artifactId>nimbus-jose-jwt</artifactId>
 			<version>9.23</version>
 		</dependency>
-<!--		End custom dependencies-->
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.15</version>
+		</dependency>
+
+		<!--		End custom dependencies-->
 		<dependency>
 			<groupId>org.dcsa.shared-kernel</groupId>
 			<artifactId>dcsa-shared-kernel-test-helpers</artifactId>

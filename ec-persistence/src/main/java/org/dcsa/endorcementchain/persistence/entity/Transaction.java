@@ -1,8 +1,7 @@
 package org.dcsa.endorcementchain.persistence.entity;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.*;
-import org.hibernate.annotations.Type;
+import org.dcsa.endorcementchain.persistence.entity.enums.TransactionInstruction;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -22,9 +21,6 @@ public class Transaction {
   @Column(name = "id", nullable = false)
   private UUID id;
 
-  @Column(name = "timestamp", nullable = false)
-  private Long timestamp;
-
   //FK to transportDocument not defined here since this association should not be fetched
   @Column(name = "document_hash", nullable = false, length = 64)
   private String documentHash;
@@ -32,7 +28,24 @@ public class Transaction {
   @Column(name = "exported")
   private Boolean isExported;
 
-  @Type(type = "jsonb")
-  @Column(name = "transaction_content", nullable = false, columnDefinition = "jsonb")
-  private JsonNode transactionContent; //ToDo verify if this needs an explicit pojo
+  @Enumerated(EnumType.STRING)
+  @Column(name = "instruction", length = 4, nullable = false)
+  private TransactionInstruction instruction;
+
+  @Column(name = "comments")
+  private String comments;
+
+  @Column(name = "timestamp", nullable = false)
+  private Long timestamp;
+
+  private Boolean isToOrder;
+
+  private String platformHost;
+
+  //ToDo this needs to be the DCSA Party object
+  private String transferee;
+//  @Type(type = "jsonb")
+//  @Column(name = "transaction_content", nullable = false, columnDefinition = "jsonb")
+//  private JsonNode transactionContent;
+
 }

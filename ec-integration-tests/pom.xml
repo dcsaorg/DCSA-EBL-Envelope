@@ -10,8 +10,8 @@
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 
-	<groupId>org.dcsa.endorcementchain</groupId>
-	<artifactId>ec-integration-tests</artifactId>
+	<name>DCSA Endorcement Chain - Integration tests</name>
+	<artifactId>dcsa-ec-integration-tests</artifactId>
 	<version>${revision}${sha1}${changelist}</version>
 
 	<properties>

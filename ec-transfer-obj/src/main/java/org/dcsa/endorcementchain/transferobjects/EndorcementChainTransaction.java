@@ -3,7 +3,7 @@ package org.dcsa.endorcementchain.transferobjects;
 import lombok.Builder;
 import org.dcsa.endorcementchain.transferobjects.enums.BlInstruction;
 
-public record EndorcementChainEntryTO(
+public record EndorcementChainTransaction(
   BlInstruction instruction,
   String comments,
   String transferee, //ToDo must be a (subset of) the party object
@@ -12,5 +12,5 @@ public record EndorcementChainEntryTO(
   String platformHost
 ) {
   @Builder(toBuilder = true)
-  public EndorcementChainEntryTO{}
+  public EndorcementChainTransaction {}
 }
