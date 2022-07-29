@@ -70,7 +70,7 @@ A digital envelope is a secure electronic data container. The eBL envelope is us
 |--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | JSON Web Signature (JWS) | A JSON Web Signature (JWS) is an open standard ([RFC 7515](https://datatracker.ietf.org/doc/html/rfc7515))) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object. This information may be verified and trusted because it is digitally signed. |
 
-_**Table 2: eBL Envelope Structure**_
+_**Table 1: eBL Envelope Structure**_
 
 In the future, the eBL envelope content might also be transferred as a Non-Fungible Token (NFT), which is a cryptographic asset on a blockchain. The standardised eBL envelope content may therefore also be used within an NFT.
 
@@ -121,6 +121,7 @@ In table 4, a standard format for the possession and/or endorsement chain is inc
 |3|#123|09:18 8-12 CET|#6R61 (Shipper)|LEI code|SP B|#5L81 (consignee)|SP E|Sign.|PK (SP B)| Title transferred                  |
 |2|#123|10:23 7-12 CET|#6R61 (Shipper)|LEI code|SP B|#6R61 (Shipper)|SP B|Sign.|PK (SP A)| Issuance                           |
 |1|#123|07:23 7-12 CET|#1E34 (Carrier)|LEI code|SP A|X|X|Sign.|X| eBL creation                       |
+
 _**Table 4: Simple example data structure possession & endorsement chain for a to order eBL**_
 
 **Digital signature**
