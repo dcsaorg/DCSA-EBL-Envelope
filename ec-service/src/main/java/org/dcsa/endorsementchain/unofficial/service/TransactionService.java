@@ -35,7 +35,7 @@ public class TransactionService {
             .orElseThrow(
                 () -> ConcreteRequestErrorMessageException.notFound("TransportDocument not found"));
 
-    return Optional.ofNullable(transportDocumentOptional)
+    return Optional.of(transportDocumentOptional)
         .filter(transportDocument -> Boolean.FALSE.equals(transportDocument.getIsExported()))
         .map(transportDocument -> createLinkedTransaction(transactionRequest, transportDocument))
         .map(repository::save)
@@ -45,7 +45,7 @@ public class TransactionService {
   private Transaction createLinkedTransaction(
       EndorsementChainTransaction transactionRequest, TransportDocument transportDocument) {
     Transaction transaction =
-        mapper.EndorsementChainTransactionToTransaction(transactionRequest, "localhost" + port);
+        mapper.endorsementChainTransactionToTransaction(transactionRequest, "localhost" + port);
     transaction.linkTransactionToTransportDocument(transportDocument);
     return transaction;
   }

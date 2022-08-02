@@ -10,5 +10,5 @@ public interface TransactionMapper {
 
   @Mapping(expression = "java(System.currentTimeMillis())", target = "timestamp")
   @Mapping(source = "platformName", target = "platformHost")
-  Transaction EndorsementChainTransactionToTransaction(EndorsementChainTransaction endorsementChainTransaction, String platformName);
+  Transaction endorsementChainTransactionToTransaction(EndorsementChainTransaction endorsementChainTransaction, String platformName);
 }
