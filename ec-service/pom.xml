@@ -104,11 +104,11 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>org.dcsa.ovs</groupId>
-									<artifactId>dcsa-ovs-service</artifactId>
+									<groupId>org.dcsa.endorsementchain</groupId>
+									<artifactId>dcsa-ec-service</artifactId>
 									<version>${project.version}</version>
 									<outputDirectory>${project.build.directory}</outputDirectory>
-									<destFileName>dcsa-ovs-service.jar</destFileName>
+									<destFileName>dcsa-ec-service.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
