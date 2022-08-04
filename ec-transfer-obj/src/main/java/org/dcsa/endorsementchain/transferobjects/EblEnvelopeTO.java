@@ -15,7 +15,7 @@ public record EblEnvelopeTO(
   @Size(max = 64, min = 64)
   String documentHash,
   @NotEmpty
-  List<EndorsementChainTransaction> transactions
+  List<EndorsementChainTransactionTO> transactions
 ) {
   @Builder(toBuilder = true)
   public EblEnvelopeTO{}

@@ -26,6 +26,10 @@ public class Transaction {
   @ManyToOne
   private TransportDocument transportDocument;
 
+  @JoinColumn(name = "envelope_hash")
+  @ManyToOne
+  private EblEnvelope eblEnvelope;
+
   @Enumerated(EnumType.STRING)
   @Column(name = "instruction", length = 4, nullable = false)
   private TransactionInstruction instruction;

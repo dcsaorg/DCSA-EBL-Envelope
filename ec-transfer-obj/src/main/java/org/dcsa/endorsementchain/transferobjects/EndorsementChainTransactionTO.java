@@ -5,7 +5,7 @@ import org.dcsa.endorsementchain.transferobjects.enums.BlInstruction;
 
 import javax.validation.constraints.NotNull;
 
-public record EndorsementChainTransaction(
+public record EndorsementChainTransactionTO(
   @NotNull
   BlInstruction instruction,
   String comments,
@@ -19,5 +19,5 @@ public record EndorsementChainTransaction(
   String transferee //ToDo must be a (subset of) the party object
 ) {
   @Builder(toBuilder = true)
-  public EndorsementChainTransaction {}
+  public EndorsementChainTransactionTO {}
 }

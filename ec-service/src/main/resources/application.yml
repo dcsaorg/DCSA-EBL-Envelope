@@ -58,6 +58,13 @@ spring:
   security:
     keystorePassword: dcsa-pass
     keystoreLocation: certificates/dcsa-jwk.jks
+    jws:
+        key-id: dcsa-kid
+    verification:
+      keystoreLocation: certificates/dcsa-jwk-verify.jks
+      keystorePassword: dcsa-pass
+      jws:
+        key-id: dcsa-kid
   config:
     activate:
       on-profile: nosecurity

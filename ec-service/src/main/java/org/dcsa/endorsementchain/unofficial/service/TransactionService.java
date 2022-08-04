@@ -5,13 +5,14 @@ import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
 import org.dcsa.endorsementchain.persistence.repository.TransactionRepository;
 import org.dcsa.endorsementchain.persistence.repository.TransportDocumentRepository;
-import org.dcsa.endorsementchain.transferobjects.EndorsementChainTransaction;
-import org.dcsa.endorsementchain.unofficial.mappers.TransactionMapper;
+import org.dcsa.endorsementchain.transferobjects.EndorsementChainTransactionTO;
+import org.dcsa.endorsementchain.unofficial.mapping.TransactionMapper;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,7 +28,7 @@ public class TransactionService {
 
   @Transactional
   public Optional<UUID> createLocalTransaction(
-      String documentHash, EndorsementChainTransaction transactionRequest) {
+      String documentHash, EndorsementChainTransactionTO transactionRequest) {
 
     TransportDocument transportDocumentOptional =
         transportDocumentRepository
@@ -43,10 +44,23 @@ public class TransactionService {
   }
 
   private Transaction createLinkedTransaction(
-      EndorsementChainTransaction transactionRequest, TransportDocument transportDocument) {
+      EndorsementChainTransactionTO transactionRequest, TransportDocument transportDocument) {
     Transaction transaction =
-        mapper.endorsementChainTransactionToTransaction(transactionRequest, "localhost" + port);
+        mapper.endorsementChainTransactionToTransaction(transactionRequest, "localhost:" + port);
     transaction.linkTransactionToTransportDocument(transportDocument);
     return transaction;
+  }
+
+  public List<Transaction> getTransactionsForExport(String documentHash) {
+    return repository
+        .findLocalNonExportedTransactions(documentHash, "localhost:8443")
+        .orElseThrow(
+            () ->
+                ConcreteRequestErrorMessageException.internalServerError(
+                    "No transactions available for export."));
+  }
+
+  public List<EndorsementChainTransactionTO> localToEndorsementChainTransactions(List<Transaction> transactions) {
+    return transactions.stream().map(mapper::transactionToEndorcementChainTransaction).toList();
   }
 }

@@ -1,7 +1,7 @@
 package org.dcsa.endorsementchain.unofficial.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.dcsa.endorsementchain.transferobjects.EndorsementChainTransaction;
+import org.dcsa.endorsementchain.transferobjects.EndorsementChainTransactionTO;
 import org.dcsa.endorsementchain.unofficial.service.TransactionService;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
 import org.springframework.http.MediaType;
@@ -28,7 +28,7 @@ public class TransactionController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<UUID> createLocalTransaction(
       @PathVariable("transportDocumentHash") String transportDocumentHash,
-      @RequestBody EndorsementChainTransaction transactionRequest,
+      @RequestBody EndorsementChainTransactionTO transactionRequest,
       UriComponentsBuilder builder) {
     return service
         .createLocalTransaction(transportDocumentHash, transactionRequest)
