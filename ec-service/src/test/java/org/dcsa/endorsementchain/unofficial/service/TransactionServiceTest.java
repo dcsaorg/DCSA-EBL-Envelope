@@ -4,10 +4,10 @@ import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
 import org.dcsa.endorsementchain.persistence.repository.TransactionRepository;
 import org.dcsa.endorsementchain.persistence.repository.TransportDocumentRepository;
-import org.dcsa.endorsementchain.transferobjects.EndorsementChainTransaction;
+import org.dcsa.endorsementchain.transferobjects.EndorsementChainTransactionTO;
 import org.dcsa.endorsementchain.unofficial.datafactories.TransactionDataFactory;
 import org.dcsa.endorsementchain.unofficial.datafactories.TransportDocumentDataFactory;
-import org.dcsa.endorsementchain.unofficial.mappers.TransactionMapper;
+import org.dcsa.endorsementchain.unofficial.mapping.TransactionMapper;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,13 +37,13 @@ class TransactionServiceTest {
 
   @InjectMocks TransactionService transactionService;
 
-  private EndorsementChainTransaction endorsementChainTransaction;
+  private EndorsementChainTransactionTO endorsementChainTransactionTO;
   private Transaction transaction;
   private TransportDocument transportDocument;
 
   @BeforeEach
   public void init() {
-    endorsementChainTransaction = TransactionDataFactory.endorsementChainTransaction();
+    endorsementChainTransactionTO = TransactionDataFactory.endorsementChainTransaction();
     transaction = TransactionDataFactory.transactionEntity();
     transportDocument = transaction.getTransportDocument();
   }
@@ -55,7 +56,7 @@ class TransactionServiceTest {
 
     Optional<UUID> transactionId =
         transactionService.createLocalTransaction(
-            transportDocument.getDocumentHash(), endorsementChainTransaction);
+            transportDocument.getDocumentHash(), endorsementChainTransactionTO);
 
     assertTrue(transactionId.isPresent());
     assertEquals(UUID.fromString("326137d8-bd60-4dea-88cc-52687fcb303a"), transactionId.get());
@@ -74,7 +75,7 @@ class TransactionServiceTest {
             ConcreteRequestErrorMessageException.class,
             () ->
                 transactionService.createLocalTransaction(
-                    documentHash, endorsementChainTransaction));
+                    documentHash, endorsementChainTransactionTO));
 
     assertEquals("TransportDocument not found", returnedException.getMessage());
   }
@@ -87,7 +88,39 @@ class TransactionServiceTest {
 
     Optional<UUID> transactionId =
       transactionService.createLocalTransaction(
-        transportDocument.getDocumentHash(), endorsementChainTransaction);
+        transportDocument.getDocumentHash(), endorsementChainTransactionTO);
     assertTrue(transactionId.isEmpty());
+  }
+
+  @Test
+  void testGetTransactionsForExport() {
+    String documentHash = transportDocument.getDocumentHash();
+    when(transactionRepository.findLocalNonExportedTransactions(any(), any())).thenReturn(Optional.of(List.of(TransactionDataFactory.transactionEntity())));
+
+    List<Transaction> transactions = transactionService.getTransactionsForExport(documentHash);
+    assertEquals(1, transactions.size());
+    assertEquals(false, transactions.get(0).getTransportDocument().getIsExported());
+  }
+
+  @Test
+  void testGetTransactionForExportNoneAvailable() {
+    String documentHash = transportDocument.getDocumentHash();
+    when(transactionRepository.findLocalNonExportedTransactions(any(), any())).thenReturn(Optional.empty());
+
+    Exception returnedException =
+      assertThrows(
+        ConcreteRequestErrorMessageException.class,
+        () -> transactionService.getTransactionsForExport(documentHash));
+
+    assertEquals("No transactions available for export.", returnedException.getMessage());
+  }
+
+  @Test
+  void testLocalToEndorsementChainTransactions() {
+    List<Transaction> transactions = List.of(transaction);
+    List<EndorsementChainTransactionTO> endorsementChainTransactionTOS = transactionService.localToEndorsementChainTransactions(transactions);
+    assertEquals(1, endorsementChainTransactionTOS.size());
+    assertEquals(transaction.getInstruction().name(), endorsementChainTransactionTOS.get(0).instruction().name());
+    assertEquals(transaction.getTimestamp(), endorsementChainTransactionTOS.get(0).timestamp());
   }
 }

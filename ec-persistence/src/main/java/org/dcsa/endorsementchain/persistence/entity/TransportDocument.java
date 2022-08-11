@@ -24,7 +24,17 @@ public class TransportDocument {
   @Column(name = "is_exported", nullable = false,  columnDefinition = "boolean default false")
   private Boolean isExported;
 
-  @OneToMany(mappedBy = "transportDocument")
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  @OneToMany(mappedBy = "transportDocument", cascade = CascadeType.MERGE)
   private Set<Transaction> transactions;
+
+  @OneToMany(mappedBy = "transportDocument")
+  private Set<EblEnvelope> eblEnvelopes;
+
+  public TransportDocument export() {
+    this.setIsExported(true);
+    return this;
+  }
 
 }

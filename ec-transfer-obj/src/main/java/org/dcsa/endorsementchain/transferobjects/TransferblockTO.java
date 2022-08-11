@@ -3,11 +3,13 @@ package org.dcsa.endorsementchain.transferobjects;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import lombok.Builder;
 
-public record Transferblock(
+import java.util.List;
+
+public record TransferblockTO(
   @JsonRawValue
   String transferDocument,
-  SignedEblEnvelopeTO endorcementChain
+  List<SignedEblEnvelopeTO> endorcementChain
 ) {
   @Builder(toBuilder = true)
-  public Transferblock {}
+  public TransferblockTO {}
 }

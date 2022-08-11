@@ -1,8 +1,10 @@
 package org.dcsa.endorsementchain.unofficial.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.dcsa.endorsementchain.unofficial.service.TransportDocumentService;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -18,9 +20,8 @@ public class TransportDocumentController {
 
   @GetMapping(
       value = API_PATH + "/{transportDocumentId}",
-      produces = {"application/json"})
+      produces = {MediaType.APPLICATION_JSON_VALUE})
   @ResponseBody
-  @CrossOrigin(origins = "*")
   public ResponseEntity<String> getTransportDocument(@PathVariable String transportDocumentId) {
     return transportDocumentService
         .getTransportDocument(transportDocumentId)
@@ -30,8 +31,8 @@ public class TransportDocumentController {
 
   @PostMapping(
       value = API_PATH,
-      consumes = {"application/json"},
-      produces = {"application/json"})
+      consumes = {MediaType.APPLICATION_JSON_VALUE},
+      produces = {MediaType.APPLICATION_JSON_VALUE})
   @ResponseBody
   public ResponseEntity<String> addTransportDocument(
       @RequestBody String httpEntity, UriComponentsBuilder builder) {
@@ -50,5 +51,15 @@ public class TransportDocumentController {
             () ->
                 ConcreteRequestErrorMessageException.internalServerError(
                     "Saving of the transport document failed"));
+  }
+
+  @PostMapping(
+      value = API_PATH + "/{transportDocumentId}/export",
+      consumes = {MediaType.APPLICATION_JSON_VALUE},
+      produces = {MediaType.APPLICATION_JSON_VALUE})
+  @ResponseBody
+  public ResponseEntity<String> exportTransportDocument(@PathVariable String transportDocumentId,
+                                                        @RequestBody JsonNode transferee, UriComponentsBuilder builder) {
+    return transportDocumentService.export(transferee.asText(), transportDocumentId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
 }

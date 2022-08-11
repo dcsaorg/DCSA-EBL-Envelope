@@ -1,15 +1,30 @@
 package org.dcsa.endorsementchain.unofficial.controller;
 
+import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.jwk.JWKSet;
+import org.dcsa.endorsementchain.components.eblenvelope.EblEnvelopeSignature;
+import org.dcsa.endorsementchain.components.jws.JWKManager;
 import org.dcsa.endorsementchain.persistence.repository.TransactionRepository;
 import org.dcsa.endorsementchain.persistence.repository.TransportDocumentRepository;
+import org.dcsa.endorsementchain.service.EblEnvelopeService;
+import org.dcsa.endorsementchain.service.ExportService;
 import org.dcsa.endorsementchain.unofficial.datafactories.TransactionDataFactory;
 import org.dcsa.endorsementchain.unofficial.service.TransactionService;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
+import org.dcsa.skernel.errors.infrastructure.ConcreteRequestErrorMessageExceptionHandler;
+import org.dcsa.skernel.errors.infrastructure.FallbackExceptionHandler;
+import org.dcsa.skernel.errors.infrastructure.JavaxValidationExceptionHandler;
+import org.dcsa.skernel.errors.infrastructure.SpringExceptionHandler;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.*;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
@@ -24,13 +39,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = {TransactionController.class})
+@Import({SpringExceptionHandler.class, JavaxValidationExceptionHandler.class, FallbackExceptionHandler.class, ConcreteRequestErrorMessageExceptionHandler.class})
 class TransactionControllerTest {
 
   @MockBean TransactionService service;
-
-  @MockBean TransactionRepository transactionRepository;
-
-  @MockBean TransportDocumentRepository transportDocumentRepository;
 
   @Autowired MockMvc mockMvc;
 

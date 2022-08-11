@@ -4,9 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.experimental.UtilityClass;
 import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.persistence.entity.enums.TransactionInstruction;
-import org.dcsa.endorsementchain.transferobjects.EndorsementChainTransaction;
+import org.dcsa.endorsementchain.transferobjects.EndorsementChainTransactionTO;
 import org.dcsa.endorsementchain.transferobjects.enums.BlInstruction;
 
+import java.util.List;
 import java.util.UUID;
 
 @UtilityClass
@@ -25,8 +26,23 @@ public class TransactionDataFactory {
       .build();
   }
 
-  public EndorsementChainTransaction endorsementChainTransaction() {
-    return EndorsementChainTransaction.builder()
+  public List<Transaction> transactionEntityList() {
+    Transaction transaction = Transaction.builder()
+      .comments("this is a free text comment")
+      .instruction(TransactionInstruction.TRNS)
+      .isToOrder(true)
+      .platformHost("localhost:8443")
+      .id(UUID.fromString("cb4c7721-f87c-485e-a6ec-3d0682faa24c"))
+      .timestamp(System.currentTimeMillis())
+      .transferee("Receiving party")
+      .transportDocument(TransportDocumentDataFactory.transportDocumentEntityWithoutTransactions())
+      .build();
+
+    return List.of(transaction, TransactionDataFactory.transactionEntity());
+  }
+
+  public EndorsementChainTransactionTO endorsementChainTransaction() {
+    return EndorsementChainTransactionTO.builder()
       .instruction(BlInstruction.ISSU)
       .comments("this is a free text comment")
       .isToOrder(true)
