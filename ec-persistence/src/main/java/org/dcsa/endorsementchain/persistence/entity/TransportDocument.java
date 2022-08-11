@@ -18,7 +18,7 @@ public class TransportDocument {
   @Column(name = "document_hash", length = 64, nullable = false)
   private String documentHash;
 
-  @Column(name = "transport_document_json")
+  @Column(name = "transport_document_json", columnDefinition = "TEXT")
   private String transportDocumentJson;
 
   @Column(name = "is_exported", nullable = false,  columnDefinition = "boolean default false")
