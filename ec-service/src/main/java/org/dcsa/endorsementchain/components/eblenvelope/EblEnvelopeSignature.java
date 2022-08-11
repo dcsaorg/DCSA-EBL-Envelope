@@ -52,7 +52,6 @@ public class EblEnvelopeSignature {
   @SneakyThrows
   public Boolean verify(String signature, String eblEnvelopeHash) {
     JWSObject jwsObject = JWSObject.parse(signature);
-    jwsObject.getPayload().toJSONObject();
     //the signed message does not contain the sent eblEnvelopeHash
     if(!jwsObject.getPayload().toString().equals(eblEnvelopeHash)){
       return false;

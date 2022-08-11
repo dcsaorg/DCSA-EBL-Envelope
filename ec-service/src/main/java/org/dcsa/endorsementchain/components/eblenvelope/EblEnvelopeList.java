@@ -5,19 +5,24 @@ import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public class EblEnvelopeList {
   public List<EblEnvelope> order(List<EblEnvelope> envelopeList) {
-    EblEnvelope firstEnvelope = first(envelopeList).orElse(null);
+
+    Map<String, EblEnvelope> eblEnvelopeMap =
+        envelopeList.stream()
+            .collect(Collectors.toMap(EblEnvelope::getPreviousEnvelopeHash, envelope -> envelope));
+    EblEnvelope firstEnvelope = first(eblEnvelopeMap).orElse(null);
 
     List<EblEnvelope> sortedList = new ArrayList<>();
     EblEnvelope envelope = firstEnvelope;
     while (envelope != null) {
       sortedList.add(envelope);
-      envelope = next(envelopeList, envelope.getEnvelopeHash()).orElse(null);
+      envelope = next(eblEnvelopeMap, envelope.getEnvelopeHash()).orElse(null);
     }
 
     return sortedList;
@@ -29,15 +34,11 @@ public class EblEnvelopeList {
         .map(envelopes -> order(eblEnvelopes).get(envelopes.size() - 1));
   }
 
-  public Optional<EblEnvelope> first(List<EblEnvelope> eblEnvelopes) {
-    return eblEnvelopes.stream()
-        .filter(eblEnvelope -> Objects.isNull(eblEnvelope.getPreviousEnvelopeHash()))
-        .findFirst();
+  Optional<EblEnvelope> first(Map<String, EblEnvelope> eblEnvelopes) {
+    return Optional.ofNullable(eblEnvelopes.get(null));
   }
 
-  private Optional<EblEnvelope> next(List<EblEnvelope> eblEnvelopes, String envelopeHash) {
-    return eblEnvelopes.stream()
-        .filter(eblEnvelope -> envelopeHash.equals(eblEnvelope.getPreviousEnvelopeHash()))
-        .findFirst();
+  private Optional<EblEnvelope> next(Map<String, EblEnvelope> eblEnvelopes, String envelopeHash) {
+    return Optional.ofNullable(eblEnvelopes.get(envelopeHash));
   }
 }
