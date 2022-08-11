@@ -10,7 +10,7 @@
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 
-	<name>DCSA EC - Database Persistence</name>
+	<name>DCSA Endorsement Chain - Database Persistence</name>
 	<artifactId>dcsa-ec-persistence</artifactId>
 	<version>${revision}${sha1}${changelist}</version>
 	<packaging>jar</packaging>
