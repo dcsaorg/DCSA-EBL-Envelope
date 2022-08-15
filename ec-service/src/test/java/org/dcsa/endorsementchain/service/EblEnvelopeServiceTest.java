@@ -1,5 +1,6 @@
 package org.dcsa.endorsementchain.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dcsa.endorsementchain.components.eblenvelope.EblEnvelopeSignature;
 import org.dcsa.endorsementchain.datafactories.EblEnvelopeDataFactory;
@@ -50,12 +51,13 @@ class EblEnvelopeServiceTest {
   private SignedEblEnvelopeTO signedEblEnvelopeTO;
 
   @BeforeEach
-  void init() {
+  void init() throws JsonProcessingException {
     eblEnvelope = EblEnvelopeDataFactory.getEblEnvelope();
     eblEnvelopeList = EblEnvelopeDataFactory.getEblEnvelopeList();
     transportDocument = TransportDocumentDataFactory.transportDocumentEntityWithTransactions();
     eblEnvelopeTO = EblEnvelopeTODataFactory.eblEnvelopeTO();
-    signedEblEnvelopeTO = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO();
+    String rawEnvelope = objectMapper.writeValueAsString(eblEnvelopeTO);
+    signedEblEnvelopeTO = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO(rawEnvelope);
   }
 
   @Test

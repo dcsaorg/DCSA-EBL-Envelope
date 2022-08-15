@@ -29,9 +29,4 @@ public class EblEnvelopeTODataFactory {
     return List.of(EblEnvelopeTODataFactory.eblEnvelopeTO(), secondEblEnvelope);
   }
 
-  @SneakyThrows
-  public String rawEblEnvelope() {
-    ObjectMapper mapper = new ObjectMapper();
-    return mapper.writeValueAsString(eblEnvelopeTO());
-  }
 }

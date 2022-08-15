@@ -62,8 +62,9 @@ class ExportServiceTest {
     previousEblEnvelopes = EblEnvelopeDataFactory.getEblEnvelopeList();
     previousEblEnvelopeHash = previousEblEnvelopes.get(0).getEnvelopeHash();
     exportingEblEnvelopeTO = EblEnvelopeTODataFactory.eblEnvelopeTO();
-    previousSignedEblEnvelopes = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList();
-    signedEblEnvelopeTO = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO();
+    String rawEnvelope = mapper.writeValueAsString(exportingEblEnvelopeTO);
+    previousSignedEblEnvelopes = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList(rawEnvelope);
+    signedEblEnvelopeTO = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO(rawEnvelope);
     endorsementChainTransactionTOs = EndorsementChainTransactionTODataFactory.endorsementChainTransactionTOList();
     jsonResponse = mapper.readTree("\"dummyResponse\"");
   }
