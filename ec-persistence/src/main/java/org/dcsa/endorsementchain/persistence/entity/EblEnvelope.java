@@ -21,8 +21,11 @@ public class EblEnvelope {
   @Column(name = "previous_envelope_hash", length = 64, unique = true)
   private String previousEnvelopeHash;
 
-  @Column(name = "signature", nullable = false)
+  @Column(name = "signature", nullable = false, columnDefinition = "TEXT")
   private String signature;
+
+  @Column(name = "ebl_envelope_json", columnDefinition = "TEXT")
+  private String eblEnvelopeJson;
 
   @ManyToOne
   @JoinColumn(name = "document_hash", nullable = false)

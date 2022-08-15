@@ -43,15 +43,17 @@ class SignedEndorcementChainTest {
             .documentHash("76a7d14c83d7268d643ae7345c448de60701f955d264a743e6928a0b8268b24f")
             .build();
 
+    ObjectMapper mapper = new ObjectMapper();
+    String rawEblEnvelope = mapper.writeValueAsString(eblEnvelope);
+
     SignedEblEnvelopeTO signedEblEnvelopeTO = SignedEblEnvelopeTO.builder()
-      .eblEnvelope(eblEnvelope)
+      .eblEnvelope(rawEblEnvelope)
       .eblEnvelopeHash("d56a93a7e9f86a2d895df818e0440bdca6ffe03246e2fee14131f2e66c84c75a")
       .signature("eyJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdLCJhbGciOiJIUzI1NiJ9..5rPBT_XW-x7mjc1ubf4WwW1iV2YJyc4CCFxORIEaAEk")
       .build();
 
     List<SignedEblEnvelopeTO> endorcementChain = List.of(signedEblEnvelopeTO);
 
-    ObjectMapper mapper = new ObjectMapper();
     assertEquals(expected, mapper.writeValueAsString(endorcementChain));
   }
 }
