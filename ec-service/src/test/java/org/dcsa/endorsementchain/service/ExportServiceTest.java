@@ -79,10 +79,10 @@ class ExportServiceTest {
     when(eblEnvelopeService.createEblEnvelope(eq(documentHash), eq(endorsementChainTransactionTOs), eq(previousEblEnvelopeHash))).thenReturn(exportingEblEnvelopeTO);
     when(transactionService.localToEndorsementChainTransactions(transactionList)).thenReturn(endorsementChainTransactionTOs);
     when(eblEnvelopeService.exportEblEnvelope(transactionList.get(0).getTransportDocument(), exportingEblEnvelopeTO)).thenReturn(signedEblEnvelopeTO);
-    when(eblEnvelopeService.verifyResponse(eq(signedEblEnvelopeTO.eblEnvelopeHash()), eq("dummyResponse"))).thenReturn("dummyResponse");
+    when(eblEnvelopeService.verifyResponse(eq("localhost:8443"), eq(signedEblEnvelopeTO.eblEnvelopeHash()), eq("dummyResponse"))).thenReturn("dummyResponse");
     when(restTemplate.exchange((URI) any(), (HttpMethod) any(), (HttpEntity<?>) any(), (Class<Object>) any())).thenReturn(new ResponseEntity<>(jsonResponse, HttpStatus.OK));
 
-    String responseSignature = exportService.exportEbl("test", TransportDocumentDataFactory.transportDocumentHash());
+    String responseSignature = exportService.exportEbl("test@localhost:8443", TransportDocumentDataFactory.transportDocumentHash());
     assertEquals("dummyResponse", responseSignature);
 
   }

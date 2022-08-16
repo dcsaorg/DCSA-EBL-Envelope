@@ -1,7 +1,5 @@
 package org.dcsa.endorsementchain.datafactories;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import org.dcsa.endorsementchain.transferobjects.EblEnvelopeTO;
 import org.dcsa.endorsementchain.unofficial.datafactories.TransportDocumentDataFactory;
@@ -16,6 +14,7 @@ public class EblEnvelopeTODataFactory {
       .transactions(EndorsementChainTransactionTODataFactory.endorsementChainTransactionTOList())
       .documentHash(TransportDocumentDataFactory.transportDocumentEntityWithTransactions().getDocumentHash())
       .previousEblEnvelopeHash(null)
+      .transactions(EndorsementChainTransactionTODataFactory.endorsementChainTransactionTOList())
       .build();
   }
 
