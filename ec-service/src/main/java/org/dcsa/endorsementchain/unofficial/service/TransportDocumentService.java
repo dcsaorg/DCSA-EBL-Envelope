@@ -61,10 +61,10 @@ public class TransportDocumentService {
         .map(TransportDocument::export)
         .map(repository::save)
         .map(transportDocument1 -> "TransportDocument exported");
-
   }
 
-  private Function<TransportDocument, TransportDocument> includeTransferTransaction(String transferee) {
+  private Function<TransportDocument, TransportDocument> includeTransferTransaction(
+      String transferee) {
     return transportDocument -> {
       Set<Transaction> transactions = transportDocument.getTransactions();
 
@@ -83,17 +83,17 @@ public class TransportDocumentService {
             transactions.stream()
                 .map(Transaction::getIsToOrder)
                 .findAny()
-                .orElseThrow(
-                    () ->
-                        ConcreteRequestErrorMessageException.internalServerError(
-                            "Mandatory isToOrder not set on transaction")))
+                .orElse(
+                    true)) // When no local transactions exist only the export transaction will be
+                           // created and isToOrder will be set to true
         .platformHost("localhost:8443")
         .timestamp(System.currentTimeMillis())
         .instruction(TransactionInstruction.TRNS)
         .build();
   }
 
-  private Function<TransportDocument, TransportDocument> exportTransportDocument(String transferee, String documentHash) {
+  private Function<TransportDocument, TransportDocument> exportTransportDocument(
+      String transferee, String documentHash) {
     return transportDocument -> {
       exportService.exportEbl(transferee, documentHash);
       return transportDocument;

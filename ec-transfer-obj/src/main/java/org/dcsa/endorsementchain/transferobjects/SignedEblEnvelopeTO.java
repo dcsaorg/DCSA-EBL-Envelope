@@ -1,5 +1,6 @@
 package org.dcsa.endorsementchain.transferobjects;
 
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import lombok.Builder;
 
 import javax.validation.constraints.NotNull;
@@ -10,7 +11,8 @@ public record SignedEblEnvelopeTO(
   @Size(max = 64, min = 64)
   String eblEnvelopeHash,
   @NotNull
-  EblEnvelopeTO eblEnvelope,
+  @JsonRawValue
+  String eblEnvelope,
   @NotNull
   String signature
 ) {

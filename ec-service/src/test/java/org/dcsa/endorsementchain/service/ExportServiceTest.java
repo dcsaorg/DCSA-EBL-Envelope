@@ -42,7 +42,6 @@ import static org.mockito.Mockito.when;
 class ExportServiceTest {
   @Mock EblEnvelopeService eblEnvelopeService;
   @Mock TransactionService transactionService;
-  @Mock EblEnvelopeSignature signature;
   @Mock RestTemplate restTemplate;
 
   @InjectMocks ExportService exportService;
@@ -63,8 +62,9 @@ class ExportServiceTest {
     previousEblEnvelopes = EblEnvelopeDataFactory.getEblEnvelopeList();
     previousEblEnvelopeHash = previousEblEnvelopes.get(0).getEnvelopeHash();
     exportingEblEnvelopeTO = EblEnvelopeTODataFactory.eblEnvelopeTO();
-    previousSignedEblEnvelopes = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList();
-    signedEblEnvelopeTO = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO();
+    String rawEnvelope = mapper.writeValueAsString(exportingEblEnvelopeTO);
+    previousSignedEblEnvelopes = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList(rawEnvelope);
+    signedEblEnvelopeTO = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO(rawEnvelope);
     endorsementChainTransactionTOs = EndorsementChainTransactionTODataFactory.endorsementChainTransactionTOList();
     jsonResponse = mapper.readTree("\"dummyResponse\"");
   }
@@ -78,35 +78,12 @@ class ExportServiceTest {
     when(eblEnvelopeService.convertExistingEblEnvelopesToSignedEnvelopes(previousEblEnvelopes)).thenReturn(previousSignedEblEnvelopes);
     when(eblEnvelopeService.createEblEnvelope(eq(documentHash), eq(endorsementChainTransactionTOs), eq(previousEblEnvelopeHash))).thenReturn(exportingEblEnvelopeTO);
     when(transactionService.localToEndorsementChainTransactions(transactionList)).thenReturn(endorsementChainTransactionTOs);
-    when(signature.sign(exportingEblEnvelopeTO)).thenReturn(signedEblEnvelopeTO);
-    when(signature.verify(eq("dummyResponse"), eq(signedEblEnvelopeTO.eblEnvelopeHash()))).thenReturn(true);
+    when(eblEnvelopeService.exportEblEnvelope(transactionList.get(0).getTransportDocument(), exportingEblEnvelopeTO)).thenReturn(signedEblEnvelopeTO);
+    when(eblEnvelopeService.verifyResponse(eq(signedEblEnvelopeTO.eblEnvelopeHash()), eq("dummyResponse"))).thenReturn("dummyResponse");
     when(restTemplate.exchange((URI) any(), (HttpMethod) any(), (HttpEntity<?>) any(), (Class<Object>) any())).thenReturn(new ResponseEntity<>(jsonResponse, HttpStatus.OK));
 
     String responseSignature = exportService.exportEbl("test", TransportDocumentDataFactory.transportDocumentHash());
     assertEquals("dummyResponse", responseSignature);
-
-  }
-
-  @Test
-  void testExportVerificationFailed() {
-    String documentHash = TransportDocumentDataFactory.transportDocumentHash();
-    when(transactionService.getTransactionsForExport(documentHash)).thenReturn(transactionList);
-    when(eblEnvelopeService.findPreviousEblEnvelopes(documentHash)).thenReturn(previousEblEnvelopes);
-    when(eblEnvelopeService.findPreviousEblEnvelopeHash(previousEblEnvelopes)).thenReturn(previousEblEnvelopeHash);
-    when(eblEnvelopeService.convertExistingEblEnvelopesToSignedEnvelopes(previousEblEnvelopes)).thenReturn(previousSignedEblEnvelopes);
-    when(eblEnvelopeService.createEblEnvelope(eq(documentHash), eq(endorsementChainTransactionTOs), eq(previousEblEnvelopeHash))).thenReturn(exportingEblEnvelopeTO);
-    when(transactionService.localToEndorsementChainTransactions(transactionList)).thenReturn(endorsementChainTransactionTOs);
-    when(signature.sign(exportingEblEnvelopeTO)).thenReturn(signedEblEnvelopeTO);
-    when(signature.verify(eq("dummyResponse"), eq(signedEblEnvelopeTO.eblEnvelopeHash()))).thenReturn(false);
-    when(restTemplate.exchange((URI) any(), (HttpMethod) any(), (HttpEntity<?>) any(), (Class<Object>) any())).thenReturn(new ResponseEntity<>(jsonResponse, HttpStatus.OK));
-
-    Exception returnedException =
-      assertThrows(
-        ConcreteRequestErrorMessageException.class,
-        () ->
-          exportService.exportEbl("test", TransportDocumentDataFactory.transportDocumentHash()));
-
-    assertEquals("Signature not valid", returnedException.getMessage());
 
   }
 
@@ -119,7 +96,7 @@ class ExportServiceTest {
     when(eblEnvelopeService.convertExistingEblEnvelopesToSignedEnvelopes(previousEblEnvelopes)).thenReturn(previousSignedEblEnvelopes);
     when(eblEnvelopeService.createEblEnvelope(eq(documentHash), eq(endorsementChainTransactionTOs), eq(previousEblEnvelopeHash))).thenReturn(exportingEblEnvelopeTO);
     when(transactionService.localToEndorsementChainTransactions(transactionList)).thenReturn(endorsementChainTransactionTOs);
-    when(signature.sign(exportingEblEnvelopeTO)).thenReturn(signedEblEnvelopeTO);
+    when(eblEnvelopeService.exportEblEnvelope(transactionList.get(0).getTransportDocument(), exportingEblEnvelopeTO)).thenReturn(signedEblEnvelopeTO);
     when(restTemplate.exchange((URI) any(), (HttpMethod) any(), (HttpEntity<?>) any(), (Class<Object>) any())).thenReturn(new ResponseEntity<>(jsonResponse, HttpStatus.BAD_REQUEST));
 
     Exception returnedException =
@@ -133,27 +110,6 @@ class ExportServiceTest {
   }
 
   @Test
-  void testExportSigningFailed() {
-    String documentHash = TransportDocumentDataFactory.transportDocumentHash();
-    when(transactionService.getTransactionsForExport(documentHash)).thenReturn(transactionList);
-    when(eblEnvelopeService.findPreviousEblEnvelopes(documentHash)).thenReturn(previousEblEnvelopes);
-    when(eblEnvelopeService.findPreviousEblEnvelopeHash(previousEblEnvelopes)).thenReturn(previousEblEnvelopeHash);
-    when(eblEnvelopeService.convertExistingEblEnvelopesToSignedEnvelopes(previousEblEnvelopes)).thenReturn(previousSignedEblEnvelopes);
-    when(eblEnvelopeService.createEblEnvelope(eq(documentHash), eq(endorsementChainTransactionTOs), eq(previousEblEnvelopeHash))).thenReturn(exportingEblEnvelopeTO);
-    when(transactionService.localToEndorsementChainTransactions(transactionList)).thenReturn(endorsementChainTransactionTOs);
-    when(signature.sign(exportingEblEnvelopeTO)).thenThrow(ConcreteRequestErrorMessageException.internalServerError("Unable to generate the JWS Object"));
-
-    Exception returnedException =
-      assertThrows(
-        ConcreteRequestErrorMessageException.class,
-        () ->
-          exportService.exportEbl("test", TransportDocumentDataFactory.transportDocumentHash()));
-
-    assertEquals("Unable to generate the JWS Object", returnedException.getMessage());
-
-  }
-
-  @Test
   void testExportCreatingEndorsementChainTransactionsFailed() {
     String documentHash = TransportDocumentDataFactory.transportDocumentHash();
     when(transactionService.getTransactionsForExport(documentHash)).thenReturn(transactionList);
@@ -162,7 +118,7 @@ class ExportServiceTest {
     when(eblEnvelopeService.convertExistingEblEnvelopesToSignedEnvelopes(previousEblEnvelopes)).thenReturn(previousSignedEblEnvelopes);
     when(eblEnvelopeService.createEblEnvelope(eq(documentHash), eq(endorsementChainTransactionTOs), eq(previousEblEnvelopeHash))).thenReturn(exportingEblEnvelopeTO);
     when(transactionService.localToEndorsementChainTransactions(transactionList)).thenReturn(endorsementChainTransactionTOs);
-    when(signature.sign(exportingEblEnvelopeTO)).thenReturn(signedEblEnvelopeTO);
+    when(eblEnvelopeService.exportEblEnvelope(transactionList.get(0).getTransportDocument(), exportingEblEnvelopeTO)).thenReturn(signedEblEnvelopeTO);
     when(restTemplate.exchange((URI) any(), (HttpMethod) any(), (HttpEntity<?>) any(), (Class<Object>) any())).thenReturn(new ResponseEntity<>(null, HttpStatus.OK));
 
     Exception returnedException =

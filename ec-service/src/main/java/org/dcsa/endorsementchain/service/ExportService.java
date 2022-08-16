@@ -2,9 +2,9 @@ package org.dcsa.endorsementchain.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
-import org.dcsa.endorsementchain.components.eblenvelope.EblEnvelopeSignature;
 import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
 import org.dcsa.endorsementchain.persistence.entity.Transaction;
+import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
 import org.dcsa.endorsementchain.transferobjects.EblEnvelopeTO;
 import org.dcsa.endorsementchain.transferobjects.SignedEblEnvelopeTO;
 import org.dcsa.endorsementchain.transferobjects.TransferblockTO;
@@ -27,13 +27,14 @@ public class ExportService {
 
   private final EblEnvelopeService eblEnvelopeService;
   private final TransactionService transactionService;
-  private final EblEnvelopeSignature signature;
   private final RestTemplate restTemplate;
 
   public String exportEbl(String transferee, String documentHash) {
 
     List<Transaction> exportedTransactions =
         transactionService.getTransactionsForExport(documentHash);
+
+    TransportDocument transportDocument = exportedTransactions.get(0).getTransportDocument();
 
     List<EblEnvelope> previousEblEnvelopes =
         eblEnvelopeService.findPreviousEblEnvelopes(documentHash);
@@ -48,28 +49,23 @@ public class ExportService {
             transactionService.localToEndorsementChainTransactions(exportedTransactions),
             previousEblEnvelopeHash);
 
-    SignedEblEnvelopeTO signedEblEnvelopeTO = signature.sign(exportingEblEnvelopeTO);
+    SignedEblEnvelopeTO signedEblEnvelopeTO =
+        eblEnvelopeService.exportEblEnvelope(transportDocument, exportingEblEnvelopeTO);
 
-    List<SignedEblEnvelopeTO> toBeExportedEblEnvelopes = Stream.concat(previousSignedEblEnvelopes.stream(), Stream.of(signedEblEnvelopeTO)).toList();
+    List<SignedEblEnvelopeTO> toBeExportedEblEnvelopes =
+        Stream.concat(previousSignedEblEnvelopes.stream(), Stream.of(signedEblEnvelopeTO)).toList();
 
     TransferblockTO transferblock =
         TransferblockTO.builder()
             .endorcementChain(toBeExportedEblEnvelopes)
-            .transferDocument(
-                exportedTransactions.get(0).getTransportDocument().getTransportDocumentJson())
+            .transferDocument(transportDocument.getTransportDocumentJson())
             .build();
 
     String signatureResponse =
         sendTransferBlock(transfereeToPlatformHost(transferee), transferblock);
 
-    return Optional.ofNullable(signatureResponse)
-        .map(
-            responseSignature ->
-                signature.verify(responseSignature, signedEblEnvelopeTO.eblEnvelopeHash()))
-        .filter(aBoolean -> aBoolean)
-        .map(aBoolean -> signatureResponse)
-        .orElseThrow(
-            () -> ConcreteRequestErrorMessageException.internalServerError("Signature not valid"));
+    return eblEnvelopeService.verifyResponse(
+        signedEblEnvelopeTO.eblEnvelopeHash(), signatureResponse);
   }
 
   private String sendTransferBlock(URI platformUrl, TransferblockTO transferblock) {
