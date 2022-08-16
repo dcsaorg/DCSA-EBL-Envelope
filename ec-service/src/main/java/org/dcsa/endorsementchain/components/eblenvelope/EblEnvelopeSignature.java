@@ -19,7 +19,7 @@ public class EblEnvelopeSignature {
   private final JWSSignerDetails jwsSignerDetails;
   private final Map<String, JWSVerifier> jwsVerifiers;
 
-  public SignedEblEnvelopeTO signEblEnvelope(String rawEblEnvelope) {
+  public SignedEblEnvelopeTO signEnvelope(String rawEblEnvelope) {
     JWSHeader header =
         new JWSHeader.Builder(jwsSignerDetails.algorithm())
             .base64URLEncodePayload(false)
@@ -56,7 +56,7 @@ public class EblEnvelopeSignature {
   }
 
   @SneakyThrows
-  public boolean verifyEblEnvelopeHash(String cn, String signature, String eblEnvelopeHash) {
+  public boolean verifyEnvelopeHash(String cn, String signature, String eblEnvelopeHash) {
     JWSObject jwsObject = JWSObject.parse(signature);
     // the signed message does not contain the sent eblEnvelopeHash
     if (!jwsObject.getPayload().toString().equals(eblEnvelopeHash)) {
@@ -66,7 +66,7 @@ public class EblEnvelopeSignature {
   }
 
   @SneakyThrows
-  public boolean verifyDetachedPayload(String cn, String signature, String payload) {
+  public boolean verifyEnvelope(String cn, String signature, String payload) {
     JWSObject jwsObject = JWSObject.parse(signature, new Payload(payload));
 
     return jwsObject.verify(jwsVerifiers.get(cn));

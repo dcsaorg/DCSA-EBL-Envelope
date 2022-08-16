@@ -139,7 +139,6 @@ As mentioned above, to transfer an eBL from one platform to the next platform, p
 
 In the transfer process, the sending platform is responsible for correct creation of the eBL envelope. By digitally signing the eBL envelope with the private key of the sender to the public key of the receiver, irrevocable proof is created that the eBL envelope data was signed in this state by the sending eBL platform to the receiving eBL platform. The same methods are applied within eBL platforms to transfer an eBL from one user to another (but this differs per eBL platform).
 
-[//]: # (ToDo change appendix reference to link to technical spec)
 Public keys are linked to a known legal entity, thus ensuring verification of the identity of the legal entity. This link may be created by a trusted entity (such as a certificate authority, government organisation or trusted party) that has verified the identity of the party holding the public key.
 Requirements for linking a public/private key pair to a legal entity via a digital certificate are found section  **Additional specifications and requirements around security** in [The general Readme](README.md) .
 

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -60,7 +61,12 @@ public class TransactionService {
                     "No transactions available for export."));
   }
 
-  public List<EndorsementChainTransactionTO> localToEndorsementChainTransactions(List<Transaction> transactions) {
+  public List<EndorsementChainTransactionTO> localToEndorsementChainTransactions(
+      List<Transaction> transactions) {
     return transactions.stream().map(mapper::transactionToEndorcementChainTransaction).toList();
+  }
+
+  public List<Transaction> saveImportedTransactions(Set<Transaction> transactions) {
+    return repository.saveAll(transactions);
   }
 }

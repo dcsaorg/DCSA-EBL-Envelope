@@ -1,6 +1,8 @@
 package org.dcsa.endorsementchain.transferobjects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Builder;
 
 import javax.validation.constraints.NotNull;
@@ -18,4 +20,10 @@ public record SignedEblEnvelopeTO(
 ) {
   @Builder(toBuilder = true)
   public SignedEblEnvelopeTO {}
+
+  @JsonCreator
+  @Builder(toBuilder = true)
+  public SignedEblEnvelopeTO(String eblEnvelopeHash, JsonNode eblEnvelope, String signature) {
+    this(eblEnvelopeHash, eblEnvelope.toString(), signature);
+  }
 }
