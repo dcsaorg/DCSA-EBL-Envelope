@@ -14,11 +14,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import javax.security.auth.x500.X500Principal;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
 
 @Component
 public class JWKManager {
@@ -33,9 +37,19 @@ public class JWKManager {
     return getJwkSet(keystoreLocation, keystorePassword);
   }
 
-  @SneakyThrows
   @Bean
-  public JWSVerifier getJWSVerifier(@Qualifier("verifying-jwk") JWKSet jwkSet, @Value("${spring.security.verification.jws.key-id}") String keyId) {
+  public Map<String, JWSVerifier> getPlatformsVerifiers(@Qualifier("verifying-jwk") JWKSet jwkSet) {
+    Map<String, JWSVerifier> platformVerifiers = new java.util.HashMap<>(Collections.emptyMap());
+    for (JWK jwk : jwkSet.getKeys()) {
+      String dn = jwk.getParsedX509CertChain().get(0).getSubjectX500Principal().getName(X500Principal.CANONICAL);//ToDO this now acts on a single standalone certificate and not a certificate chain
+      String cn = Arrays.stream(dn.split(",")).filter(s -> s.contains("cn")).map(s -> s.substring(s.indexOf("=")+1)).findFirst().orElseThrow(() -> new IllegalStateException("CN not set on Certificate."));
+      platformVerifiers.put(cn, getJWSVerifier(jwkSet, jwk.getKeyID()));
+    }
+    return platformVerifiers;
+  }
+
+  @SneakyThrows
+  private JWSVerifier getJWSVerifier(@Qualifier("verifying-jwk") JWKSet jwkSet, @Value("${spring.security.verification.jws.key-id}") String keyId) {
     JWK jwk = jwkSet.getKeyByKeyId(keyId);
 
     KeyType keyType = getValidKeyType(jwk);

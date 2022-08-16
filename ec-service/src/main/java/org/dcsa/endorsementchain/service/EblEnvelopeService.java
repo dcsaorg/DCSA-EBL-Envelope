@@ -1,5 +1,6 @@
 package org.dcsa.endorsementchain.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -72,7 +73,7 @@ public class EblEnvelopeService {
 
     String rawEblEnvelope = mapper.writeValueAsString(eblEnvelopeTO);
 
-    SignedEblEnvelopeTO signedEblEnvelopeTO = signature.sign(rawEblEnvelope);
+    SignedEblEnvelopeTO signedEblEnvelopeTO = signature.signEblEnvelope(rawEblEnvelope);
 
     EblEnvelope envelope =
         EblEnvelope.builder()
@@ -88,12 +89,34 @@ public class EblEnvelopeService {
     return signedEblEnvelopeTO;
   }
 
-  public String verifyResponse(String eblEnvelopeHash, String signatureResponse) {
+  public String verifyResponse(
+      String platformHost, String eblEnvelopeHash, String signatureResponse) {
     return Optional.ofNullable(signatureResponse)
-        .map(responseSignature -> signature.verify(responseSignature, eblEnvelopeHash))
+        .map(
+            responseSignature ->
+                signature.verifyEblEnvelopeHash(platformHost, responseSignature, eblEnvelopeHash))
         .filter(aBoolean -> aBoolean)
         .map(aBoolean -> signatureResponse)
         .orElseThrow(
             () -> ConcreteRequestErrorMessageException.internalServerError("Signature not valid"));
+  }
+
+  public EblEnvelopeTO verifyEnvelopeSignature(String envelopeSignature, String eblEnvelope) {
+    EblEnvelopeTO parsedEblEnvelope;
+    try {
+      parsedEblEnvelope = mapper.readValue(eblEnvelope, EblEnvelopeTO.class);
+    } catch (JsonProcessingException e) {
+      throw ConcreteRequestErrorMessageException.invalidInput(
+          "Provided EBL envelope is not valid", e);
+    }
+
+    // Since the platformhost is the host of the originating transaction and all transactions within
+    // an EBL envelope are from the same platform we can take any of the transactions to retrieve
+    // the platformhost.
+    String platformHost = parsedEblEnvelope.transactions().get(0).platformHost();
+    if (!signature.verifyDetachedPayload(platformHost, envelopeSignature, eblEnvelope)) {
+      throw ConcreteRequestErrorMessageException.invalidInput("Signature could not be validated");
+    }
+    return parsedEblEnvelope;
   }
 }

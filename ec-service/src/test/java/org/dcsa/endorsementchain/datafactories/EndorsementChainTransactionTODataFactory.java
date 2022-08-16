@@ -16,7 +16,7 @@ public class EndorsementChainTransactionTODataFactory {
       .isToOrder(false)
       .platformHost("localhost:8443")
       .timestamp(System.currentTimeMillis())
-      .transferee("Transferee")
+      .transferee("Transferee@localhost:8443")
       .build();
   }
 
@@ -27,7 +27,7 @@ public class EndorsementChainTransactionTODataFactory {
       .isToOrder(false)
       .platformHost("localhost:8443")
       .timestamp(System.currentTimeMillis())
-      .transferee("initialTransferee")
+      .transferee("initialTransferee@localhost:8443")
       .build();
 
     return List.of(initialTransaction, EndorsementChainTransactionTODataFactory.endorsementChainTransactionTO());

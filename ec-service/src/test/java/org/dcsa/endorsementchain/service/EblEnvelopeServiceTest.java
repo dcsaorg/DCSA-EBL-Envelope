@@ -49,6 +49,7 @@ class EblEnvelopeServiceTest {
   private TransportDocument transportDocument;
   private EblEnvelopeTO eblEnvelopeTO;
   private SignedEblEnvelopeTO signedEblEnvelopeTO;
+  private String rawEnvelope;
 
   @BeforeEach
   void init() throws JsonProcessingException {
@@ -56,7 +57,7 @@ class EblEnvelopeServiceTest {
     eblEnvelopeList = EblEnvelopeDataFactory.getEblEnvelopeList();
     transportDocument = TransportDocumentDataFactory.transportDocumentEntityWithTransactions();
     eblEnvelopeTO = EblEnvelopeTODataFactory.eblEnvelopeTO();
-    String rawEnvelope = objectMapper.writeValueAsString(eblEnvelopeTO);
+    rawEnvelope = objectMapper.writeValueAsString(eblEnvelopeTO);
     signedEblEnvelopeTO = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO(rawEnvelope);
   }
 
@@ -139,7 +140,7 @@ class EblEnvelopeServiceTest {
   @Test
   void testExportEnvelope() {
     when(repository.save(any())).thenAnswer(i -> i.getArguments()[0]);
-    when(signature.sign(any())).thenReturn(signedEblEnvelopeTO);
+    when(signature.signEblEnvelope(any())).thenReturn(signedEblEnvelopeTO);
 
     SignedEblEnvelopeTO response = service.exportEblEnvelope(transportDocument, eblEnvelopeTO);
 
@@ -149,7 +150,7 @@ class EblEnvelopeServiceTest {
 
   @Test
   void testExportEnvelopeSignFailed() {
-    when(signature.sign(any()))
+    when(signature.signEblEnvelope(any()))
         .thenThrow(
             ConcreteRequestErrorMessageException.internalServerError(
                 "Unable to generate the JWS Object"));
@@ -164,21 +165,55 @@ class EblEnvelopeServiceTest {
 
   @Test
   void testVerifyResponseSignatureInvalid() {
-    when(signature.verify(any(), any())).thenReturn(false);
+    when(signature.verifyEblEnvelopeHash(any(), any(), any())).thenReturn(false);
+
+    String envelopeHash = signedEblEnvelopeTO.eblEnvelopeHash();
+    String signature = signedEblEnvelopeTO.signature();
 
     Exception returnedException =
       assertThrows(
         ConcreteRequestErrorMessageException.class,
-        () -> service.verifyResponse(signedEblEnvelopeTO.eblEnvelopeHash(), signedEblEnvelopeTO.signature()));
+        () -> service.verifyResponse("localhost:8443", envelopeHash, signature));
 
     assertEquals("Signature not valid", returnedException.getMessage());
   }
 
   @Test
   void testVerifyResponseSignatureValid() {
-    when(signature.verify(any(), any())).thenReturn(true);
+    when(signature.verifyEblEnvelopeHash(any(), any(),any())).thenReturn(true);
 
-    String response = service.verifyResponse(signedEblEnvelopeTO.eblEnvelopeHash(), signedEblEnvelopeTO.signature());
+    String response = service.verifyResponse("localhost:8443", signedEblEnvelopeTO.eblEnvelopeHash(), signedEblEnvelopeTO.signature());
     assertEquals(signedEblEnvelopeTO.signature(), response);
+  }
+
+  @Test
+  void testVerifyEnvelopeSignatureInvalidEblEnvelope() {
+    Exception returnedException =
+      assertThrows(
+        ConcreteRequestErrorMessageException.class,
+        () -> service.verifyEnvelopeSignature("signature", "dummyPayload"));
+
+    assertEquals("Provided EBL envelope is not valid", returnedException.getMessage());
+  }
+
+  @Test
+  void testVerifyEnvelopeSignatureInvalid() {
+    when(signature.verifyDetachedPayload(any(), any(), any())).thenReturn(false);
+    Exception returnedException =
+      assertThrows(
+        ConcreteRequestErrorMessageException.class,
+        () -> service.verifyEnvelopeSignature("InvalidSignature", rawEnvelope));
+
+    assertEquals("Signature could not be validated", returnedException.getMessage());
+  }
+
+  @Test
+  void testVerifyEnvelopeSignatureValid() {
+    when(signature.verifyDetachedPayload(any(), any(), any())).thenReturn(true);
+
+    EblEnvelopeTO parsedEnvelope = service.verifyEnvelopeSignature("validSignature", rawEnvelope);
+    assertEquals(eblEnvelopeTO.documentHash(), parsedEnvelope.documentHash());
+    assertEquals(eblEnvelopeTO.previousEblEnvelopeHash(), parsedEnvelope.previousEblEnvelopeHash());
+    assertEquals(eblEnvelopeTO.transactions().size(), parsedEnvelope.transactions().size());
   }
 }

@@ -13,7 +13,6 @@ import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -61,11 +60,14 @@ public class ExportService {
             .transferDocument(transportDocument.getTransportDocumentJson())
             .build();
 
-    String signatureResponse =
-        sendTransferBlock(transfereeToPlatformHost(transferee), transferblock);
+    URI platformURL = transfereeToPlatformHost(transferee);
+
+    String signatureResponse = sendTransferBlock(platformURL, transferblock);
 
     return eblEnvelopeService.verifyResponse(
-        signedEblEnvelopeTO.eblEnvelopeHash(), signatureResponse);
+        platformURL.getHost() + ":" + platformURL.getPort(),
+        signedEblEnvelopeTO.eblEnvelopeHash(),
+        signatureResponse);
   }
 
   private String sendTransferBlock(URI platformUrl, TransferblockTO transferblock) {
@@ -89,14 +91,12 @@ public class ExportService {
                     "No signature response received from recipient platform"));
   }
 
-  // ToDo migrate to DCSA Party object
   private URI transfereeToPlatformHost(String transferee) {
-    UriComponents uriComponents =
-        UriComponentsBuilder.newInstance()
-            .scheme("https")
-            .host(transferee.substring(transferee.indexOf("@") + 1))
-            .path("/v1/transferblocks")
-            .build();
-    return uriComponents.toUri();
+    String host = transferee.substring(transferee.indexOf("@") + 1);
+    return UriComponentsBuilder.fromHttpUrl("https://" + host)
+        .scheme("https")
+        .path("/v1/transferblocks")
+        .build()
+        .toUri();
   }
 }
