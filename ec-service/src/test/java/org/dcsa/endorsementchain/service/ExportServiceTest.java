@@ -3,7 +3,6 @@ package org.dcsa.endorsementchain.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.dcsa.endorsementchain.components.eblenvelope.EblEnvelopeSignature;
 import org.dcsa.endorsementchain.datafactories.EblEnvelopeDataFactory;
 import org.dcsa.endorsementchain.datafactories.EblEnvelopeTODataFactory;
 import org.dcsa.endorsementchain.datafactories.EndorsementChainTransactionTODataFactory;
@@ -35,7 +34,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,7 +61,14 @@ class ExportServiceTest {
     previousEblEnvelopeHash = previousEblEnvelopes.get(0).getEnvelopeHash();
     exportingEblEnvelopeTO = EblEnvelopeTODataFactory.eblEnvelopeTO();
     String rawEnvelope = mapper.writeValueAsString(exportingEblEnvelopeTO);
-    previousSignedEblEnvelopes = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList(rawEnvelope);
+    List<String> rawEblEnvelopes = previousEblEnvelopes.stream().map(parsedEblEnvelope -> {
+      try {
+        return mapper.writeValueAsString(parsedEblEnvelope);
+      } catch (JsonProcessingException e) {
+        throw new RuntimeException("Can't serialize eblEnvelope");
+      }
+    }).toList();
+    previousSignedEblEnvelopes = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList(rawEblEnvelopes.get(0), rawEblEnvelopes.get(1));
     signedEblEnvelopeTO = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO(rawEnvelope);
     endorsementChainTransactionTOs = EndorsementChainTransactionTODataFactory.endorsementChainTransactionTOList();
     jsonResponse = mapper.readTree("\"dummyResponse\"");
@@ -76,10 +81,10 @@ class ExportServiceTest {
     when(eblEnvelopeService.findPreviousEblEnvelopes(documentHash)).thenReturn(previousEblEnvelopes);
     when(eblEnvelopeService.findPreviousEblEnvelopeHash(previousEblEnvelopes)).thenReturn(previousEblEnvelopeHash);
     when(eblEnvelopeService.convertExistingEblEnvelopesToSignedEnvelopes(previousEblEnvelopes)).thenReturn(previousSignedEblEnvelopes);
-    when(eblEnvelopeService.createEblEnvelope(eq(documentHash), eq(endorsementChainTransactionTOs), eq(previousEblEnvelopeHash))).thenReturn(exportingEblEnvelopeTO);
+    when(eblEnvelopeService.createEblEnvelope(documentHash, endorsementChainTransactionTOs, previousEblEnvelopeHash)).thenReturn(exportingEblEnvelopeTO);
     when(transactionService.localToEndorsementChainTransactions(transactionList)).thenReturn(endorsementChainTransactionTOs);
     when(eblEnvelopeService.exportEblEnvelope(transactionList.get(0).getTransportDocument(), exportingEblEnvelopeTO)).thenReturn(signedEblEnvelopeTO);
-    when(eblEnvelopeService.verifyResponse(eq("localhost:8443"), eq(signedEblEnvelopeTO.eblEnvelopeHash()), eq("dummyResponse"))).thenReturn("dummyResponse");
+    when(eblEnvelopeService.verifyResponse("localhost:8443", signedEblEnvelopeTO.eblEnvelopeHash(), "dummyResponse")).thenReturn("dummyResponse");
     when(restTemplate.exchange((URI) any(), (HttpMethod) any(), (HttpEntity<?>) any(), (Class<Object>) any())).thenReturn(new ResponseEntity<>(jsonResponse, HttpStatus.OK));
 
     String responseSignature = exportService.exportEbl("test@localhost:8443", TransportDocumentDataFactory.transportDocumentHash());
@@ -94,7 +99,7 @@ class ExportServiceTest {
     when(eblEnvelopeService.findPreviousEblEnvelopes(documentHash)).thenReturn(previousEblEnvelopes);
     when(eblEnvelopeService.findPreviousEblEnvelopeHash(previousEblEnvelopes)).thenReturn(previousEblEnvelopeHash);
     when(eblEnvelopeService.convertExistingEblEnvelopesToSignedEnvelopes(previousEblEnvelopes)).thenReturn(previousSignedEblEnvelopes);
-    when(eblEnvelopeService.createEblEnvelope(eq(documentHash), eq(endorsementChainTransactionTOs), eq(previousEblEnvelopeHash))).thenReturn(exportingEblEnvelopeTO);
+    when(eblEnvelopeService.createEblEnvelope(documentHash, endorsementChainTransactionTOs, previousEblEnvelopeHash)).thenReturn(exportingEblEnvelopeTO);
     when(transactionService.localToEndorsementChainTransactions(transactionList)).thenReturn(endorsementChainTransactionTOs);
     when(eblEnvelopeService.exportEblEnvelope(transactionList.get(0).getTransportDocument(), exportingEblEnvelopeTO)).thenReturn(signedEblEnvelopeTO);
     when(restTemplate.exchange((URI) any(), (HttpMethod) any(), (HttpEntity<?>) any(), (Class<Object>) any())).thenReturn(new ResponseEntity<>(jsonResponse, HttpStatus.BAD_REQUEST));
@@ -103,7 +108,7 @@ class ExportServiceTest {
       assertThrows(
         ConcreteRequestErrorMessageException.class,
         () ->
-          exportService.exportEbl("test", TransportDocumentDataFactory.transportDocumentHash()));
+          exportService.exportEbl("test", documentHash));
 
     assertEquals("Transfer failed.", returnedException.getMessage());
 
@@ -116,7 +121,7 @@ class ExportServiceTest {
     when(eblEnvelopeService.findPreviousEblEnvelopes(documentHash)).thenReturn(previousEblEnvelopes);
     when(eblEnvelopeService.findPreviousEblEnvelopeHash(previousEblEnvelopes)).thenReturn(previousEblEnvelopeHash);
     when(eblEnvelopeService.convertExistingEblEnvelopesToSignedEnvelopes(previousEblEnvelopes)).thenReturn(previousSignedEblEnvelopes);
-    when(eblEnvelopeService.createEblEnvelope(eq(documentHash), eq(endorsementChainTransactionTOs), eq(previousEblEnvelopeHash))).thenReturn(exportingEblEnvelopeTO);
+    when(eblEnvelopeService.createEblEnvelope(documentHash, endorsementChainTransactionTOs, previousEblEnvelopeHash)).thenReturn(exportingEblEnvelopeTO);
     when(transactionService.localToEndorsementChainTransactions(transactionList)).thenReturn(endorsementChainTransactionTOs);
     when(eblEnvelopeService.exportEblEnvelope(transactionList.get(0).getTransportDocument(), exportingEblEnvelopeTO)).thenReturn(signedEblEnvelopeTO);
     when(restTemplate.exchange((URI) any(), (HttpMethod) any(), (HttpEntity<?>) any(), (Class<Object>) any())).thenReturn(new ResponseEntity<>(null, HttpStatus.OK));
@@ -125,7 +130,7 @@ class ExportServiceTest {
       assertThrows(
         ConcreteRequestErrorMessageException.class,
         () ->
-          exportService.exportEbl("test", TransportDocumentDataFactory.transportDocumentHash()));
+          exportService.exportEbl("test", documentHash));
 
     assertEquals("No signature response received from recipient platform", returnedException.getMessage());
 

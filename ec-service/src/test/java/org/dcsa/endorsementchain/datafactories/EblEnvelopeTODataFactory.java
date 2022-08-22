@@ -20,7 +20,7 @@ public class EblEnvelopeTODataFactory {
 
   public List<EblEnvelopeTO> eblEnvelopeTOList() {
     EblEnvelopeTO secondEblEnvelope = EblEnvelopeTO.builder()
-      .previousEblEnvelopeHash("a7fd75ab75107c4c01aa71b42517a902710cd37a921514e48d798a32b6d0ebd0")
+      .previousEblEnvelopeHash("a25286672be331c6770fa590f8eb7ab7cf105fd76f0db4b7cabd258a5953482e")
       .documentHash(TransportDocumentDataFactory.transportDocumentHash())
       .transactions(EndorsementChainTransactionTODataFactory.endorsementChainTransactionTOList())
       .build();

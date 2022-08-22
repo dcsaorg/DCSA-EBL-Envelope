@@ -66,4 +66,10 @@ class EblEnvelopeListTest {
     Optional<EblEnvelope> lastEblEnvelope = EblEnvelopeList.last(Collections.emptyList());
     assertTrue(lastEblEnvelope.isEmpty());
   }
+
+  @Test
+  void testGetLastEblEnvelopeWithNoEnvelopeHash() {
+    Optional<EblEnvelope> lastEblEnvelope = EblEnvelopeList.last(List.of(EblEnvelope.builder().build()));
+    assertTrue(lastEblEnvelope.isEmpty());
+  }
 }

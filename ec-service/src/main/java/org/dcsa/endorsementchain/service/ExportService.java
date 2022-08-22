@@ -56,8 +56,8 @@ public class ExportService {
 
     TransferblockTO transferblock =
         TransferblockTO.builder()
-            .endorcementChain(toBeExportedEblEnvelopes)
-            .transferDocument(transportDocument.getTransportDocumentJson())
+            .endorsementChain(toBeExportedEblEnvelopes)
+            .document(transportDocument.getTransportDocumentJson())
             .build();
 
     URI platformURL = transfereeToPlatformHost(transferee);

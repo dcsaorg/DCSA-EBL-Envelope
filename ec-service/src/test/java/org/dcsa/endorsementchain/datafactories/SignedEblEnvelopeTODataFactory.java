@@ -13,11 +13,11 @@ public class SignedEblEnvelopeTODataFactory {
         .eblEnvelope(rawEnvelope)
         .signature(
             "nI85d4jseqXOR3hXkyLT2uajlXCsW88nAoEwec13I1tUyt6xwbgQz4jVQ2tdKbSlLcwrVmetlbz9Moy-DRno3X3cJmW9Y9TtyVMuygP0p_BQy1TVd766O1VRpiTp_tB1Eb93Fnj0RvpUZ_ddp9YKQjdxpAYi23Rbnz33A-x3uWp-Nk6y7sy3THlw5ZwbhuBWtp7yeaNGwVL9RUegyHwojGQp3YIVzFVXomUkj-JAg8UvOE6xdd7XSZaM_Sf7ZJlyTQQxyqZ1ui-zCwVHu0zdNEbEzAm_SfgxlPUaO8nEWSmAGo29aGO8HiU2_mbVMU1lCL00LyAEoAaDFnmbnEOoWw")
-        .eblEnvelopeHash("5d52a570c5df23371da789956922870eea5efe50cb4d571517ab18cadabb611e")
+        .eblEnvelopeHash("a25286672be331c6770fa590f8eb7ab7cf105fd76f0db4b7cabd258a5953482e")
         .build();
   }
 
-  public List<SignedEblEnvelopeTO> signedEblEnvelopeTOList(String rawEnvelope) {
+  public List<SignedEblEnvelopeTO> signedEblEnvelopeTOList(String rawEnvelope, String secondRawEnvelope) {
     SignedEblEnvelopeTO initialSignedEblEnvelopeTO =
         SignedEblEnvelopeTO.builder()
             .eblEnvelope(rawEnvelope)
@@ -26,6 +26,6 @@ public class SignedEblEnvelopeTODataFactory {
             .eblEnvelopeHash("2071af20009cdd6348a727b33c005767afe83db2a9e67e2dde6367fcd045fd0a")
             .build();
 
-    return List.of(initialSignedEblEnvelopeTO, SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO(rawEnvelope));
+    return List.of(initialSignedEblEnvelopeTO, SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO(secondRawEnvelope));
   }
 }

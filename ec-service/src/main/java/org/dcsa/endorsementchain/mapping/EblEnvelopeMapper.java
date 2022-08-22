@@ -11,4 +11,5 @@ public interface EblEnvelopeMapper {
   @Mapping(source = "envelope.transportDocument.transactions", target = "transactions")
   @Mapping(source = "envelope.transportDocument.documentHash", target = "documentHash")
   EblEnvelopeTO eblEnvelopeToTo(EblEnvelope envelope);
+
 }
