@@ -22,7 +22,7 @@ paths:
     put:
       tags:
       - Transferblock
-      summary: Get transport document transfer based on the hash of the transferblock
+      summary: PUT transferblock - transfers the EBL envelope via a transferblock to another platform
       description: |
         Retrieves the transport document
       parameters:
@@ -35,7 +35,7 @@ paths:
           type: string
           example: "1"
       requestBody:
-        description: the transferblock containing the B/L document along with the endorcement chain.
+        description: the transferblock containing the B/L document along with the endorsement chain.
         content:
           application/json:
             schema:
@@ -69,21 +69,17 @@ components:
       properties:
         document:
           $ref: '#/components/schemas/transportDocument'
-        endorcementChain:
+        endorsementChain:
           type: array
           items:
-            $ref: '#/components/schemas/endorcementChainEntry'
-    endorcementChainEntry:
+            $ref: '#/components/schemas/endorsementChainEntry'
+    endorsementChainEntry:
       required:
       - eblEnvelope
       - envelopeHash
       - signature
       type: object
       properties:
-        signature:
-          type: string
-          description: Signature of JWS with detached unencoded payload as specified in https://datatracker.ietf.org/doc/html/rfc7797 the detached payload signed is the "eblEnvelope" object.
-          example: eyJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdLCJhbGciOiJIUzI1NiJ9..5rPBT_XW-x7mjc1ubf4WwW1iV2YJyc4CCFxORIEaAEk
         envelopeHash:
           allOf:
           - $ref: '#/components/schemas/sha256Hash'
@@ -91,6 +87,10 @@ components:
           - description: sha256 hash of the eblEnvelope object
         eblEnvelope:
           $ref: '#/components/schemas/eblEnvelope'
+        signature:
+          type: string
+          description: Signature of JWS with detached unencoded payload as specified in https://datatracker.ietf.org/doc/html/rfc7797 the detached payload signed is the "eblEnvelope" object.
+          example: eyJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdLCJhbGciOiJIUzI1NiJ9..5rPBT_XW-x7mjc1ubf4WwW1iV2YJyc4CCFxORIEaAEk
     eblEnvelope:
       required:
       - documentHash
@@ -1995,6 +1995,16 @@ components:
     clauseContent:
       type: string
       description: The content of the clause.
+  parameters:
+    Api-Version-Major:
+      name: API-Version
+      in: header
+      description: |
+        An API-Version header MAY be added to the request (optional); if added it MUST only contain MAJOR version. API-Version header MUST be aligned with the URI version.
+      required: false
+      schema:
+        type: string
+        example: "1"
   headers:
     API-Version:
       description: SemVer used to indicate the version of the contract (API version) returned.
