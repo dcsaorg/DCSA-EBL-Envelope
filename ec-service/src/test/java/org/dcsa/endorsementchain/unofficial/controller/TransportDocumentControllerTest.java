@@ -34,7 +34,7 @@ class TransportDocumentControllerTest {
 
   @Test
   void testSuccessfulCreateTransportDocument() throws Exception {
-    when(service.saveTransportDocument(any()))
+    when(service.saveTransportDocument(any(), any()))
         .thenReturn(Optional.of(TransportDocumentDataFactory.transportDocumentHash()));
 
     mockMvc
@@ -54,7 +54,7 @@ class TransportDocumentControllerTest {
 
   @Test
   void testErrorCreateTransportDocument() throws Exception {
-    when(service.saveTransportDocument(any())).thenReturn(Optional.empty());
+    when(service.saveTransportDocument(any(), any())).thenReturn(Optional.empty());
 
     mockMvc
         .perform(

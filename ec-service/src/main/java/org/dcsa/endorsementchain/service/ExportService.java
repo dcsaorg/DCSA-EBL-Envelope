@@ -64,9 +64,9 @@ public class ExportService {
 
     String signatureResponse = sendTransferBlock(platformURL, transferblock);
 
-    return eblEnvelopeService.verifyResponse(
+    return eblEnvelopeService.verifyEblEnvelopeResponseSignature(
         platformURL.getHost() + ":" + platformURL.getPort(),
-        signedEblEnvelopeTO.eblEnvelopeHash(),
+        signedEblEnvelopeTO.envelopeHash(),
         signatureResponse);
   }
 

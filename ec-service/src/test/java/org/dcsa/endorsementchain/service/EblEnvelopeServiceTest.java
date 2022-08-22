@@ -6,7 +6,6 @@ import org.dcsa.endorsementchain.components.eblenvelope.EblEnvelopeSignature;
 import org.dcsa.endorsementchain.datafactories.EblEnvelopeDataFactory;
 import org.dcsa.endorsementchain.datafactories.EblEnvelopeTODataFactory;
 import org.dcsa.endorsementchain.datafactories.SignedEblEnvelopeTODataFactory;
-import org.dcsa.endorsementchain.mapping.EblEnvelopeMapper;
 import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
 import org.dcsa.endorsementchain.persistence.repository.EblEnvelopeRepository;
@@ -160,7 +159,7 @@ class EblEnvelopeServiceTest {
 
     SignedEblEnvelopeTO response = service.exportEblEnvelope(transportDocument, eblEnvelopeTO);
 
-    assertEquals(signedEblEnvelopeTO.eblEnvelopeHash(), response.eblEnvelopeHash());
+    assertEquals(signedEblEnvelopeTO.envelopeHash(), response.envelopeHash());
     assertEquals(signedEblEnvelopeTO.signature(), response.signature());
   }
 
@@ -183,13 +182,13 @@ class EblEnvelopeServiceTest {
   void testVerifyResponseSignatureInvalid() {
     when(signature.verifyEnvelopeHash(any(), any(), any())).thenReturn(false);
 
-    String envelopeHash = signedEblEnvelopeTO.eblEnvelopeHash();
+    String envelopeHash = signedEblEnvelopeTO.envelopeHash();
     String signature = signedEblEnvelopeTO.signature();
 
     Exception returnedException =
         assertThrows(
             ConcreteRequestErrorMessageException.class,
-            () -> service.verifyResponse("localhost:8443", envelopeHash, signature));
+            () -> service.verifyEblEnvelopeResponseSignature("localhost:8443", envelopeHash, signature));
 
     assertEquals("Signature not valid", returnedException.getMessage());
   }
@@ -199,37 +198,47 @@ class EblEnvelopeServiceTest {
     when(signature.verifyEnvelopeHash(any(), any(), any())).thenReturn(true);
 
     String response =
-        service.verifyResponse(
+        service.verifyEblEnvelopeResponseSignature(
             "localhost:8443",
-            signedEblEnvelopeTO.eblEnvelopeHash(),
+            signedEblEnvelopeTO.envelopeHash(),
             signedEblEnvelopeTO.signature());
     assertEquals(signedEblEnvelopeTO.signature(), response);
   }
 
   @Test
-  void testVerifyEnvelopeSignatureInvalidEblEnvelope() {
-    SignedEblEnvelopeTO invalidSignedEblEnvelope =
-        SignedEblEnvelopeTO.builder()
-            .eblEnvelopeHash(signedEblEnvelopeTO.eblEnvelopeHash())
-            .signature(signedEblEnvelopeTO.signature())
-            .eblEnvelope("InvalidEblEnvelope")
-            .build();
-
+  void testParseEnvelopeInvalidEblEnvelope() {
     Exception returnedException =
         assertThrows(
             ConcreteRequestErrorMessageException.class,
-            () -> service.verifyEnvelopeSignature(invalidSignedEblEnvelope));
+            () -> service.parseEblEnvelope("invalid EBL envelope"));
 
     assertEquals("Provided EBL envelope is not valid", returnedException.getMessage());
   }
 
   @Test
+  void testParseEnvelopeValidEblEnvelope() {
+    EblEnvelopeTO eblEnvelopeTO = service.parseEblEnvelope(signedEblEnvelopeTO.eblEnvelope());
+
+    assertNotNull(eblEnvelopeTO);
+    assertEquals(2, eblEnvelopeTO.transactions().size());
+    assertEquals("21a9c5f49bfc7248fecbeba49e0b3414376e0c77a84ce1dae383dccd66f03000", eblEnvelopeTO.documentHash());
+    assertEquals("a25286672be331c6770fa590f8eb7ab7cf105fd76f0db4b7cabd258a5953482e", eblEnvelopeTO.previousEblEnvelopeHash());
+  }
+
+  @Test
   void testVerifyEnvelopeSignatureInvalid() {
+    SignedEblEnvelopeTO invalidSignedEblEnvelope =
+      SignedEblEnvelopeTO.builder()
+        .envelopeHash(signedEblEnvelopeTO.envelopeHash())
+        .signature(signedEblEnvelopeTO.signature())
+        .eblEnvelope("InvalidEblEnvelope")
+        .build();
+
     when(signature.verifyEnvelope(any(), any(), any())).thenReturn(false);
     Exception returnedException =
         assertThrows(
             ConcreteRequestErrorMessageException.class,
-            () -> service.verifyEnvelopeSignature(signedEblEnvelopeTO));
+            () -> service.verifyEblEnvelopeSignature(eblEnvelopeTO, invalidSignedEblEnvelope));
 
     assertEquals("Signature could not be validated", returnedException.getMessage());
   }
@@ -238,10 +247,7 @@ class EblEnvelopeServiceTest {
   void testVerifyEnvelopeSignatureValid() {
     when(signature.verifyEnvelope(any(), any(), any())).thenReturn(true);
 
-    EblEnvelope parsedEnvelope = service.verifyEnvelopeSignature(signedEblEnvelopeTOs.get(1));
-    assertEquals(eblEnvelope.getEnvelopeHash(), parsedEnvelope.getEnvelopeHash());
-    assertEquals(
-        eblEnvelopeList.get(0).getEnvelopeHash(), parsedEnvelope.getPreviousEnvelopeHash());
+    service.verifyEblEnvelopeSignature(eblEnvelopeTO, signedEblEnvelopeTOs.get(1));
   }
 
   @Test

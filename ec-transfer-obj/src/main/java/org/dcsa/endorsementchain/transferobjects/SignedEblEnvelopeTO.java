@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 public record SignedEblEnvelopeTO(
   @NotNull
   @Size(max = 64, min = 64)
-  String eblEnvelopeHash,
+  String envelopeHash,
   @NotNull
   @JsonRawValue
   String eblEnvelope,
@@ -23,7 +23,7 @@ public record SignedEblEnvelopeTO(
 
   @JsonCreator
   @Builder(toBuilder = true)
-  public SignedEblEnvelopeTO(String eblEnvelopeHash, JsonNode eblEnvelope, String signature) {
-    this(eblEnvelopeHash, eblEnvelope.toString(), signature);
+  public SignedEblEnvelopeTO(String envelopeHash, JsonNode eblEnvelope, String signature) {
+    this(envelopeHash, eblEnvelope.toString(), signature);
   }
 }

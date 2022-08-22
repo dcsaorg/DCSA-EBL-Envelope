@@ -27,12 +27,13 @@ public class EblEnvelope {
   @Column(name = "ebl_envelope_json", columnDefinition = "TEXT")
   private String eblEnvelopeJson;
 
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "document_hash", nullable = false)
   private TransportDocument transportDocument;
 
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
-  @OneToMany(mappedBy = "eblEnvelope")
+  @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "envelope_hash")
   private Set<Transaction> transactions;
 }
