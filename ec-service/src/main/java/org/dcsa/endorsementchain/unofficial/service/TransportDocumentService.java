@@ -51,10 +51,9 @@ public class TransportDocumentService {
 
   public void verifyDocumentHash(String transportDocument, List<String> documentHash) {
 
-    boolean areEqual = documentHash.stream().allMatch(documentHash.get(0)::equals);
-    boolean isVerified = DigestUtils.sha256Hex(transportDocument).equals(documentHash.get(0));
+    boolean isVerified = documentHash.stream().allMatch(DigestUtils.sha256Hex(transportDocument)::equals);
 
-    if (!(isVerified && areEqual)) {
+    if (!isVerified) {
       throw ConcreteRequestErrorMessageException.invalidInput(
           "Transportdocument hash verification failed");
     }
