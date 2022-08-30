@@ -2,39 +2,54 @@ package org.dcsa.endorsementchain.service;
 
 import lombok.RequiredArgsConstructor;
 import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
+import org.dcsa.endorsementchain.transferobjects.EblEnvelopeTO;
 import org.dcsa.endorsementchain.transferobjects.SignedEblEnvelopeTO;
 import org.dcsa.endorsementchain.transferobjects.TransferblockTO;
-import org.dcsa.endorsementchain.unofficial.service.TransactionService;
 import org.dcsa.endorsementchain.unofficial.service.TransportDocumentService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ImportService {
   private final EblEnvelopeService eblEnvelopeService;
-  private final TransactionService transactionService;
   private final TransportDocumentService transportDocumentService;
 
   @Transactional
-  public String importEbl(TransferblockTO transferblock) {
-    List<EblEnvelope> parsedEblEnvelopes = parseEblEnvelopes(transferblock.endorsementChain());
-    return saveTransferBlock(transferblock, parsedEblEnvelopes);
+  public Optional<String> importEbl(TransferblockTO transferblock) {
+    List<EblEnvelope> parsedEblEnvelopes = parseEblEnvelopes(transferblock);
+    return Optional.ofNullable(eblEnvelopeService.saveEblEnvelopes(parsedEblEnvelopes));
   }
 
-  private String saveTransferBlock(TransferblockTO transferblock, List<EblEnvelope> eblEnvelopes) {
-    transportDocumentService.saveTransportDocument(transferblock.document());
-    String signedResponse = eblEnvelopeService.saveEblEnvelopes(eblEnvelopes);
+  private List<EblEnvelope> parseEblEnvelopes(TransferblockTO transferblock) {
 
+    List<EblEnvelope> eblEnvelopeList = transferblock.endorsementChain().stream()
+      .map(signedEblEnvelopeTO ->
+        validate(transferblock, signedEblEnvelopeTO))
+      .toList();
 
-    eblEnvelopes.forEach(
-        eblEnvelope -> transactionService.saveImportedTransactions(eblEnvelope.getTransactions()));
-    return signedResponse;
+    verifyTransportDocument(transferblock.document(), eblEnvelopeList);
+
+    return eblEnvelopeList;
   }
 
-  private List<EblEnvelope> parseEblEnvelopes(List<SignedEblEnvelopeTO> endorsementChain) {
-    return endorsementChain.stream().map(eblEnvelopeService::verifyEnvelopeSignature).toList();
+  private EblEnvelope validate(TransferblockTO transferblock, SignedEblEnvelopeTO signedEblEnvelopeTO) {
+    EblEnvelopeTO parsedEblEnvelope = eblEnvelopeService.parseEblEnvelope(signedEblEnvelopeTO.eblEnvelope());
+    eblEnvelopeService.verifyEblEnvelopeSignature(parsedEblEnvelope, signedEblEnvelopeTO);
+
+    // Since the platformhost is the host of the originating transaction and all transactions within
+    // an EBL envelope are from the same platform we can take any of the transactions to retrieve
+    // the platformhost.
+    String platformHost = parsedEblEnvelope.transactions().get(0).platformHost();
+
+    return eblEnvelopeService.signedEblEnvelopeToEblEnvelope(signedEblEnvelopeTO, parsedEblEnvelope, transferblock.document(), platformHost);
+  }
+
+  private void verifyTransportDocument(String transferDocument, List<EblEnvelope> eblEnvelopeList) {
+    List<String> documentHashes = eblEnvelopeList.stream().map(envelope -> envelope.getTransportDocument().getDocumentHash()).toList();
+    transportDocumentService.verifyDocumentHash(transferDocument, documentHashes);
   }
 }

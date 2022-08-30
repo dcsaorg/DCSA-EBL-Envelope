@@ -26,9 +26,8 @@ public class Transaction {
   @ManyToOne
   private TransportDocument transportDocument;
 
-  @JoinColumn(name = "envelope_hash")
-  @ManyToOne
-  private EblEnvelope eblEnvelope;
+  @Column(name = "envelope_hash", length = 64)
+  String envelopeHash;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "instruction", length = 4, nullable = false)

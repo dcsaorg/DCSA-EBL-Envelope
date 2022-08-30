@@ -11,6 +11,7 @@ import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -24,13 +25,16 @@ public class TransportDocumentService {
   private final ExportService exportService;
 
   @Transactional
-  public Optional<String> saveTransportDocument(String transportDocument) {
+  public Optional<String> saveTransportDocument(String transportDocument, String documentHash) {
+
+    verifyDocumentHash(transportDocument, List.of(documentHash));
+
     return Stream.of(transportDocument)
         .map(
             jsonNode ->
                 TransportDocument.builder()
                     .transportDocumentJson(transportDocument)
-                    .documentHash(DigestUtils.sha256Hex(transportDocument))
+                    .documentHash(documentHash)
                     .isExported(false)
                     .build())
         .map(repository::save)
@@ -43,6 +47,16 @@ public class TransportDocumentService {
     return repository
         .findById(transportDocumentHash)
         .map(TransportDocument::getTransportDocumentJson);
+  }
+
+  public void verifyDocumentHash(String transportDocument, List<String> documentHash) {
+
+    boolean isVerified = documentHash.stream().allMatch(DigestUtils.sha256Hex(transportDocument)::equals);
+
+    if (!isVerified) {
+      throw ConcreteRequestErrorMessageException.invalidInput(
+          "Transportdocument hash verification failed");
+    }
   }
 
   @Transactional
@@ -85,7 +99,7 @@ public class TransportDocumentService {
                 .findAny()
                 .orElse(
                     true)) // When no local transactions exist only the export transaction will be
-                           // created and isToOrder will be set to true
+        // created and isToOrder will be set to true
         .platformHost("localhost:8443")
         .timestamp(System.currentTimeMillis())
         .instruction(TransactionInstruction.TRNS)

@@ -16,4 +16,14 @@ public class TransferblockTODataFactory {
                 EblEnvelopeDataFactory.getEblEnvelopeList().get(1).getEblEnvelopeJson()))
         .build();
   }
+
+  public TransferblockTO transferblockTO(String rawEnvelope, String secondRawEnvelope) {
+    return TransferblockTO.builder()
+      .document(TransportDocumentDataFactory.transportDocumentEntityWithoutTransactions().getTransportDocumentJson())
+      .endorsementChain(
+        SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList(
+          rawEnvelope,
+          secondRawEnvelope))
+      .build();
+  }
 }

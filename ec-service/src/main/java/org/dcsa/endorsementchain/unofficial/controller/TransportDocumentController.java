@@ -2,6 +2,7 @@ package org.dcsa.endorsementchain.unofficial.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.dcsa.endorsementchain.unofficial.service.TransportDocumentService;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
 import org.springframework.http.MediaType;
@@ -38,7 +39,7 @@ public class TransportDocumentController {
       @RequestBody String httpEntity, UriComponentsBuilder builder) {
 
     return transportDocumentService
-        .saveTransportDocument(httpEntity)
+        .saveTransportDocument(httpEntity, DigestUtils.sha256Hex(httpEntity))
         .map(
             transportDocumentHash ->
                 ResponseEntity.created(

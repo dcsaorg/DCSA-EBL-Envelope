@@ -37,7 +37,7 @@ public class EblEnvelopeService {
         .map(
             envelope ->
                 SignedEblEnvelopeTO.builder()
-                    .eblEnvelopeHash(envelope.getEnvelopeHash())
+                    .envelopeHash(envelope.getEnvelopeHash())
                     .signature(envelope.getSignature())
                     .eblEnvelope(envelope.getEblEnvelopeJson())
                     .build())
@@ -68,7 +68,7 @@ public class EblEnvelopeService {
   }
 
   @SneakyThrows
-  public SignedEblEnvelopeTO exportEblEnvelope(
+  SignedEblEnvelopeTO exportEblEnvelope(
       TransportDocument transportDocument, EblEnvelopeTO eblEnvelopeTO) {
 
     if (!eblEnvelopeTO.documentHash().equals(transportDocument.getDocumentHash())) {
@@ -83,7 +83,7 @@ public class EblEnvelopeService {
     EblEnvelope envelope =
         EblEnvelope.builder()
             .eblEnvelopeJson(rawEblEnvelope)
-            .envelopeHash(signedEblEnvelopeTO.eblEnvelopeHash())
+            .envelopeHash(signedEblEnvelopeTO.envelopeHash())
             .previousEnvelopeHash(eblEnvelopeTO.previousEblEnvelopeHash())
             .signature(signedEblEnvelopeTO.signature())
             .transportDocument(transportDocument)
@@ -94,7 +94,7 @@ public class EblEnvelopeService {
     return signedEblEnvelopeTO;
   }
 
-  public String verifyResponse(
+  public String verifyEblEnvelopeResponseSignature(
       String platformHost, String eblEnvelopeHash, String signatureResponse) {
     return Optional.ofNullable(signatureResponse)
         .map(
@@ -106,33 +106,33 @@ public class EblEnvelopeService {
             () -> ConcreteRequestErrorMessageException.internalServerError("Signature not valid"));
   }
 
-  public EblEnvelope verifyEnvelopeSignature(SignedEblEnvelopeTO signedEblEnvelope) {
-    String envelopeSignature = signedEblEnvelope.signature();
-    String eblEnvelope = signedEblEnvelope.eblEnvelope();
+  void verifyEblEnvelopeSignature(EblEnvelopeTO envelope, SignedEblEnvelopeTO signedEblEnvelopeTO) {
+    // Since the platformhost is the host of the originating transaction and all transactions within
+    // an EBL envelope are from the same platform we can take any of the transactions to retrieve
+    // the platformhost.
+    String platformHost = envelope.transactions().get(0).platformHost();
+    if (!signature.verifyEnvelope(platformHost, signedEblEnvelopeTO.signature(), signedEblEnvelopeTO.eblEnvelope())) {
+      throw ConcreteRequestErrorMessageException.invalidInput("Signature could not be validated");
+    }
+  }
+
+  EblEnvelopeTO parseEblEnvelope(String eblEnvelope) {
     EblEnvelopeTO parsedEblEnvelope;
+
     try {
       parsedEblEnvelope = mapper.readValue(eblEnvelope, EblEnvelopeTO.class);
     } catch (JsonProcessingException e) {
       throw ConcreteRequestErrorMessageException.invalidInput(
           "Provided EBL envelope is not valid", e);
     }
-
-    // Since the platformhost is the host of the originating transaction and all transactions within
-    // an EBL envelope are from the same platform we can take any of the transactions to retrieve
-    // the platformhost.
-    String platformHost = parsedEblEnvelope.transactions().get(0).platformHost();
-    if (!signature.verifyEnvelope(platformHost, envelopeSignature, eblEnvelope)) {
-      throw ConcreteRequestErrorMessageException.invalidInput("Signature could not be validated");
-    }
-    return signedEblEnvelopeToEblEnvelope(signedEblEnvelope, parsedEblEnvelope, platformHost);
+    return parsedEblEnvelope;
   }
 
-  public String saveEblEnvelopes(List<EblEnvelope> eblEnvelopes) {
+  String saveEblEnvelopes(List<EblEnvelope> eblEnvelopes) {
 
-    List<EblEnvelope> savedEblEnvelopes = eblEnvelopeRepository.saveAll(eblEnvelopes);
-
+    eblEnvelopeRepository.saveAll(eblEnvelopes);
     String envelopeHash =
-        EblEnvelopeList.last(savedEblEnvelopes)
+        EblEnvelopeList.last(eblEnvelopes)
             .map(EblEnvelope::getEnvelopeHash)
             .orElseThrow(
                 () ->
@@ -142,8 +142,18 @@ public class EblEnvelopeService {
     return signature.signEnvelopeHash(envelopeHash);
   }
 
-  private EblEnvelope signedEblEnvelopeToEblEnvelope(
-      SignedEblEnvelopeTO signedEblEnvelopeTO, EblEnvelopeTO eblEnvelopeTO, String platformHost) {
+  EblEnvelope signedEblEnvelopeToEblEnvelope(
+      SignedEblEnvelopeTO signedEblEnvelopeTO,
+      EblEnvelopeTO eblEnvelopeTO,
+      String transportDocumentJson,
+      String platformHost) {
+
+    TransportDocument transportDocument =
+      TransportDocument.builder()
+        .documentHash(eblEnvelopeTO.documentHash())
+        .transportDocumentJson(transportDocumentJson)
+        .isExported(false)
+        .build();
 
     Set<Transaction> transactions =
         eblEnvelopeTO.transactions().stream()
@@ -151,14 +161,17 @@ public class EblEnvelopeService {
                 endorsementChainTransactionTO ->
                     transactionMapper.endorsementChainTransactionToTransaction(
                         endorsementChainTransactionTO, platformHost))
+            .map(transaction -> transaction.linkTransactionToTransportDocument(transportDocument))
             .collect(Collectors.toSet());
 
     return EblEnvelope.builder()
         .signature(signedEblEnvelopeTO.signature())
         .eblEnvelopeJson(signedEblEnvelopeTO.eblEnvelope())
-        .envelopeHash(signedEblEnvelopeTO.eblEnvelopeHash())
+        .envelopeHash(signedEblEnvelopeTO.envelopeHash())
+        .transportDocument(transportDocument)
         .transactions(transactions)
         .previousEnvelopeHash(eblEnvelopeTO.previousEblEnvelopeHash())
         .build();
   }
+
 }

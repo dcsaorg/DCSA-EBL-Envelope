@@ -12,7 +12,7 @@ public class TransportDocumentDataFactory {
   public TransportDocument transportDocumentEntityWithoutTransactions() {
     return TransportDocument.builder()
       .transportDocumentJson("{\"test\":\"testvalue\"}")
-      .documentHash("3696079683666fb0214472ca9f3cab4f42d6c9aeb40677c25e7f115d8cea513e")
+      .documentHash("21a9c5f49bfc7248fecbeba49e0b3414376e0c77a84ce1dae383dccd66f03000")
       .isExported(false)
       .build();
   }
@@ -20,7 +20,7 @@ public class TransportDocumentDataFactory {
   public TransportDocument exportedTransportDocumentEntityWithoutTransactions() {
     return TransportDocument.builder()
       .transportDocumentJson("{\"test\":\"testvalue\"}")
-      .documentHash("3696079683666fb0214472ca9f3cab4f42d6c9aeb40677c25e7f115d8cea513e")
+      .documentHash("21a9c5f49bfc7248fecbeba49e0b3414376e0c77a84ce1dae383dccd66f03000")
       .isExported(true)
       .build();
   }
@@ -33,7 +33,7 @@ public class TransportDocumentDataFactory {
   }
 
   public String transportDocumentHash() {
-    return DigestUtils.sha256Hex("this is just a dummy hash");
+    return DigestUtils.sha256Hex("{\"test\":\"testvalue\"}");
   }
 
   public TransportDocument transportDocumentEntityWithTransactions() {
@@ -41,7 +41,7 @@ public class TransportDocumentDataFactory {
       .isExported(false)
       .transactions(new HashSet<>(TransactionDataFactory.transactionEntityList()))
       .transportDocumentJson("{\"test\":\"testvalue\"}")
-      .documentHash("3696079683666fb0214472ca9f3cab4f42d6c9aeb40677c25e7f115d8cea513e")
+      .documentHash("21a9c5f49bfc7248fecbeba49e0b3414376e0c77a84ce1dae383dccd66f03000")
       .build();
   }
 

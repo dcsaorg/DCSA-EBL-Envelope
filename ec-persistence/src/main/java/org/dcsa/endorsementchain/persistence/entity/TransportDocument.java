@@ -29,7 +29,9 @@ public class TransportDocument {
   @OneToMany(mappedBy = "transportDocument", cascade = CascadeType.MERGE)
   private Set<Transaction> transactions;
 
-  @OneToMany(mappedBy = "transportDocument")
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  @OneToMany(mappedBy = "transportDocument", cascade = CascadeType.ALL)
   private Set<EblEnvelope> eblEnvelopes;
 
   public TransportDocument export() {

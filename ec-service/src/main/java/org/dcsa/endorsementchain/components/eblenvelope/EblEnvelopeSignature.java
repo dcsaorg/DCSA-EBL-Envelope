@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -32,7 +33,7 @@ public class EblEnvelopeSignature {
       String envelopeHash = DigestUtils.sha256Hex(rawEblEnvelope);
 
       return SignedEblEnvelopeTO.builder()
-          .eblEnvelopeHash(envelopeHash)
+          .envelopeHash(envelopeHash)
           .signature(signature)
           .eblEnvelope(rawEblEnvelope)
           .build();
@@ -58,17 +59,29 @@ public class EblEnvelopeSignature {
   @SneakyThrows
   public boolean verifyEnvelopeHash(String cn, String signature, String eblEnvelopeHash) {
     JWSObject jwsObject = JWSObject.parse(signature);
-    // the signed message does not contain the sent eblEnvelopeHash
+    // the signed message does not contain the sent envelopeHash
     if (!jwsObject.getPayload().toString().equals(eblEnvelopeHash)) {
       return false;
     }
-    return jwsObject.verify(jwsVerifiers.get(cn));
+
+    JWSVerifier jwsVerifier = getJwsVerifierFromCN(cn);
+    return jwsObject.verify(jwsVerifier);
   }
+
 
   @SneakyThrows
   public boolean verifyEnvelope(String cn, String signature, String payload) {
     JWSObject jwsObject = JWSObject.parse(signature, new Payload(payload));
 
-    return jwsObject.verify(jwsVerifiers.get(cn));
+    JWSVerifier jwsVerifier = getJwsVerifierFromCN(cn);
+    return jwsObject.verify(jwsVerifier);
+  }
+
+  private JWSVerifier getJwsVerifierFromCN(String cn) {
+    return Optional.ofNullable(jwsVerifiers.get(cn))
+      .orElseThrow(
+        () ->
+          ConcreteRequestErrorMessageException.internalServerError(
+            "No public key available for sending platform"));
   }
 }
