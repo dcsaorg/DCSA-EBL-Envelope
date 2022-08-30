@@ -8,13 +8,13 @@ spring:
     name: DCSA-Endorcement-Chain
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${db_hostname}/tdt_registry
-    username: tdt_db_owner
+    url: jdbc:postgresql://${db_hostname}/dcsa_ec_registry
+    username: dcsa_db_owner
     hikari:
-      schema: public
+      schema: ec_registry
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
-    hibernate.ddl-auto: update
+    hibernate.ddl-auto: validate
   security:
     oauth2:
       resourceserver:
@@ -29,7 +29,7 @@ spring:
 
 server:
   ssl:
-    key-store: classpath:certificates/springboot-https.p12
+    key-store: test-certificates/springboot-https.p12
     key-store-password: your_key-store_password
     key-store-type: pkcs12
     key-alias: springboot-https
@@ -57,11 +57,11 @@ logging:
 spring:
   security:
     keystorePassword: dcsa-pass
-    keystoreLocation: certificates/dcsa-jwk.jks
+    keystoreLocation: test-certificates/dcsa-jwk.jks
     jws:
         key-id: dcsa-kid
     verification:
-      keystoreLocation: certificates/dcsa-jwk-verify.jks
+      keystoreLocation: test-certificates/dcsa-jwk-verify.jks
       keystorePassword: dcsa-pass
       jws:
         key-id: dcsa-kid
@@ -84,8 +84,8 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${db_hostname:localhost}/tdt_registry
-    username: tdt_db_owner
+    url: jdbc:postgresql://${db_hostname}/dcsa_ec_registry
+    username: dcsa_db_owner
     password: 9c072fe8-c59c-11ea-b8d1-7b6577e9f3f5
   jpa:
     show-sql: true
