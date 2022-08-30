@@ -29,7 +29,7 @@ spring:
 
 server:
   ssl:
-    key-store: classpath:certificates/springboot-https.p12
+    key-store: test-certificates/springboot-https.p12
     key-store-password: your_key-store_password
     key-store-type: pkcs12
     key-alias: springboot-https
@@ -57,11 +57,11 @@ logging:
 spring:
   security:
     keystorePassword: dcsa-pass
-    keystoreLocation: certificates/dcsa-jwk.jks
+    keystoreLocation: test-certificates/dcsa-jwk.jks
     jws:
         key-id: dcsa-kid
     verification:
-      keystoreLocation: certificates/dcsa-jwk-verify.jks
+      keystoreLocation: test-certificates/dcsa-jwk-verify.jks
       keystorePassword: dcsa-pass
       jws:
         key-id: dcsa-kid

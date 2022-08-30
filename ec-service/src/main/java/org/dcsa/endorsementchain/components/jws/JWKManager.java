@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.security.auth.x500.X500Principal;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -81,10 +82,7 @@ public class JWKManager {
     JWKSet jwkSet = null;
     try {
       KeyStore keyStore = KeyStore.getInstance("PKCS12");
-
-      keyStore.load(
-        JWKManager.class.getClassLoader().getResourceAsStream(keystoreLocation),
-        keystorePassword);
+      keyStore.load(new FileInputStream(keystoreLocation), keystorePassword);
 
       jwkSet = JWKSet.load(keyStore, name -> keystorePassword);
     } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException e) {
