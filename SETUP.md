@@ -94,8 +94,70 @@ Build and run the docker containers
 docker-compose -f docker-compose.yml up -d -V --build
 ```
 
-## Running via an IDE
-ToDo
+## Running via an IDE or commandline
+In order to run the via an IDE or via the command line a standalone database is needed for the application to store and retrieve data. The setup of the database is described [here](test-certificates/README.md).
+The hostname and port to the database need to be provided via the environment variable: DB_HOSTNAME
+for example:
+```shell
+export DB_HOSTNAME=localhost:5432
+```
+
+The application is using Java and Spring Boot and contains multiple Spring profiles and groups of profiles. For development the 'dev' profile should be used.
+Setting the Spring profile can also be done via an environment variable:
+```shell
+export SPRING_PROFILES_ACTIVE=dev
+```
+
+Like the application running via Docker the application by default is using the key material available in the 'test-certificates' directory.
+If needed this can be changed via the properties in [application.yml](ec-service/src/main/resources/application.yml)
+
+Due to the Spring-Boot maven plugin the application can be run from the commandline using Maven:
+```shell
+mvn spring-boot:run
+```
 
 ## Generating and using your own key material
-ToDo
+The required key material for running the EBL-Envelope reference implementation is described [here](test-certificates/README.md).
+This directory also includes a set of test keys, certificates and keystores. However, it is certainly possible to use your own key material.
+When using/runninng the reference implementation other than for local development it is highly recommended using your own key material.
+
+### Generating keystore for TLS
+The TLS connection is setup to require a PKCS12 keystore containing a private key and public certificate.
+To generate a self-signed certificate:
+```shell
+keytool -genkeypair -alias springboot-https -keyalg RSA -storetype PKCS12 -keystore springboot-https.p12 -storepass your_key-store_password
+```
+To use an existing TLS private key and certificate chain:
+```shell
+openssl pkcs12 -export -name "springboot-https" -out springboot-https.p12 -in fullchain.pem -inkey privkey.pem
+```
+
+### Generating keystore for signing
+Generating the signature requires a JKS. The alias is configured in [application.yml](ec-service/src/main/resources/application.yml) in the property spring.security.jws.key-id
+
+To generate the keystore :
+```shell
+keytool -genkeypair -alias dcsa-kid -keyalg RSA -keystore dcsa-jwk.jks -storepass dcsa-pass
+```
+
+### Generating keystore for verifying signatures
+Verifying the signatures of either incoming transferblocks or verifying the signature in the response of an outgoing transferblock requires a JKS.
+This JKS can contain multiple public certificates of each platform connected. The reference implementations uses the **_'CN'_** in the certificate to determine which public key to use for verification.
+For incoming transferblocks the CN is matched with the 'platformHost' field in the transaction.
+For verifying responses of outgoing transferblocks the CN is matched to the URL the transferblock is being sent to.
+So when generating the key material make sure to take not of the CN used.
+
+To generate the keystore:
+```shell
+keytool -genkeypair -alias dcsa-kid \
+-keyalg RSA -keysize 2048 \
+-keystore dcsa-jwk-verify.jks -storepass keystore-pass \
+-dname "CN=server.mycompany.com,OU=My Company Dev Team,O=My Company,L=State,S=City,C=Country" \
+-validity 365;
+```
+
+To import an existing public certificate (chain in the keystore):
+```shell
+keytool -importcert -alias my_public_cert -file public_cert.cer -keystore dcsa-jwk-verify.jks -storepass keystore-pass -noprompt
+```
+
