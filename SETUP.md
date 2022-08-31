@@ -127,7 +127,7 @@ To generate a self-signed certificate:
 ```shell
 keytool -genkeypair -alias springboot-https -keyalg RSA -storetype PKCS12 -keystore springboot-https.p12 -storepass your_key-store_password
 ```
-To use an existing TLS private key and certificate chain:
+To use an existing TLS private key and certificate chain in PEM format:
 ```shell
 openssl pkcs12 -export -name "springboot-https" -out springboot-https.p12 -in fullchain.pem -inkey privkey.pem
 ```
@@ -145,7 +145,7 @@ Verifying the signatures of either incoming transferblocks or verifying the sign
 This JKS can contain multiple public certificates of each platform connected. The reference implementations uses the **_'CN'_** in the certificate to determine which public key to use for verification.
 For incoming transferblocks the CN is matched with the 'platformHost' field in the transaction.
 For verifying responses of outgoing transferblocks the CN is matched to the URL the transferblock is being sent to.
-So when generating the key material make sure to take not of the CN used.
+So when generating the key material make sure to take note of the CN used.
 
 To generate the keystore:
 ```shell
@@ -156,8 +156,7 @@ keytool -genkeypair -alias dcsa-kid \
 -validity 365;
 ```
 
-To import an existing public certificate (chain in the keystore):
+To import an existing public certificate(chain) in PEM format in the keystore:
 ```shell
 keytool -importcert -alias my_public_cert -file public_cert.cer -keystore dcsa-jwk-verify.jks -storepass keystore-pass -noprompt
 ```
-
