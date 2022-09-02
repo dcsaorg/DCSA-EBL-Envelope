@@ -26,7 +26,13 @@ Note: Treat this token as you would treat any password.
 
 #### Setting up settings.xml
 
-1. Go to your maven directory. Default directory on Windows is C:\Users\USERNAME\.m2 . If you don't have this directory, and you do have Maven installed create this directory.
+1. Go to your maven directory. There are two locations where a settings.xml file may live:
+
+   The Maven install: ${maven.home}/conf/settings.xml
+
+   A user's install: ${user.home}/.m2/settings.xml.
+
+   If you don't have this directory, and you do have Maven installed create this directory.
 2. Create a file called "settings.xml"
 3. Paste the following into the file:
 ```xml

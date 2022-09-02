@@ -25,19 +25,20 @@ public class TransactionController {
   @PostMapping(
       value = API_PATH + "/local/{transportDocumentHash}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<UUID> createLocalTransaction(
+      produces = MediaType.TEXT_PLAIN_VALUE)
+  public ResponseEntity<String> createLocalTransaction(
       @PathVariable("transportDocumentHash") String transportDocumentHash,
       @RequestBody EndorsementChainTransactionTO transactionRequest,
       UriComponentsBuilder builder) {
     return service
         .createLocalTransaction(transportDocumentHash, transactionRequest)
+        .map(UUID::toString)
         .map(
             transactionID ->
                 ResponseEntity.created(
                         builder
                             .path(API_PATH + "/local/{transportDocumentHash}")
-                            .buildAndExpand("transactionID")
+                            .buildAndExpand(transactionID)
                             .toUri())
                     .body(transactionID))
         .orElseThrow(() -> ConcreteRequestErrorMessageException.invalidParameter("Cannot create a transaction on an exported TransportDocument."));

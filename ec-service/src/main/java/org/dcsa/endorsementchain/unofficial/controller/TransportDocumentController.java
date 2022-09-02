@@ -33,7 +33,7 @@ public class TransportDocumentController {
   @PostMapping(
       value = API_PATH,
       consumes = {MediaType.APPLICATION_JSON_VALUE},
-      produces = {MediaType.APPLICATION_JSON_VALUE})
+      produces = {MediaType.TEXT_PLAIN_VALUE})
   @ResponseBody
   public ResponseEntity<String> addTransportDocument(
       @RequestBody String httpEntity, UriComponentsBuilder builder) {

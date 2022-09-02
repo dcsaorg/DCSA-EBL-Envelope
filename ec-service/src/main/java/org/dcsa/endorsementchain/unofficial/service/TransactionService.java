@@ -53,7 +53,7 @@ public class TransactionService {
 
   public List<Transaction> getTransactionsForExport(String documentHash) {
     return repository
-        .findLocalNonExportedTransactions(documentHash, "localhost:8443")
+        .findLocalNonExportedTransactions(documentHash, "localhost:" + port)
         .orElseThrow(
             () ->
                 ConcreteRequestErrorMessageException.internalServerError(
