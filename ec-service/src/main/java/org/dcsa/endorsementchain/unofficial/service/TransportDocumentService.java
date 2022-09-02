@@ -8,6 +8,7 @@ import org.dcsa.endorsementchain.persistence.entity.enums.TransactionInstruction
 import org.dcsa.endorsementchain.persistence.repository.TransportDocumentRepository;
 import org.dcsa.endorsementchain.service.ExportService;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,9 @@ import java.util.stream.Stream;
 public class TransportDocumentService {
   private final TransportDocumentRepository repository;
   private final ExportService exportService;
+
+  @Value("${server.port}")
+  private String port;
 
   @Transactional
   public Optional<String> saveTransportDocument(String transportDocument, String documentHash) {
@@ -100,7 +104,7 @@ public class TransportDocumentService {
                 .orElse(
                     true)) // When no local transactions exist only the export transaction will be
         // created and isToOrder will be set to true
-        .platformHost("localhost:8443")
+        .platformHost("localhost:"+port)
         .timestamp(System.currentTimeMillis())
         .instruction(TransactionInstruction.TRNS)
         .build();
