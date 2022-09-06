@@ -5,7 +5,7 @@ DCSA EBL Envelope
 This document provides the technical description and specifications for transferring eBL documents between platforms using the eBL Envelope.
 General concepts and backgrounds can be found [here](CONCEPTS_AND_BACKGROUND.md).
 the rendered Open API specification for the is available on the [DCSA Swaggerhub](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EEC/0.10-alpha).
-However, for easier collaboration and the ability to add PR's and issues the resolved oas specification can be found in [here](oas/dcsaorg-DCSA_EEC-0.10-alpha-resolved.yaml).
+However, for easier collaboration and the ability to add PR's and issues the resolved oas specification can be found in [here](specifications/oas/dcsaorg-DCSA_EEC-0.10-alpha-resolved.yaml).
 
 # Open points for discussion
 
