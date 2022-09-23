@@ -50,10 +50,6 @@
 			<groupId>org.dcsa.shared-kernel</groupId>
 			<artifactId>dcsa-shared-kernel-errors</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.dcsa.shared-kernel</groupId>
-			<artifactId>dcsa-shared-kernel-infrastructure</artifactId>
-		</dependency>
 <!--		Custom dependencies not managed by DCSA Pom-->
 		<dependency>
 			<groupId>com.nimbusds</groupId>

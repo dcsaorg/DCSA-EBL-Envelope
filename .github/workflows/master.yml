@@ -32,3 +32,43 @@ jobs:
 
       - name: Build EBL Envelope
         run: cd DCSA-EBL-Envelope && mvn clean -U -B package -Ddcsa.artifacttype=-SNAPSHOT
+
+      - name: Build and run the microservices
+        run: cd DCSA-EBL-Envelope && docker-compose -f docker-compose.yml up -d -V --build
+
+      - name: Fetch Backend Status
+        run: |
+          sleep 10
+          status=$(curl -k -s https://localhost:8443/v1/actuator/health | jq -r '.status')
+          retries=12
+          while [[ "$status" != "UP" ]] && [[ $retries -gt 0 ]]; do
+            echo "Status is '$status' - waiting 5 secs ($retries retries left)"
+            sleep 5
+            retries=$((retries - 1))
+            status=$(curl -k -s https://localhost:8443/v1/actuator/health | jq -r '.status')
+          done
+          echo "Final status is '$status'"
+          if [[ "$status" != "UP" ]]; then
+            curl -k -v https://localhost:8443/v1/actuator/health || :
+            docker ps || :
+            docker logs dcsa-ebl-envelope-dcsa-ec-service-1 || :
+            exit 1
+          fi
+          echo "::set-output name=STATUS::$status"
+        id: healthcheck
+
+      - name: Confirm microservice status
+        if: ${{ steps.healthcheck.outputs.STATUS == 'UP' }}
+        run: |
+          echo "The DCSA-EBL-Envelope service is UP."
+
+      - name: Run API Tests
+        id: run-newman
+        uses: anthonyvscode/newman-action@v1
+        with:
+          collection: DCSA-EBL-Envelope/postman_collection.json
+          reporters: cli
+          insecure: true
+
+      - name: Output summary to console
+        run: echo ${{ steps.run-newman.outputs.summary }}
