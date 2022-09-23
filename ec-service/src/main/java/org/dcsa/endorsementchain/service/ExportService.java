@@ -1,6 +1,5 @@
 package org.dcsa.endorsementchain.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
 import org.dcsa.endorsementchain.persistence.entity.Transaction;
@@ -75,16 +74,15 @@ public class ExportService {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
-    ResponseEntity<JsonNode> transferblockResponse =
+    ResponseEntity<String> transferblockResponse =
         restTemplate.exchange(
-            platformUrl, HttpMethod.PUT, new HttpEntity<>(transferblock, headers), JsonNode.class);
+            platformUrl, HttpMethod.PUT, new HttpEntity<>(transferblock, headers), String.class);
 
     if (transferblockResponse.getStatusCode().isError()) {
       throw ConcreteRequestErrorMessageException.internalServerError("Transfer failed.");
     }
 
     return Optional.ofNullable(transferblockResponse.getBody())
-        .map(JsonNode::asText)
         .orElseThrow(
             () ->
                 ConcreteRequestErrorMessageException.internalServerError(

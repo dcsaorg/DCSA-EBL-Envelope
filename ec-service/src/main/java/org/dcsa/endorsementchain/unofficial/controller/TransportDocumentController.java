@@ -1,7 +1,9 @@
 package org.dcsa.endorsementchain.unofficial.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.dcsa.endorsementchain.unofficial.service.TransportDocumentService;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
@@ -9,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping
@@ -18,6 +22,7 @@ public class TransportDocumentController {
   public static final String API_PATH = "/unofficial/transport-documents";
 
   private final TransportDocumentService transportDocumentService;
+  private final ObjectMapper mapper;
 
   @GetMapping(
       value = API_PATH + "/{transportDocumentId}",
@@ -36,10 +41,14 @@ public class TransportDocumentController {
       produces = {MediaType.TEXT_PLAIN_VALUE})
   @ResponseBody
   public ResponseEntity<String> addTransportDocument(
-      @RequestBody String httpEntity, UriComponentsBuilder builder) {
+      @RequestBody JsonNode document, UriComponentsBuilder builder) {
 
-    return transportDocumentService
-        .saveTransportDocument(httpEntity, DigestUtils.sha256Hex(httpEntity))
+    return Optional.of(document)
+        .map(this::marshalDocument)
+        .flatMap(
+            rawDocument ->
+                transportDocumentService.saveTransportDocument(
+                    rawDocument, DigestUtils.sha256Hex(rawDocument)))
         .map(
             transportDocumentHash ->
                 ResponseEntity.created(
@@ -59,8 +68,18 @@ public class TransportDocumentController {
       consumes = {MediaType.APPLICATION_JSON_VALUE},
       produces = {MediaType.APPLICATION_JSON_VALUE})
   @ResponseBody
-  public ResponseEntity<String> exportTransportDocument(@PathVariable String transportDocumentId,
-                                                        @RequestBody JsonNode transferee, UriComponentsBuilder builder) {
-    return transportDocumentService.export(transferee.asText(), transportDocumentId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+  public ResponseEntity<String> exportTransportDocument(
+      @PathVariable String transportDocumentId,
+      @RequestBody JsonNode transferee,
+      UriComponentsBuilder builder) {
+    return transportDocumentService
+        .export(transferee.asText(), transportDocumentId)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @SneakyThrows
+  private String marshalDocument(JsonNode document) {
+    return mapper.writeValueAsString(document);
   }
 }

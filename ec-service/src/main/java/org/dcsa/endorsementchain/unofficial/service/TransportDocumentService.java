@@ -28,6 +28,9 @@ public class TransportDocumentService {
   @Value("${server.port}")
   private String port;
 
+  @Value("${server.hostname}")
+  private String hostname;
+
   @Transactional
   public Optional<String> saveTransportDocument(String transportDocument, String documentHash) {
 
@@ -104,7 +107,7 @@ public class TransportDocumentService {
                 .orElse(
                     true)) // When no local transactions exist only the export transaction will be
         // created and isToOrder will be set to true
-        .platformHost("localhost:"+port)
+        .platformHost(hostname+":"+port)
         .timestamp(System.currentTimeMillis())
         .instruction(TransactionInstruction.TRNS)
         .build();

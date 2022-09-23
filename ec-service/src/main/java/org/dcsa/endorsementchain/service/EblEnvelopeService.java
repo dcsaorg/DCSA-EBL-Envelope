@@ -17,6 +17,7 @@ import org.dcsa.endorsementchain.unofficial.mapping.TransactionMapper;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
 import org.springframework.stereotype.Service;
 
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

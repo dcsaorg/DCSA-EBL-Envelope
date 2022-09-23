@@ -29,11 +29,12 @@ spring:
 
 server:
   ssl:
-    key-store: test-certificates/springboot-https.p12
-    key-store-password: your_key-store_password
+    key-store: ${TLS_KEYSTORE:test-certificates/springboot-https.p12}
+    key-store-password: ${TLS_KEYSTORE_PASSWORD:your_key-store_password}
     key-store-type: pkcs12
     key-alias: springboot-https
   port: ${PORT:8443}
+  hostname: ${HOSTNAME:localhost}
   servlet.context-path: /v1
   error:
     include-binding-errors: on_param
@@ -57,11 +58,11 @@ logging:
 spring:
   security:
     keystorePassword: dcsa-pass
-    keystoreLocation: test-certificates/dcsa-jwk.jks
+    keystoreLocation: ${KEYSTORE_LOCATION:test-certificates/dcsa-jwk.jks}
     jws:
-        key-id: dcsa-kid
+        key-id: ${JWS_KEY_ID:dcsa-kid}
     verification:
-      keystoreLocation: test-certificates/dcsa-jwk-verify.jks
+      keystoreLocation: ${KEYSTORE_VERIFICATION_LOCATION:test-certificates/dcsa-jwk-verify.jks}
       keystorePassword: dcsa-pass
       jws:
         key-id: dcsa-kid
