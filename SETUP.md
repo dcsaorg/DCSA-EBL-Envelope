@@ -100,6 +100,42 @@ Build and run the docker containers
 docker-compose -f docker-compose.yml up -d -V --build
 ```
 
+## Docker Compose two instances
+It is possible to run two instances locally so EBL Envelopes can be exchanged between the two platforms locally.
+In order to run two instances of the reference implementation locally via Docker Compose using the test certificates.
+1. clone this repository
+2. build the Java application
+3. Build and run the docker containers
+
+clone the repository:
+```shell
+git clone git@github.com:dcsaorg/DCSA-EBL-Envelope.git
+cd DCSA-EBL-EBL
+```
+Build the Java application:
+```shell
+mvn package
+```
+Build and run the docker containers
+```shell
+docker-compose -f docker-compose-two-platforms.yml up -d -V --build
+```
+
+Once of the instances is exposed on port `8443`, the second instance is exposed on port `8444`.
+
+### Exporting between platforms
+The two instances of the reference implementation communicate over a network created by Docker expose.
+The hostname of the first instance is: `ec-registry-platform1` and of the second instance is: `ec-registry-platform2`.
+
+This does mean that in order to transfer an EBL Envelope from the first instance to the second instance via the unofficial export endpoint the body of the request must contain the `ec-registry-platform2` hostname.
+An example cURL request would look like this:
+```shell
+curl --location --request POST 'https://localhost:8443/v1/unofficial/transport-documents/b1ff5904b69f26e0b8ea1882e2dd2556e7f9b8d159e0c67f2e3a9c89014ac889/export' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--data-raw '"foo@ec-registry-platform2:8444"'
+```
+
 ## Running via an IDE or commandline
 In order to run the via an IDE or via the command line a standalone database is needed for the application to store and retrieve data. The setup of the database is described [here](test-certificates/README.md).
 The hostname and port to the database need to be provided via the environment variable: DB_HOSTNAME

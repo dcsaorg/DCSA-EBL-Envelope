@@ -26,6 +26,9 @@ public class TransactionService {
   @Value("${server.port}")
   private String port;
 
+  @Value("${server.hostname}")
+  private String hostname;
+
   @Transactional
   public Optional<UUID> createLocalTransaction(
       String documentHash, EndorsementChainTransactionTO transactionRequest) {
@@ -46,14 +49,14 @@ public class TransactionService {
   private Transaction createLinkedTransaction(
       EndorsementChainTransactionTO transactionRequest, TransportDocument transportDocument) {
     Transaction transaction =
-        mapper.endorsementChainTransactionToTransaction(transactionRequest, "localhost:" + port);
+        mapper.endorsementChainTransactionToTransaction(transactionRequest, hostname + ":" + port);
     transaction.linkTransactionToTransportDocument(transportDocument);
     return transaction;
   }
 
   public List<Transaction> getTransactionsForExport(String documentHash) {
     return repository
-        .findLocalNonExportedTransactions(documentHash, "localhost:" + port)
+        .findLocalNonExportedTransactions(documentHash,  hostname + ":" + port)
         .orElseThrow(
             () ->
                 ConcreteRequestErrorMessageException.internalServerError(

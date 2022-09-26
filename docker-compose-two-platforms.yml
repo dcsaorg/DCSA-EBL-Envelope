@@ -1,0 +1,64 @@
+version: '3.5'
+services:
+  ec-registry-platform1:
+    build:
+      .
+    volumes:
+      - ./test-certificates:/test-certificates:ro
+    ports:
+      - 8443:8443
+    environment:
+      - "db_hostname=dcsa-ec-registry-test-db-platform1"
+      - "SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-dev}"
+      - "SPRING_DATASOURCE_PASSWORD=9c072fe8-c59c-11ea-b8d1-7b6577e9f3f5"
+      - "ROOT_LOG_LEVEL=${ROOT_LOG_LEVEL:-INFO}"
+      - "DCSA_LOG_LEVEL=${DCSA_LOG_LEVEL:-INFO}"
+      - "TLS_KEYSTORE=test-certificates/two-platforms/springboot-https-platform1.p12"
+      - "HOSTNAME=ec-registry-platform1"
+      - "KEYSTORE_LOCATION=test-certificates/two-platforms/dcsa-jwk-platform1.jks"
+      - "JWS_KEY_ID=dcsa-kid-platform1"
+      - "KEYSTORE_VERIFICATION_LOCATION=test-certificates/two-platforms/dcsa-jwk-verify-all.jks"
+    logging:
+      options:
+        max-file: '10'
+        max-size: 200k
+  dcsa-ec-registry-test-db-platform1:
+    container_name: ec_registry_db-platform1
+    environment:
+      POSTGRES_PASSWORD: "9c072fe8-c59c-11ea-b8d1-7b6577e9f3f5"
+    build:
+      datamodel/
+    ports:
+      - 5432:5432
+  ec-registry-platform2:
+    build:
+      .
+    volumes:
+      - ./test-certificates:/test-certificates:ro
+    ports:
+      - 8444:8444
+    environment:
+      - "db_hostname=dcsa-ec-registry-test-db-platform2"
+      - "SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-dev}"
+      - "SPRING_DATASOURCE_PASSWORD=9c072fe8-c59c-11ea-b8d1-7b6577e9f3f5"
+      - "PORT=8444"
+      - "HOSTNAME=ec-registry-platform2"
+      - "ROOT_LOG_LEVEL=${ROOT_LOG_LEVEL:-INFO}"
+      - "DCSA_LOG_LEVEL=${DCSA_LOG_LEVEL:-INFO}"
+      - "TLS_KEYSTORE=test-certificates/two-platforms/springboot-https-platform2.p12"
+      - "KEYSTORE_LOCATION=test-certificates/two-platforms/dcsa-jwk-platform2.jks"
+      - "JWS_KEY_ID=dcsa-kid-platform2"
+      - "KEYSTORE_VERIFICATION_LOCATION=test-certificates/two-platforms/dcsa-jwk-verify-all.jks"
+    logging:
+      options:
+        max-file: '10'
+        max-size: 200k
+  dcsa-ec-registry-test-db-platform2:
+    container_name: ec_registry_db-platform2
+    environment:
+      POSTGRES_PASSWORD: "9c072fe8-c59c-11ea-b8d1-7b6577e9f3f5"
+    build:
+      datamodel/
+    ports:
+      - 5433:5432
+
