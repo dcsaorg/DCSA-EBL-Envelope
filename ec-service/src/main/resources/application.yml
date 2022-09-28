@@ -16,6 +16,15 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
     hibernate.ddl-auto: validate
   security:
+    keystorePassword: dcsa-pass
+    keystoreLocation: ${KEYSTORE_LOCATION:test-certificates/dcsa-jwk.jks}
+    jws:
+      key-id: ${JWS_KEY_ID:dcsa-kid}
+    verification:
+      keystoreLocation: ${KEYSTORE_VERIFICATION_LOCATION:test-certificates/dcsa-jwk-verify.jks}
+      keystorePassword: dcsa-pass
+      jws:
+        key-id: dcsa-kid
     oauth2:
       resourceserver:
         jwt:
@@ -56,16 +65,6 @@ logging:
 ---
 # A profile for disabling security
 spring:
-  security:
-    keystorePassword: dcsa-pass
-    keystoreLocation: ${KEYSTORE_LOCATION:test-certificates/dcsa-jwk.jks}
-    jws:
-        key-id: ${JWS_KEY_ID:dcsa-kid}
-    verification:
-      keystoreLocation: ${KEYSTORE_VERIFICATION_LOCATION:test-certificates/dcsa-jwk-verify.jks}
-      keystorePassword: dcsa-pass
-      jws:
-        key-id: dcsa-kid
   config:
     activate:
       on-profile: nosecurity

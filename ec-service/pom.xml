@@ -50,12 +50,16 @@
 			<groupId>org.dcsa.shared-kernel</groupId>
 			<artifactId>dcsa-shared-kernel-errors</artifactId>
 		</dependency>
-<!--		Custom dependencies not managed by DCSA Pom-->
 		<dependency>
-			<groupId>com.nimbusds</groupId>
-			<artifactId>nimbus-jose-jwt</artifactId>
-			<version>9.23</version>
+			<groupId>org.dcsa.shared-kernel</groupId>
+			<artifactId>dcsa-shared-kernel-infrastructure</artifactId>
 		</dependency>
+<!--		Custom dependencies not managed by DCSA Pom-->
+<!--		<dependency>-->
+<!--			<groupId>com.nimbusds</groupId>-->
+<!--			<artifactId>nimbus-jose-jwt</artifactId>-->
+<!--			<version>9.23</version>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
@@ -71,6 +75,21 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.dasniko</groupId>
+			<artifactId>testcontainers-keycloak</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>testcontainers</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

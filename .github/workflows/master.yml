@@ -31,7 +31,7 @@ jobs:
           servers: '[{ "id": "github", "username": "${{ secrets.DCSA_USER }}", "password": "${{ secrets.DCSA_PACKAGES_PAT }}" }]'
 
       - name: Build EBL Envelope
-        run: cd DCSA-EBL-Envelope && mvn clean -U -B package -Ddcsa.artifacttype=-SNAPSHOT
+        run: cd DCSA-EBL-Envelope && mvn clean -U -B package -Ddcsa.artifacttype=-SNAPSHOT failsafe:integration-test
 
       - name: Build and run the microservices
         run: cd DCSA-EBL-Envelope && docker-compose -f docker-compose.yml up -d -V --build
