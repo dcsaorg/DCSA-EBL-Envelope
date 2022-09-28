@@ -55,11 +55,6 @@
 			<artifactId>dcsa-shared-kernel-infrastructure</artifactId>
 		</dependency>
 <!--		Custom dependencies not managed by DCSA Pom-->
-<!--		<dependency>-->
-<!--			<groupId>com.nimbusds</groupId>-->
-<!--			<artifactId>nimbus-jose-jwt</artifactId>-->
-<!--			<version>9.23</version>-->
-<!--		</dependency>-->
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
