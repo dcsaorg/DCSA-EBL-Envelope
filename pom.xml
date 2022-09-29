@@ -32,6 +32,8 @@
 		<shared-kernel.version>${dcsa.shared-kernel.version}${dcsa.shared-kernel.tag}${dcsa.shared-kernel.artifacttype}
 		</shared-kernel.version>
 		<!-- End: Define Shared kernel version -->
+		<testcontainers.version>1.17.3</testcontainers.version>
+		<testcontainers.keycloak.version>2.2.2</testcontainers.keycloak.version>
 	</properties>
 
 	<dependencies>
@@ -72,6 +74,46 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers</artifactId>
+				<version>${testcontainers.version}</version>
+				<scope>test</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>org.jetbrains</groupId>
+						<artifactId>annotations</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>junit-jupiter</artifactId>
+				<version>${testcontainers.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>postgresql</artifactId>
+				<version>${testcontainers.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.github.dasniko</groupId>
+				<artifactId>testcontainers-keycloak</artifactId>
+				<version>${testcontainers.keycloak.version}</version>
+				<scope>test</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>org.testcontainers</groupId>
+						<artifactId>testcontainers</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>jakarta.enterprise</groupId>
+						<artifactId>jakarta.enterprise.cdi-api</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
 		</dependencies>
 
 	</dependencyManagement>
@@ -107,7 +149,7 @@
 		<repository>
 			<id>github</id>
 			<name>GitHub OWNER Apache Maven Packages</name>
-			<url>https://maven.pkg.github.com/dcsaorg/DCSA-Endorcement-Chain</url>
+			<url>https://maven.pkg.github.com/dcsaorg/DCSA-EBL-Envelope</url>
 		</repository>
 	</distributionManagement>
 
