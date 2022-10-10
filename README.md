@@ -4,15 +4,15 @@ DCSA EBL Envelope
 # eB/L interoperability technical specifications
 This document provides the technical description and specifications for transferring eBL documents between platforms using the eBL Envelope.
 General concepts and backgrounds can be found [here](CONCEPTS_AND_BACKGROUND.md).
-the rendered Open API specification for the is available on the [DCSA Swaggerhub](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EEC/0.10-alpha).
-However, for easier collaboration and the ability to add PR's and issues the resolved oas specification can be found in [here](specifications/oas/dcsaorg-DCSA_EEC-0.10-alpha-resolved.yaml).
+the rendered Open API specification for the is available on the [DCSA Swaggerhub](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EEC/0.11-alpha).
+However, for easier collaboration and the ability to add PR's and issues the resolved oas specification can be found in [here](specifications/oas/dcsaorg-DCSA_EEC-0.11-alpha-resolved.yaml).
 
 # Open points for discussion
 
-- [ ] sha256 of the json structure is fragile. sha256 of base64 encoding is more robust (same goes for all hashes)
+- [x] sha256 of the json structure is fragile. sha256 of base64 encoding is more robust (same goes for all hashes)
 - [ ] should the transportdocument be sent in a separate json document and the API has the mime type that supports this?
-- [ ] response of the PUT transferblock is an encoded JWS with the eblEnvelopeHash signed by the receiving platform.
-- [ ] response of the PUT transferblock is only the string representation of the encoded JWS (no wrapper JSON object)
+- [x] response of the PUT transferblock is an encoded JWS with the eblEnvelopeHash signed by the receiving platform.
+- [x] response of the PUT transferblock is only the string representation of the encoded JWS (no wrapper JSON object)
 - [ ] transferee is represented with the [DCSA Party object](https://app.swaggerhub.com/domains/dcsaorg/DOCUMENTATION_DOMAIN/2.0.1#/components/schemas/party)
 - [ ] discuss the details of platform authentication OIDC and if further specifications are required
 - [ ] align on the standardized error responses
@@ -30,7 +30,7 @@ See [the contributing guide](CONTRIBUTING.md) for detailed instructions on how t
 Transferring the BL control (Possession & Title) is accomplished by sending a _**"Transferblock"**_ from the sending platform to the receiving platform.
 
 ## Overview of a transferblock
-A transferblock is a single JSON structure described [here](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EEC/0.10-alpha#/transferblock).
+A transferblock is a single JSON structure described [here](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EEC/0.11-alpha#/transferblock).
 The transferblock has the following structure:
 * data of the B/L according to the [DCSA transportDocument specification](https://app.swaggerhub.com/domains/dcsaorg/DOCUMENTATION_DOMAIN/2.0.1#/components/schemas/transportDocument)
 * The complete endorsement chain as signed eblEnvelopes transferred between platforms
@@ -165,7 +165,6 @@ for the request message:
 * signature is created using the private key of the sending platform
 * the signature is transferred as a JWS (Json Web Signature as described in [RFC 7515](https://datatracker.ietf.org/doc/html/rfc7515)) in the **_signature_** field
 * the JWS is tranferred in the compact serialization format (as described in [Section 7 of RFC 7515](https://datatracker.ietf.org/doc/html/rfc7515#section-7.1))
-* the JWS is using a detached unencoded payload (which is the eblEnvelope JSON object as described in [RFC 7797](https://datatracker.ietf.org/doc/html/rfc7797))
 
 For the response message:
 * signature covers the envelopeHash of the last item in the endorcement chain

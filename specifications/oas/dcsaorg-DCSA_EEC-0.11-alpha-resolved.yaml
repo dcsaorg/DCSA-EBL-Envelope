@@ -14,7 +14,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.10-alpha
+  version: 0.11-alpha
 servers:
 - url: /
 paths:
@@ -35,7 +35,7 @@ paths:
           type: string
           example: "1"
       requestBody:
-        description: the transferblock containing the B/L document along with the endorsement chain.
+        description: the transferblock containing the B/L document along with the endorcement chain.
         content:
           application/json:
             schema:
@@ -51,12 +51,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/transferblockResponse'
-            application/pdf:
-              schema:
-                type: string
-                description: |
-                  The Bill of Lading referenced in the `transferBlock` as a PDF document
-                format: binary
 components:
   schemas:
     sha256Hash:
@@ -85,12 +79,11 @@ components:
           - $ref: '#/components/schemas/sha256Hash'
           - example: 20a0257b313ae08417e07f6555c4ec829a512c083f3ead16b41158018a22abe9
           - description: sha256 hash of the eblEnvelope object
-        eblEnvelope:
-          $ref: '#/components/schemas/eblEnvelope'
         signature:
+          pattern: ^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*)
           type: string
-          description: Signature of JWS with detached unencoded payload as specified in https://datatracker.ietf.org/doc/html/rfc7797 the detached payload signed is the "eblEnvelope" object.
-          example: eyJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdLCJhbGciOiJIUzI1NiJ9..5rPBT_XW-x7mjc1ubf4WwW1iV2YJyc4CCFxORIEaAEk
+          description: 'JWS with compact serialization according to: https://datatracker.ietf.org/doc/html/rfc7515#section-7.1 payload of the JWS contains the envelopeHash as received signed by the receiving platform. The content of the payload is the EBL-Envelope defined in: #/components/schemas/eblEnvelope'
+          example: eyJraWQiOiJmNjA1YmZlYi1jZjUwLTQ1MTItYTM5Zi02OGRlZGZmYjJhNDgiLCJhbGciOiJSUzI1NiJ9.ImVudmVsb3BlSGFzaCI6ICJkNTZhOTNhN2U5Zjg2YTJkODk1ZGY4MThlMDQ0MGJkY2E2ZmZlMDMyNDZlMmZlZTE0MTMxZjJlNjZjODRjNzVhIg.ff6MAR0Pwtnt3_RGzgIH0oemzusB3iiE1zsq5-q-bpRDLwKV4gS_yCYtz1TMRKF021c7CAWS-NmaTS8e1ydtTRZDEmxENVDl4z58rCIM3_oOpP6XItHkSCacBIi90kQzl97b-ZDC75a1cm1ez39pcg8izDlpUuhNvY6QqN7Dju0bw_-1kZ4YjedMyxgRHztVNNbHUe9qhpbB_yOo0sYb2KmkeOwnA6wKoRvUxWaQU-2RbuK4eAwhjWc5ZgJ3DOLZBLk3ucuz1KT6QCOwfce2oG2tIxuFBsoubStMPfvmAwuKVBMuCHl_NKKzoxRvAkExRLWNi9q6kuAyqfisHhZfBw
     eblEnvelope:
       required:
       - documentHash
@@ -165,6 +158,148 @@ components:
                 type: string
                 example: 43549850248@exampleplatform.com
           - $ref: '#/components/schemas/party'
+    party:
+      type: object
+      description: refers to a company or a legal entity.
+      allOf:
+      - type: object
+        properties:
+          partyName:
+            $ref: '#/components/schemas/partyName'
+      - type: object
+        properties:
+          taxReference1:
+            $ref: '#/components/schemas/taxReference1'
+      - type: object
+        properties:
+          taxReference2:
+            $ref: '#/components/schemas/taxReference2'
+      - type: object
+        properties:
+          publicKey:
+            $ref: '#/components/schemas/publicKey'
+      - type: object
+        properties:
+          address:
+            oneOf:
+            - $ref: '#/components/schemas/displayAddress'
+            - $ref: '#/components/schemas/address'
+      - type: object
+        properties:
+          partyContactDetails:
+            minItems: 1
+            type: array
+            description: |
+              A list of contact details - the list cannot be empty
+            items:
+              allOf:
+              - $ref: '#/components/schemas/partyContactDetail'
+      - type: object
+        properties:
+          identifyingCodes:
+            type: array
+            items:
+              allOf:
+              - $ref: '#/components/schemas/identifyingCode'
+    identifyingCode:
+      required:
+      - DCSAResponsibleAgencyCode
+      - partyCode
+      type: object
+      allOf:
+      - type: object
+        properties:
+          DCSAResponsibleAgencyCode:
+            $ref: '#/components/schemas/DCSAResponsibleAgencyCode'
+      - type: object
+        properties:
+          partyCode:
+            $ref: '#/components/schemas/partyCode'
+      - type: object
+        properties:
+          codeListName:
+            $ref: '#/components/schemas/codeListName'
+    displayAddress:
+      type: object
+      properties:
+        displayAddress:
+          type: string
+          example: Kronprincessegade 54, 5. sal, 1306 København Denmark
+    partyContactDetail:
+      required:
+      - name
+      type: object
+      description: |
+        Contact information for a Party
+      allOf:
+      - type: object
+        properties:
+          name:
+            $ref: '#/components/schemas/name'
+      - type: object
+        properties:
+          phone:
+            $ref: '#/components/schemas/phone'
+      - type: object
+        properties:
+          email:
+            $ref: '#/components/schemas/email'
+      - type: object
+        properties:
+          url:
+            $ref: '#/components/schemas/url'
+    DCSAResponsibleAgencyCode:
+      type: string
+      description: |
+        A DCSA provided code for [UN/CEFACT](https://unece.org/fileadmin/DAM/trade/untdid/d16b/tred/tred3055.htm) code list providers:
+        - ISO (International Standards Organization)
+        - UNECE (United Nations Economic Commission for Europe)
+        - LLOYD (Lloyd's register of shipping)
+        - BIC (Bureau International des Containeurs)
+        - IMO (International Maritime Organization)
+        - SCAC (Standard Carrier Alpha Code)
+        - ITIGG (International Transport Implementation Guidelines Group)
+        - ITU (International Telecommunication Union)
+        - SMDG (Shipplanning Message Development Group)
+        - EXIS (Exis Technologies Ltd.)
+        - FMC (Federal Maritime Commission)
+        - CBSA (Canada Border Services Agency)
+        - DCSA (Digital Container Shipping Association)
+        - DID (Decentralized Identifier)
+        - LEI (Legal Entity Identifier)
+        - ZZZ (Mutually defined)
+
+        More details can be found on [GitHub](https://github.com/dcsaorg/DCSA-Information-Model/blob/master/datamodel/referencedata.d/codelistresponsibleagencycodes.csv).
+      example: SMDG
+      enum:
+      - ISO
+      - UNECE
+      - LLOYD
+      - BIC
+      - IMO
+      - SCAC
+      - ITIGG
+      - ITU
+      - SMDG
+      - EXIS
+      - FMC
+      - CBSA
+      - DCSA
+      - DID
+      - LEI
+      - ZZZ
+    partyCode:
+      maxLength: 100
+      type: string
+      description: |
+        Code to identify the party as provided by the agency
+      example: MSK
+    codeListName:
+      maxLength: 100
+      type: string
+      description: |
+        The name of the list, provided by the responsible agency
+      example: LCL
     transferblockResponse:
       pattern: ^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*)
       type: string
@@ -266,7 +401,7 @@ components:
         properties:
           issuingParty:
             allOf:
-            - $ref: '#/components/schemas/party'
+            - $ref: '#/components/schemas/party_1'
       - type: object
         properties:
           numberOfRiderPages:
@@ -323,7 +458,7 @@ components:
       enum:
       - SMDG
       - NMFTA
-    party:
+    party_1:
       required:
       - partyContactDetails
       type: object
@@ -464,119 +599,6 @@ components:
       type: string
       description: The country of the party’s address.
       example: Denmark
-    partyContactDetail:
-      required:
-      - name
-      type: object
-      description: |
-        Contact information for a Party
-      allOf:
-      - type: object
-        properties:
-          name:
-            $ref: '#/components/schemas/name'
-      - type: object
-        properties:
-          phone:
-            $ref: '#/components/schemas/phone'
-      - type: object
-        properties:
-          email:
-            $ref: '#/components/schemas/email'
-      - type: object
-        properties:
-          url:
-            $ref: '#/components/schemas/url'
-    name:
-      maxLength: 100
-      type: string
-      description: Name of the contact
-      example: Henrik
-    phone:
-      maxLength: 30
-      type: string
-      description: Phone number for the contact
-      example: +45 33364660
-    email:
-      maxLength: 100
-      type: string
-      description: E-mail address for the contact
-      example: info@dcsa.org
-    url:
-      maxLength: 100
-      type: string
-      description: URL for the contact
-      example: https://www.dcsa.org
-    identifyingCode:
-      required:
-      - DCSAResponsibleAgencyCode
-      - partyCode
-      type: object
-      allOf:
-      - type: object
-        properties:
-          DCSAResponsibleAgencyCode:
-            $ref: '#/components/schemas/DCSAResponsibleAgencyCode'
-      - type: object
-        properties:
-          partyCode:
-            $ref: '#/components/schemas/partyCode'
-      - type: object
-        properties:
-          codeListName:
-            $ref: '#/components/schemas/codeListName'
-    DCSAResponsibleAgencyCode:
-      type: string
-      description: |
-        A DCSA provided code for [UN/CEFACT](https://unece.org/fileadmin/DAM/trade/untdid/d16b/tred/tred3055.htm) code list providers:
-        - ISO (International Standards Organization)
-        - UNECE (United Nations Economic Commission for Europe)
-        - LLOYD (Lloyd's register of shipping)
-        - BIC (Bureau International des Containeurs)
-        - IMO (International Maritime Organization)
-        - SCAC (Standard Carrier Alpha Code)
-        - ITIGG (International Transport Implementation Guidelines Group)
-        - ITU (International Telecommunication Union)
-        - SMDG (Shipplanning Message Development Group)
-        - EXIS (Exis Technologies Ltd.)
-        - FMC (Federal Maritime Commission)
-        - CBSA (Canada Border Services Agency)
-        - DCSA (Digital Container Shipping Association)
-        - DID (Decentralized Identifier)
-        - LEI (Legal Entity Identifier)
-        - ZZZ (Mutually defined)
-
-        More details can be found on [GitHub](https://github.com/dcsaorg/DCSA-Information-Model/blob/master/datamodel/referencedata.d/codelistresponsibleagencycodes.csv).
-      example: SMDG
-      enum:
-      - ISO
-      - UNECE
-      - LLOYD
-      - BIC
-      - IMO
-      - SCAC
-      - ITIGG
-      - ITU
-      - SMDG
-      - EXIS
-      - FMC
-      - CBSA
-      - DCSA
-      - DID
-      - LEI
-      - ZZZ
-    partyCode:
-      maxLength: 100
-      type: string
-      description: |
-        Code to identify the party as provided by the agency
-      example: MSK
-    codeListName:
-      maxLength: 100
-      type: string
-      description: |
-        The name of the list, provided by the responsible agency
-      example: LCL
     numberOfRiderPages:
       type: integer
       description: The number of additional pages required to contain the goods description on a transport document. Only applicable for physical transport documents.
@@ -1830,7 +1852,7 @@ components:
         properties:
           party:
             allOf:
-            - $ref: '#/components/schemas/party'
+            - $ref: '#/components/schemas/party_1'
       - type: object
         properties:
           partyFunction:
@@ -1995,6 +2017,26 @@ components:
     clauseContent:
       type: string
       description: The content of the clause.
+    name:
+      maxLength: 100
+      type: string
+      description: Name of the contact
+      example: Henrik
+    phone:
+      maxLength: 30
+      type: string
+      description: Phone number for the contact
+      example: +45 33364660
+    email:
+      maxLength: 100
+      type: string
+      description: E-mail address for the contact
+      example: info@dcsa.org
+    url:
+      maxLength: 100
+      type: string
+      description: URL for the contact
+      example: https://www.dcsa.org
   parameters:
     Api-Version-Major:
       name: API-Version
