@@ -11,9 +11,7 @@ public class TransferblockTODataFactory {
     return TransferblockTO.builder()
         .document(TransportDocumentDataFactory.transportDocumentEntityWithoutTransactions().getTransportDocumentJson())
         .endorsementChain(
-            SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList(
-                EblEnvelopeDataFactory.getEblEnvelopeList().get(0).getEblEnvelopeJson(),
-                EblEnvelopeDataFactory.getEblEnvelopeList().get(1).getEblEnvelopeJson()))
+            SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList())
         .build();
   }
 
@@ -21,9 +19,7 @@ public class TransferblockTODataFactory {
     return TransferblockTO.builder()
       .document(TransportDocumentDataFactory.transportDocumentEntityWithoutTransactions().getTransportDocumentJson())
       .endorsementChain(
-        SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList(
-          rawEnvelope,
-          secondRawEnvelope))
+        SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList())
       .build();
   }
 }

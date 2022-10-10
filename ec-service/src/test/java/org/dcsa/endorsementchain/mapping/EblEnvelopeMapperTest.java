@@ -47,6 +47,6 @@ class EblEnvelopeMapperTest {
     assertEquals(envelope.getTransportDocument().getDocumentHash(), eblEnvelopeTO.documentHash());
     assertEquals(envelope.getTransportDocument().getTransactions().size(), eblEnvelopeTO.transactions().size());
     assertEquals(BlInstruction.ISSU, eblEnvelopeTO.transactions().get(0).instruction());
-    assertNull(eblEnvelopeTO.previousEblEnvelopeHash());
+    assertNull(eblEnvelopeTO.previousEnvelopeHash());
   }
 }

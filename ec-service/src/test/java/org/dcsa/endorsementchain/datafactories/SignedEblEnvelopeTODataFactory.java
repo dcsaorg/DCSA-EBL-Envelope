@@ -8,24 +8,26 @@ import java.util.List;
 @UtilityClass
 public class SignedEblEnvelopeTODataFactory {
 
-  public SignedEblEnvelopeTO signedEblEnvelopeTO(String rawEnvelope) {
+  public SignedEblEnvelopeTO signedEblEnvelopeTO() {
     return SignedEblEnvelopeTO.builder()
-        .eblEnvelope(rawEnvelope)
-        .signature(
-            "nI85d4jseqXOR3hXkyLT2uajlXCsW88nAoEwec13I1tUyt6xwbgQz4jVQ2tdKbSlLcwrVmetlbz9Moy-DRno3X3cJmW9Y9TtyVMuygP0p_BQy1TVd766O1VRpiTp_tB1Eb93Fnj0RvpUZ_ddp9YKQjdxpAYi23Rbnz33A-x3uWp-Nk6y7sy3THlw5ZwbhuBWtp7yeaNGwVL9RUegyHwojGQp3YIVzFVXomUkj-JAg8UvOE6xdd7XSZaM_Sf7ZJlyTQQxyqZ1ui-zCwVHu0zdNEbEzAm_SfgxlPUaO8nEWSmAGo29aGO8HiU2_mbVMU1lCL00LyAEoAaDFnmbnEOoWw")
-        .envelopeHash("a25286672be331c6770fa590f8eb7ab7cf105fd76f0db4b7cabd258a5953482e")
-        .build();
+      .signature("eyJhbGciOiJSUzI1NiIsImtpZCI6IlVhRVdLNmt2ZkRITzNZT2NwUGl2M1RCT2JQTzk2SFZhR2U0czFhUUxBZU0ifQ.eyJkb2N1bWVudEhhc2giOiJmZDg2OGM4MmU5OTc3N2I0NzJhMTY3NzM5MGQ5NTRkYmIwMTMxY2IzYjBmNTVjOGVmNTE5Njk4NTY0MTBkMzhlIiwicHJldmlvdXNFbnZlbG9wZUhhc2giOm51bGwsInRyYW5zYWN0aW9ucyI6W3siaW5zdHJ1Y3Rpb24iOiJJU1NVIiwiY29tbWVudHMiOiJUaGUgQi9MIGhhcyBiZWVuIGlzc3VlZC4iLCJ0aW1lc3RhbXAiOjE2NTgzODUxNjYzMDI0NDIyMDAsImlzVG9PcmRlciI6dHJ1ZSwicGxhdGZvcm1Ib3N0IjoibG9jYWxob3N0Ojg0NDMiLCJ0cmFuc2ZlcmVlIjoiNDM1NDk4NTAyNDhAbG9jYWxob3N0Ojg0NDMifV19.aybAB3RUg_UM2WcvoE4s807Kf7BhSALZq1EvF9f_AUP6ZZgOP4cFS0rlLHSVrobKlF_Og-w0K_M9SPAQS6UnY0hht6pwHTHmoxPmWoQ-ARhnsThjhB3ZYhDbrroJnYPkQAjCmKXPrhNi2z9Fn4GvaI6iRjfJMQchSWQtAEjhqSLNaHtRwec65CDYEZ6OTHX7uP5g3WZtCfmswRGrkcCLosveSxsFpezjjOfTEo2NCCtO0tAxtNtus4GsF8QIMrM6QknJ4909ZrVonvtMUoRffFoUqgemfaFggK5XriLgn2OdSn8ZBhRn_ZqVojuf26mXrVm12C9jSQPPfPGy-myrOQ")
+      .envelopeHash("92939058e050dcdfaa836ab7d8d2da57420c6320f25b49e087af5af16f49cb1b")
+      .build();
   }
 
-  public List<SignedEblEnvelopeTO> signedEblEnvelopeTOList(String rawEnvelope, String secondRawEnvelope) {
-    SignedEblEnvelopeTO initialSignedEblEnvelopeTO =
-        SignedEblEnvelopeTO.builder()
-            .eblEnvelope(rawEnvelope)
-            .signature(
-                "gb_mxYs4slLrOnFqmlFHnv0YC5-HajF2Bxs39OBe4okm0teciZJ0USUYc1AGFqAaL2oYogn6shsWY2kkPnpU85-hq2qldv9M-WoT5vh1xqAxcXYsEUSOQFV-2ATJAuMk5ceIQ8DlksVJ14CPTTlB59bHz6UWhwpbuzDVEROjQ79qS9AGlgH6rU06q8phGGn09G1rq2twZL6qxXHP9y4ZrTo_P088JCWBtvkGQ1ApHfcGO75wp-BmqAt26BZHuUioC7kvo9hPXJQGz8RY5KqNwul3lXKmjnVF2Ac-MU-IRf0AzFARk25UUaVnpHXN6hIeHR3hAjwNjGnY44VXTbDbwA")
-            .envelopeHash("2071af20009cdd6348a727b33c005767afe83db2a9e67e2dde6367fcd045fd0a")
-            .build();
-
-    return List.of(initialSignedEblEnvelopeTO, SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO(secondRawEnvelope));
+  public SignedEblEnvelopeTO signedEblEnvelopeTOWithInvalidSignature() {
+    return SignedEblEnvelopeTO.builder()
+      .signature("eyJhbGciOiJSUzI1NiIsImtpZCI6IlVhRVdLNmt2ZkRITzNZT2NwUGl2M1RCT2JQTzk2SFZhR2U0czFhUUxBZU0ifQ.eyJkb2N1bWVudEhhc2giOiJmZDg2OGM4MmU5OTc3N2I0NzJhMTY3NzM5MGQ5NTRkYmIwMTMxY2IzYjBmNTVjOGVmNTE5Njk4NTY0MTBkMzhlIiwicHJldmlvdXNFbnZlbG9wZUhhc2giOm51bGwsInRyYW5zYWN0aW9ucyI6W3siaW5zdHJ1Y3Rpb24iOiJJU1NVIiwiY29tbWVudHMiOiJUaGUgQi9MIGhhcyBiZWVuIGlzc3VlZC4iLCJ0aW1lc3RhbXAiOjE2NTgzODUxNjYzMDI0NDIyMDAsImlzVG9PcmRlciI6dHJ1ZSwicGxhdGZvcm1Ib3N0IjoibG9jYWxob3N0Ojg0NDMiLCJ0cmFuc2ZlcmVlIjoiNDM1NDk4NTAyNDhAbG9jYWxob3N0Ojg0NDMifV19.aybAB3RUg_UM2WcvoE4s807Kf7BhSALZq1EvF9f_AUP6ZZgOP4cFS0rlLHSVrobKlF_Og-w0K_M9SPAQS6UnY0hht6pwHTHmoxPmWoQ-ARhnsThjhB3ZYhDbrroJnYPkQAjCmKXPrhNi2z9Fn4GvaI6iRjfJMQchSWQtAEjhqSLNaHtRwec65CDYEZ6OTHX7uP5g3WZtCfmswRGrkcCLosveSxsFpezjjOfTEo2NCCtO0tAxtNtus4GsF8QIMrM6QknJ4909ZrVonvtMUoRffFoUqgemfaFggK5XriLgn2OdSn8ZBhRn_ZqVojuf26mXrVm12C9jSQPPfPGz-myrOQ")
+      .envelopeHash("92939058e050dcdfaa836ab7d8d2da57420c6320f25b49e087af5af16f49cb1b")
+      .build();
   }
+
+  public List<SignedEblEnvelopeTO> signedEblEnvelopeTOList() {
+    return List.of(signedEblEnvelopeTO(), SignedEblEnvelopeTO.builder()
+        .signature("eyJhbGciOiJSUzI1NiIsImtpZCI6IlVhRVdLNmt2ZkRITzNZT2NwUGl2M1RCT2JQTzk2SFZhR2U0czFhUUxBZU0ifQ.eyJkb2N1bWVudEhhc2giOiJmZDg2OGM4MmU5OTc3N2I0NzJhMTY3NzM5MGQ5NTRkYmIwMTMxY2IzYjBmNTVjOGVmNTE5Njk4NTY0MTBkMzhlIiwicHJldmlvdXNFbnZlbG9wZUhhc2giOiI5MjkzOTA1OGUwNTBkY2RmYWE4MzZhYjdkOGQyZGE1NzQyMGM2MzIwZjI1YjQ5ZTA4N2FmNWFmMTZmNDljYjFiIiwidHJhbnNhY3Rpb25zIjpbeyJpbnN0cnVjdGlvbiI6IlRSTlMiLCJjb21tZW50cyI6IlRoZSBCL0wgaGFzIGJlZW4gdHJhbnNmZXJlZC4iLCJ0aW1lc3RhbXAiOjE2NTgzODUxNjYzMDI0ODUwMDAsImlzVG9PcmRlciI6dHJ1ZSwicGxhdGZvcm1Ib3N0IjoibG9jYWxob3N0Ojg0NDQiLCJ0cmFuc2ZlcmVlIjoiYWJmZGNkMjQ0NTNAbG9jYWxob3N0Ojg0NDQifV19.B0V6vKEu-crd4qf5_8IjZ_yedfQ2dV4q9SZ5_eeZR6royRbvK0t8HXS1Kao2LjUeBoqk75iiKCowvzon42pVhEEAeDn7aXSTYOF4JBjjNAJcIIbNX9dEkqwnp74YNa7t1DzZ0Jy3ltsDB5YnZguEZhFzjs7jbFilrVrpI2nyZRqBaFh_RXbGuiVw8CE3lCdOX8dwQNWwfkk9NIUTAG4X_r_bDsJbdz9KX9Ut5_BTlHenMyGTPBOwry6SJA7y2elhkfHDieYLG_LmWZeY1XK3io_nw7pjp_-OuF6zB3Q3uGSoqIfGMr4h-NDG7uCV1agja5uzM1y2BGXwwhgGcO8ucQ")
+        .envelopeHash("d65b3cc024f406d1d4f1038a7e1ed30060c6788a145de8f7cf47391b15992fbc")
+        .build()
+    );
+  }
+
 }

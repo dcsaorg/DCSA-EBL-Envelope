@@ -15,8 +15,7 @@ CREATE TABLE ec_registry.ebl_envelope (
   envelope_hash varchar(64) NOT NULL PRIMARY KEY,
   previous_envelope_hash varchar(64) NULL UNIQUE,
   signature text NOT NULL,
-  document_hash varchar(64) NOT NULL,
-  ebl_envelope_json text NULL
+  document_hash varchar(64) NOT NULL
 );
 
 ALTER TABLE ec_registry.ebl_envelope ADD FOREIGN KEY (document_hash) REFERENCES ec_registry.transportdocument(document_hash);

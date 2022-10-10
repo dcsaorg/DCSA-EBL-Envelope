@@ -1,6 +1,5 @@
 package org.dcsa.endorsementchain.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dcsa.endorsementchain.datafactories.EblEnvelopeDataFactory;
 import org.dcsa.endorsementchain.datafactories.EblEnvelopeTODataFactory;
@@ -53,21 +52,13 @@ class ExportServiceTest {
   private SignedEblEnvelopeTO signedEblEnvelopeTO;
 
   @BeforeEach
-  void init() throws JsonProcessingException {
+  void init() {
     transactionList = TransactionDataFactory.transactionEntityList();
     previousEblEnvelopes = EblEnvelopeDataFactory.getEblEnvelopeList();
     previousEblEnvelopeHash = previousEblEnvelopes.get(0).getEnvelopeHash();
     exportingEblEnvelopeTO = EblEnvelopeTODataFactory.eblEnvelopeTO();
-    String rawEnvelope = mapper.writeValueAsString(exportingEblEnvelopeTO);
-    List<String> rawEblEnvelopes = previousEblEnvelopes.stream().map(parsedEblEnvelope -> {
-      try {
-        return mapper.writeValueAsString(parsedEblEnvelope);
-      } catch (JsonProcessingException e) {
-        throw new RuntimeException("Can't serialize eblEnvelope");
-      }
-    }).toList();
-    previousSignedEblEnvelopes = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList(rawEblEnvelopes.get(0), rawEblEnvelopes.get(1));
-    signedEblEnvelopeTO = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO(rawEnvelope);
+    previousSignedEblEnvelopes = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList();
+    signedEblEnvelopeTO = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO();
     endorsementChainTransactionTOs = EndorsementChainTransactionTODataFactory.endorsementChainTransactionTOList();
   }
 
