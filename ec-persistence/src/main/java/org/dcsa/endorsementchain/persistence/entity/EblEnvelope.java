@@ -24,9 +24,6 @@ public class EblEnvelope {
   @Column(name = "signature", nullable = false, columnDefinition = "TEXT")
   private String signature;
 
-  @Column(name = "ebl_envelope_json", columnDefinition = "TEXT")
-  private String eblEnvelopeJson;
-
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "document_hash", nullable = false)
   private TransportDocument transportDocument;

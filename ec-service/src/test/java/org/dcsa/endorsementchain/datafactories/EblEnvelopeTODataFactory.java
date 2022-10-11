@@ -13,14 +13,14 @@ public class EblEnvelopeTODataFactory {
     return EblEnvelopeTO.builder()
       .transactions(EndorsementChainTransactionTODataFactory.endorsementChainTransactionTOList())
       .documentHash(TransportDocumentDataFactory.transportDocumentEntityWithTransactions().getDocumentHash())
-      .previousEblEnvelopeHash(null)
+      .previousEnvelopeHash(null)
       .transactions(EndorsementChainTransactionTODataFactory.endorsementChainTransactionTOList())
       .build();
   }
 
   public List<EblEnvelopeTO> eblEnvelopeTOList() {
     EblEnvelopeTO secondEblEnvelope = EblEnvelopeTO.builder()
-      .previousEblEnvelopeHash("a25286672be331c6770fa590f8eb7ab7cf105fd76f0db4b7cabd258a5953482e")
+      .previousEnvelopeHash("a25286672be331c6770fa590f8eb7ab7cf105fd76f0db4b7cabd258a5953482e")
       .documentHash(TransportDocumentDataFactory.transportDocumentHash())
       .transactions(EndorsementChainTransactionTODataFactory.endorsementChainTransactionTOList())
       .build();

@@ -45,14 +45,14 @@ class ImportServiceTest {
         throw new RuntimeException("Can't serialize eblEnvelope");
       }
     }).toList();
-    List<SignedEblEnvelopeTO> signedEblEnvelopes = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList(rawEblEnvelopes.get(0), rawEblEnvelopes.get(1));
+    List<SignedEblEnvelopeTO> signedEblEnvelopes = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList();
 
     TransferblockTO transferblock = TransferblockTODataFactory.transferblockTO(rawEblEnvelopes.get(0), rawEblEnvelopes.get(1));
     List<EblEnvelopeTO> eblEnvelopeTOs = EblEnvelopeTODataFactory.eblEnvelopeTOList();
 
-    when(eblEnvelopeService.parseEblEnvelope(signedEblEnvelopes.get(0).eblEnvelope()))
+    when(eblEnvelopeService.verifyEndorsementChainSignature(signedEblEnvelopes.get(0).signature()))
         .thenReturn(eblEnvelopeTOs.get(0));
-    when(eblEnvelopeService.parseEblEnvelope(signedEblEnvelopes.get(1).eblEnvelope()))
+    when(eblEnvelopeService.verifyEndorsementChainSignature(signedEblEnvelopes.get(1).signature()))
         .thenReturn(eblEnvelopeTOs.get(1));
     when(eblEnvelopeService.signedEblEnvelopeToEblEnvelope(signedEblEnvelopes.get(0), eblEnvelopeTOs.get(0), transferblock.document(), "localhost:8443")).thenReturn(eblEnvelopes.get(0));
     when(eblEnvelopeService.signedEblEnvelopeToEblEnvelope(signedEblEnvelopes.get(1), eblEnvelopeTOs.get(1), transferblock.document(), "localhost:8443")).thenReturn(eblEnvelopes.get(1));
@@ -69,7 +69,6 @@ class ImportServiceTest {
       .document("Test document")
       .endorsementChain(Collections.emptyList())
       .build();
-    List<SignedEblEnvelopeTO> signedEblEnvelopes = transferblock.endorsementChain();
 
     Optional<String> signedResponse = importService.importEbl(transferblock);
     assertTrue(signedResponse.isEmpty());

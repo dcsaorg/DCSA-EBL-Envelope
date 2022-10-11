@@ -17,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -30,33 +29,19 @@ public class EblEnvelopeSignature {
   private final Map<String, JWSVerifier> jwsVerifiers;
   private final RestTemplate restTemplate;
 
-  public SignedEblEnvelopeTO signEnvelope(String rawEblEnvelope) {
-    JWSHeader header =
-        new JWSHeader.Builder(jwsSignerDetails.algorithm())
-            .base64URLEncodePayload(false)
-            .criticalParams(Collections.singleton("b64"))
-            .build();
-    try {
-      JWSObject jwsObject = new JWSObject(header, new Payload(rawEblEnvelope));
-      jwsObject.sign(jwsSignerDetails.signer());
-      String signature = jwsObject.serialize(true);
-      String envelopeHash = DigestUtils.sha256Hex(rawEblEnvelope);
+  public SignedEblEnvelopeTO createSignedEblEnvelope(String rawEblEnvelope) {
+    String signature = sign(rawEblEnvelope);
+    String envelopeHash = DigestUtils.sha256Hex(rawEblEnvelope);
 
-      return SignedEblEnvelopeTO.builder()
-          .envelopeHash(envelopeHash)
-          .signature(signature)
-          .eblEnvelope(rawEblEnvelope)
-          .build();
-
-    } catch (JOSEException e) {
-      throw ConcreteRequestErrorMessageException.internalServerError(
-          "Unable to generate the JWS Object");
-    }
+    return SignedEblEnvelopeTO.builder()
+        .envelopeHash(envelopeHash)
+        .signature(signature)
+        .build();
   }
 
-  public String signEnvelopeHash(String envelopeHash) {
+  public String sign(String payload) {
     JWSHeader header = new JWSHeader.Builder(jwsSignerDetails.algorithm()).build();
-    JWSObject jwsObject = new JWSObject(header, new Payload(envelopeHash));
+    JWSObject jwsObject = new JWSObject(header, new Payload(payload));
     try {
       jwsObject.sign(jwsSignerDetails.signer());
     } catch (JOSEException e) {
@@ -79,9 +64,7 @@ public class EblEnvelopeSignature {
   }
 
   @SneakyThrows
-  public boolean verifyEnvelope(String cn, String signature, String payload) {
-    JWSObject jwsObject = JWSObject.parse(signature, new Payload(payload));
-
+  public boolean verifySignature(String cn, JWSObject jwsObject) {
     JWSVerifier jwsVerifier = getJwsVerifierFromCN(cn);
     return jwsObject.verify(jwsVerifier);
   }

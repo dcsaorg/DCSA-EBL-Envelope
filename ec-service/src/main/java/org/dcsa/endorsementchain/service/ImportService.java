@@ -37,8 +37,7 @@ public class ImportService {
   }
 
   private EblEnvelope validate(TransferblockTO transferblock, SignedEblEnvelopeTO signedEblEnvelopeTO) {
-    EblEnvelopeTO parsedEblEnvelope = eblEnvelopeService.parseEblEnvelope(signedEblEnvelopeTO.eblEnvelope());
-    eblEnvelopeService.verifyEblEnvelopeSignature(parsedEblEnvelope, signedEblEnvelopeTO);
+    EblEnvelopeTO parsedEblEnvelope = eblEnvelopeService.verifyEndorsementChainSignature(signedEblEnvelopeTO.signature());
 
     // Since the platformhost is the host of the originating transaction and all transactions within
     // an EBL envelope are from the same platform we can take any of the transactions to retrieve
