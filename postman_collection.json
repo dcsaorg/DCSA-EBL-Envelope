@@ -148,14 +148,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{BASE_URL}}/{{MAJOR_VERSION}}/unofficial/.well-known/jwks.json",
+							"raw": "https://{{BASE_URL}}/{{MAJOR_VERSION}}/.well-known/jwks.json",
 							"protocol": "https",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"{{MAJOR_VERSION}}",
-								"unofficial",
 								".well-known",
 								"jwks.json"
 							]

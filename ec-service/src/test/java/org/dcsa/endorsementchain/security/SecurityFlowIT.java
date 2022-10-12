@@ -14,7 +14,7 @@ import org.dcsa.endorsementchain.components.eblenvelope.EblEnvelopeSignature;
 import org.dcsa.endorsementchain.service.EblEnvelopeService;
 import org.dcsa.endorsementchain.service.ExportService;
 import org.dcsa.endorsementchain.service.ImportService;
-import org.dcsa.endorsementchain.unofficial.controller.JwkSetRestController;
+import org.dcsa.endorsementchain.controller.JwkSetRestController;
 import org.dcsa.endorsementchain.unofficial.service.TransactionService;
 import org.dcsa.endorsementchain.unofficial.service.TransportDocumentService;
 import org.junit.jupiter.api.Test;

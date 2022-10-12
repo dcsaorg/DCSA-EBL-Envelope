@@ -51,6 +51,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/transferblockResponse'
+  /v1/.well-known/jwks.json:
+    get:
+      tags:
+      - JWKS
+      summary: JWKS endpoint providing the public key(s) of this platform
+      description: provides the JWKS of the platform
+      parameters:
+      - name: API-Version
+        in: header
+        description: |
+          An API-Version header MAY be added to the request (optional); if added it MUST only contain MAJOR version. API-Version header MUST be aligned with the URI version.
+        required: false
+        schema:
+          type: string
+          example: "1"
+      responses:
+        "200":
+          description: Request successful
+          headers:
+            API-Version:
+              $ref: '#/components/headers/API-Version'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/jwks'
+              example:
+              - kty: RSA
+                x5t#S256: exa8R4v9nLwglTQn1FKvLdUDYdPGs2Ftp-RezKSTM2A
+                e: AQAB
+                kid: dcsa-kid
+                x5c:
+                - MIIDfDCCAmSgAwIBAgIJAM6iTZvk8egFMA0GCSqGSIb3DQEBCwUAMGwxCzAJBgNVBAYTAk5MMRYwFAYDVQQIEw1Ob29yZC1Ib2xsYW5kMRIwEAYDVQQHEwlBbXN0ZXJkYW0xDTALBgNVBAoTBERDU0ExCzAJBgNVBAsTAklUMRUwEwYDVQQDEwxlYmwtZW52ZWxvcGUwHhcNMjIwNzI5MTAwNjQzWhcNMjIxMDI3MTAwNjQzWjBsMQswCQYDVQQGEwJOTDEWMBQGA1UECBMNTm9vcmQtSG9sbGFuZDESMBAGA1UEBxMJQW1zdGVyZGFtMQ0wCwYDVQQKEwREQ1NBMQswCQYDVQQLEwJJVDEVMBMGA1UEAxMMZWJsLWVudmVsb3BlMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4wwZAmx07g7+rSvacPE60UvZyF02i1fTB/eg2Eu6zIuSr+np+IsEDPa5PdT4XYDSSbwa1gs1HUs7r8JY3OjUQdiXl0IgYj/YWsFJeokfne9kkSfDmFdTeiYzA+mcj68MF3wwK8UR72vprp8nWJeDxGXLjMCECr9vDGozaZ6+U15yVnAUVymBtbDlaNb2qT/OS0Nmls6pUdHfy7VM6QnYy58nBAH/PS4kdxThd1kauAN1+mUaVMYJNCbTlBSew/Y2cvC3Oh6iwe1lYkBIHMvkytGT3lbssX2mIwbht2O5EKg6b6YG2iii732w7i264i2OEKK2/+lR837Y2Es5zFR3vQIDAQABoyEwHzAdBgNVHQ4EFgQUOBRI3iOZCILGWS6ku4cdwLnyxc8wDQYJKoZIhvcNAQELBQADggEBAGIP6bQwA6FxUIJavCvmC/dLbrpkZn2b77QS9xNmDlIdtxgWHsIOK2KwOri2XqEvKhxWQ+xyEXk0F7tLmgA3soV8xDpQL32qc4/RWl3QS2dsXoRPPgMFAxY1Hu4ZAdiN8rdnWylvm7FNvTbE57PpQQXlaEF1dHR6fzBylET35W29pAuNZwdwcOyj0XzXqLHqpd87zluTq5k5JKIjjRAU2YMivLTt0986Q/ihEThVdcX00T3HiLUjRy3hE9HdbJgcdmSo094+T/sJ+rZ79SyNCnXeUYaUzFP6ZibBdf3jZhmolfqnAyJy3qHcQA61Rvn3C76bskxCG8ccspEM3VSJBzM=
+                n: 4wwZAmx07g7-rSvacPE60UvZyF02i1fTB_eg2Eu6zIuSr-np-IsEDPa5PdT4XYDSSbwa1gs1HUs7r8JY3OjUQdiXl0IgYj_YWsFJeokfne9kkSfDmFdTeiYzA-mcj68MF3wwK8UR72vprp8nWJeDxGXLjMCECr9vDGozaZ6-U15yVnAUVymBtbDlaNb2qT_OS0Nmls6pUdHfy7VM6QnYy58nBAH_PS4kdxThd1kauAN1-mUaVMYJNCbTlBSew_Y2cvC3Oh6iwe1lYkBIHMvkytGT3lbssX2mIwbht2O5EKg6b6YG2iii732w7i264i2OEKK2_-lR837Y2Es5zFR3vQ
 components:
   schemas:
     sha256Hash:
@@ -82,7 +115,7 @@ components:
         signature:
           pattern: ^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*)
           type: string
-          description: 'JWS with compact serialization according to: https://datatracker.ietf.org/doc/html/rfc7515#section-7.1 payload of the JWS contains the envelopeHash as received signed by the receiving platform. The content of the payload is the EBL-Envelope defined in: #/components/schemas/eblEnvelope'
+          description: 'JWS with compact serialization according to: [RFC 7515](https://datatracker.ietf.org/doc/html/rfc7515#section-7.1) payload of the JWS contains the envelopeHash as received signed by the receiving platform. <BR> The content of the payload is the EBL-Envelope defined in: [eblEnvelope](#/eblEnvelope)'
           example: eyJraWQiOiJmNjA1YmZlYi1jZjUwLTQ1MTItYTM5Zi02OGRlZGZmYjJhNDgiLCJhbGciOiJSUzI1NiJ9.ImVudmVsb3BlSGFzaCI6ICJkNTZhOTNhN2U5Zjg2YTJkODk1ZGY4MThlMDQ0MGJkY2E2ZmZlMDMyNDZlMmZlZTE0MTMxZjJlNjZjODRjNzVhIg.ff6MAR0Pwtnt3_RGzgIH0oemzusB3iiE1zsq5-q-bpRDLwKV4gS_yCYtz1TMRKF021c7CAWS-NmaTS8e1ydtTRZDEmxENVDl4z58rCIM3_oOpP6XItHkSCacBIi90kQzl97b-ZDC75a1cm1ez39pcg8izDlpUuhNvY6QqN7Dju0bw_-1kZ4YjedMyxgRHztVNNbHUe9qhpbB_yOo0sYb2KmkeOwnA6wKoRvUxWaQU-2RbuK4eAwhjWc5ZgJ3DOLZBLk3ucuz1KT6QCOwfce2oG2tIxuFBsoubStMPfvmAwuKVBMuCHl_NKKzoxRvAkExRLWNi9q6kuAyqfisHhZfBw
     eblEnvelope:
       required:
@@ -305,6 +338,154 @@ components:
       type: string
       description: 'JWS with compact serialization according to: https://datatracker.ietf.org/doc/html/rfc7515#section-7.1 payload of the JWS contains the envelopeHash as received signed by the receiving platform.'
       example: eyJraWQiOiJmNjA1YmZlYi1jZjUwLTQ1MTItYTM5Zi02OGRlZGZmYjJhNDgiLCJhbGciOiJSUzI1NiJ9.ImVudmVsb3BlSGFzaCI6ICJkNTZhOTNhN2U5Zjg2YTJkODk1ZGY4MThlMDQ0MGJkY2E2ZmZlMDMyNDZlMmZlZTE0MTMxZjJlNjZjODRjNzVhIg.ff6MAR0Pwtnt3_RGzgIH0oemzusB3iiE1zsq5-q-bpRDLwKV4gS_yCYtz1TMRKF021c7CAWS-NmaTS8e1ydtTRZDEmxENVDl4z58rCIM3_oOpP6XItHkSCacBIi90kQzl97b-ZDC75a1cm1ez39pcg8izDlpUuhNvY6QqN7Dju0bw_-1kZ4YjedMyxgRHztVNNbHUe9qhpbB_yOo0sYb2KmkeOwnA6wKoRvUxWaQU-2RbuK4eAwhjWc5ZgJ3DOLZBLk3ucuz1KT6QCOwfce2oG2tIxuFBsoubStMPfvmAwuKVBMuCHl_NKKzoxRvAkExRLWNi9q6kuAyqfisHhZfBw
+    jwks:
+      required:
+      - keys
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/jwks_keys'
+      description: JSON Web Key Set to validate JSON Web Signatures, according to [RFC 7517](https://www.ietf.org/rfc/rfc7517.txt)
+    ecPublicKey:
+      type: object
+      properties:
+        crv:
+          type: string
+        x:
+          type: string
+          description: |
+            The "x" (x coordinate) parameter contains the x coordinate for the
+            Elliptic Curve point.  It is represented as the base64url encoding of
+            the octet string representation of the coordinate, as defined in
+            Section 2.3.5 of SEC1 [SEC1].  The length of this octet string MUST
+            be the full size of a coordinate for the curve specified in the "crv"
+            parameter.  For example, if the value of "crv" is "P-521", the octet
+            string must be 66 octets long.
+          format: byte
+        y:
+          maxLength: 66
+          minLength: 66
+          type: string
+          description: |
+            he "y" (y coordinate) parameter contains the y coordinate for the
+            Elliptic Curve point.  It is represented as the base64url encoding of
+            the octet string representation of the coordinate, as defined in
+            Section 2.3.5 of SEC1 [SEC1].  The length of this octet string MUST
+            be the full size of a coordinate for the curve specified in the "crv"
+            parameter.  For example, if the value of "crv" is "P-521", the octet
+            string must be 66 octets long.
+          format: byte
+    ecPrivateKey:
+      type: object
+      properties:
+        d:
+          type: string
+          description: |
+            The "d" (ECC private key) parameter contains the Elliptic Curve
+            private key value.  It is represented as the base64url encoding of
+            the octet string representation of the private key value, as defined
+            in Section 2.3.7 of SEC1 [SEC1].  The length of this octet string
+            MUST be ceiling(log-base-2(n)/8) octets (where n is the order of the
+            curve).
+          format: byte
+    rsaPublicKey:
+      type: object
+      properties:
+        n:
+          type: string
+          description: |
+            The "n" (modulus) parameter contains the modulus value for the RSA
+            public key.  It is represented as a Base64urlUInt-encoded value.
+
+            Note that implementers have found that some cryptographic libraries
+            prefix an extra zero-valued octet to the modulus representations they
+            return, for instance, returning 257 octets for a 2048-bit key, rather
+            than 256.  Implementations using such libraries will need to take
+            care to omit the extra octet from the base64url-encoded
+            representation.
+          format: byte
+        e:
+          type: string
+          description: |
+            The "e" (exponent) parameter contains the exponent value for the RSA
+            public key.  It is represented as a Base64urlUInt-encoded value.
+
+            For instance, when representing the value 65537, the octet sequence
+            to be base64url-encoded MUST consist of the three octets [1, 0, 1];
+            the resulting representation for this value is "AQAB".
+          format: byte
+    rsaPrivateKey:
+      type: object
+      properties:
+        d:
+          type: string
+          description: |
+            The "d" (private exponent) parameter contains the private exponent
+            value for the RSA private key.  It is represented as a Base64urlUInt-
+            encoded value.
+          format: byte
+        p:
+          type: string
+          description: |
+            The "p" (first prime factor) parameter contains the first prime
+            factor.  It is represented as a Base64urlUInt-encoded value.
+          format: byte
+        q:
+          type: string
+          description: |
+            The "q" (second prime factor) parameter contains the second prime
+            factor.  It is represented as a Base64urlUInt-encoded value.
+          format: byte
+        dp:
+          type: string
+          description: |
+            The "dp" (first factor CRT exponent) parameter contains the Chinese
+            Remainder Theorem (CRT) exponent of the first factor.  It is
+            represented as a Base64urlUInt-encoded value.
+          format: byte
+        dq:
+          type: string
+          description: |
+            he "dq" (second factor CRT exponent) parameter contains the CRT
+            exponent of the second factor.  It is represented as a Base64urlUInt-
+            encoded value.
+          format: byte
+        qi:
+          type: string
+          description: |
+            The "qi" (first CRT coefficient) parameter contains the CRT
+            coefficient of the second factor.  It is represented as a
+            Base64urlUInt-encoded value.
+          format: byte
+        oth:
+          type: array
+          description: |
+            The "oth" (other primes info) parameter contains an array of
+            information about any third and subsequent primes, should they exist.
+            When only two primes have been used (the normal case), this parameter
+            MUST be omitted.  When three or more primes have been used, the
+            number of array elements MUST be the number of primes used minus two.
+            For more information on this case, see the description of the
+            OtherPrimeInfo parameters in Appendix A.1.2 of RFC 3447 [RFC3447],
+            upon which the following parameters are modeled.  If the consumer of
+            a JWK does not support private keys with more than two primes and it
+            encounters a private key that includes the "oth" parameter, then it
+            MUST NOT use the key.  Each array element MUST be an object with the
+            following members.
+          items:
+            $ref: '#/components/schemas/rsaPrivateKey_oth'
+    symKey:
+      type: object
+      properties:
+        k:
+          type: string
+          description: |-
+            The "k" (key value) parameter contains the value of the symmetric (or
+            other single-valued) key.  It is represented as the base64url
+            encoding of the octet sequence containing the key value.
+          format: byte
     transportDocument:
       required:
       - shippingInstruction
@@ -2037,6 +2218,115 @@ components:
       type: string
       description: URL for the contact
       example: https://www.dcsa.org
+    jwks_keys:
+      required:
+      - kty
+      type: object
+      properties:
+        kty:
+          type: string
+          description: The "kty" (key type) parameter identifies the cryptographic algorithm family used with the key, such as "RSA" or "EC".  "kty" values should either be registered in the IANA "JSON Web Key Types" registry established by [JWA] or be a value that contains a Collision- Resistant Name.  The "kty" value is a case-sensitive string.  This member MUST be present in a JWK.
+        use:
+          type: string
+          description: |
+            The "use" (public key use) parameter identifies the intended use of
+            the public key.  The "use" parameter is employed to indicate whether
+            a public key is used for encrypting data or verifying the signature
+            on data.
+            values defined are:
+             * sig (signature)
+             * enc (encryption)
+          enum:
+          - sig
+          - enc
+        key_ops:
+          type: string
+          description: |
+            The "key_ops" (key operations) parameter identifies the operation(s)
+            for which the key is intended to be used.  The "key_ops" parameter is
+            intended for use cases in which public, private, or symmetric keys
+            may be present.
+
+            Its value is an array of key operation values.  Values defined by
+            this specification are:
+
+            *  sign (compute digital signature or MAC)
+            *  verify (verify digital signature or MAC)
+            *  encrypt (encrypt content)
+            *  decrypt (decrypt content and validate decryption, if applicable)
+            *  wrapKey (encrypt key)
+            *  unwrapKey (decrypt key and validate decryption, if applicable)
+            *  deriveKey (derive key)
+            *  deriveBits (derive bits not to be used as a key)
+          enum:
+          - sign
+          - verify
+          - encrypt
+          - decrypt
+          - wrapKey
+          - unwrapKey
+          - deriveKey
+          - deriveBits
+        alg:
+          type: string
+          description: The "alg" (algorithm) parameter identifies the algorithm intended for use with the key.  The values used should either be registered in the IANA "JSON Web Signature and Encryption Algorithms" registry established by [JWA] or be a value that contains a Collision- Resistant Name.  The "alg" value is a case-sensitive ASCII string. Use of this member is OPTIONAL.
+        kid:
+          type: string
+          description: The "kid" (key ID) parameter is used to match a specific key.  This is used, for instance, to choose among a set of keys within a JWK Set during key rollover.  The structure of the "kid" value is unspecified.  When "kid" values are used within a JWK Set, different keys within the JWK Set SHOULD use distinct "kid" values.  (One example in which different keys might use the same "kid" value is if they have different "kty" (key type) values but are considered to be equivalent alternatives by the application using them.)  The "kid" value is a case-sensitive string.  Use of this member is OPTIONAL. When used with JWS or JWE, the "kid" value is used to match a JWS or JWE "kid" Header Parameter value.
+        x5u:
+          type: string
+          description: The "x5u" (X.509 URL) parameter is a URI [RFC3986] that refers to a resource for an X.509 public key certificate or certificate chain [RFC5280].  The identified resource MUST provide a representation of the certificate or certificate chain that conforms to RFC 5280 [RFC5280] in PEM-encoded form, with each certificate delimited as specified in Section 6.1 of RFC 4945 [RFC4945].  The key in the first certificate MUST match the public key represented by other members of the JWK.  The protocol used to acquire the resource MUST provide integrity protection; an HTTP GET request to retrieve the certificate MUST use TLS [RFC2818] [RFC5246]; the identity of the server MUST be validated, as per Section 6 of RFC 6125 [RFC6125].  Use of this member is OPTIONAL.
+          format: url
+        x5c:
+          type: array
+          description: |
+            The "x5c" (X.509 certificate chain) parameter contains a chain of one
+            or more PKIX certificates [RFC5280].  The certificate chain is
+            represented as a JSON array of certificate value strings.  Each
+            string in the array is a base64-encoded (Section 4 of [RFC4648] --
+            not base64url-encoded) DER [ITU.X690.1994] PKIX certificate value.
+            The PKIX certificate containing the key value MUST be the first
+            certificate.  This MAY be followed by additional certificates, with
+            each subsequent certificate being the one used to certify the
+            previous one.  The key in the first certificate MUST match the public
+            key represented by other members of the JWK.  Use of this member is
+            OPTIONAL.
+          items:
+            type: string
+        x5t:
+          type: string
+          description: |
+            The "x5t" (X.509 certificate SHA-1 thumbprint) parameter is a
+            base64url-encoded SHA-1 thumbprint (a.k.a. digest) of the DER
+            encoding of an X.509 certificate [RFC5280].  Note that certificate
+            thumbprints are also sometimes known as certificate fingerprints.
+            The key in the certificate MUST match the public key represented by
+            other members of the JWK.  Use of this member is OPTIONAL.
+      description: The value of the "keys" parameter is an array of JWK values. By default, the order of the JWK values within the array does not imply an order of preference among them, although applications of JWK Sets can choose to assign a meaning to the order for their purposes, if desired.
+    rsaPrivateKey_oth:
+      type: object
+      properties:
+        r:
+          type: string
+          description: |
+            The "r" (prime factor) parameter within an "oth" array member
+            represents the value of a subsequent prime factor.  It is represented
+            as a Base64urlUInt-encoded value.
+          format: byte
+        d:
+          type: string
+          description: |
+            The "d" (factor CRT exponent) parameter within an "oth" array member
+            represents the CRT exponent of the corresponding prime factor.  It is
+            represented as a Base64urlUInt-encoded value.
+          format: byte
+        t:
+          type: string
+          description: |
+            The "t" (factor CRT coefficient) parameter within an "oth" array
+            member represents the CRT coefficient of the corresponding prime
+            factor.  It is represented as a Base64urlUInt-encoded value.
+          format: byte
   parameters:
     Api-Version-Major:
       name: API-Version
