@@ -354,8 +354,6 @@ components:
         crv:
           type: string
         x:
-          maxLength: 66
-          minLength: 66
           type: string
           description: |
             The "x" (x coordinate) parameter contains the x coordinate for the
@@ -365,6 +363,7 @@ components:
             be the full size of a coordinate for the curve specified in the "crv"
             parameter.  For example, if the value of "crv" is "P-521", the octet
             string must be 66 octets long.
+          format: byte
         y:
           maxLength: 66
           minLength: 66
@@ -377,6 +376,7 @@ components:
             be the full size of a coordinate for the curve specified in the "crv"
             parameter.  For example, if the value of "crv" is "P-521", the octet
             string must be 66 octets long.
+          format: byte
     ecPrivateKey:
       type: object
       properties:
