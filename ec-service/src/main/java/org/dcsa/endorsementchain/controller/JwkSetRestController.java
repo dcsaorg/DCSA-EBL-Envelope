@@ -1,4 +1,4 @@
-package org.dcsa.endorsementchain.unofficial.controller;
+package org.dcsa.endorsementchain.controller;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class JwkSetRestController {
 
-  public static final String API_PATH = "/unofficial/.well-known";
+  public static final String API_PATH = "/.well-known";
 
   @Qualifier("signing-jwk")
   private final JWKSet jwkSet;
