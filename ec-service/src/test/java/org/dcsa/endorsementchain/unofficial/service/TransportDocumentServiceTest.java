@@ -38,7 +38,7 @@ class TransportDocumentServiceTest {
     when(repository.save(any())).thenReturn(transportDocument);
 
     Optional<String> documentHash =
-        service.saveTransportDocument(transportDocument.getTransportDocumentJson(), TransportDocumentDataFactory.transportDocumentHash());
+        service.saveTransportDocument(transportDocument.getTransportDocumentJson());
     assertTrue(documentHash.isPresent());
     assertEquals(transportDocument.getDocumentHash(), documentHash.get());
   }
@@ -49,7 +49,7 @@ class TransportDocumentServiceTest {
         .thenReturn(TransportDocumentDataFactory.transportDocumentEntityWithoutDocumentHash());
 
     Optional<String> documentHash =
-        service.saveTransportDocument(transportDocument.getTransportDocumentJson(), TransportDocumentDataFactory.transportDocumentHash());
+        service.saveTransportDocument(transportDocument.getTransportDocumentJson());
     assertTrue(documentHash.isEmpty());
   }
 

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.dcsa.endorsementchain.unofficial.service.TransportDocumentService;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
 import org.springframework.http.MediaType;
@@ -45,10 +44,7 @@ public class TransportDocumentController {
 
     return Optional.of(document)
         .map(this::marshalDocument)
-        .flatMap(
-            rawDocument ->
-                transportDocumentService.saveTransportDocument(
-                    rawDocument, DigestUtils.sha256Hex(rawDocument)))
+        .flatMap(transportDocumentService::saveTransportDocument)
         .map(
             transportDocumentHash ->
                 ResponseEntity.created(

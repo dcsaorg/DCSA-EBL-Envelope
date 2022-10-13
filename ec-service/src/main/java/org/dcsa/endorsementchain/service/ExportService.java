@@ -1,6 +1,8 @@
 package org.dcsa.endorsementchain.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
 import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
@@ -9,6 +11,7 @@ import org.dcsa.endorsementchain.transferobjects.SignedEblEnvelopeTO;
 import org.dcsa.endorsementchain.transferobjects.TransferblockTO;
 import org.dcsa.endorsementchain.unofficial.service.TransactionService;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
+import org.erdtman.jcs.JsonCanonicalizer;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -36,6 +39,9 @@ public class ExportService {
 
     List<EblEnvelope> previousEblEnvelopes =
         eblEnvelopeService.findPreviousEblEnvelopes(documentHash);
+
+    checkOutGoingDocumentHash(transportDocument.getTransportDocumentJson(), documentHash);
+
     String previousEblEnvelopeHash =
         eblEnvelopeService.findPreviousEblEnvelopeHash(previousEblEnvelopes);
     List<SignedEblEnvelopeTO> previousSignedEblEnvelopes =
@@ -96,5 +102,16 @@ public class ExportService {
         .path("/v1/transferblocks")
         .build()
         .toUri();
+  }
+
+  //The reference implementation already ensures the transportdocument is formatted according to RFC 8785 in TransportDocumentController#addTransportDocument
+  //If the transport document was received from another EBL provider and the hash is provided it cannot be changed when it differs. So an exception is raised.
+  @SneakyThrows
+  private void checkOutGoingDocumentHash(String transportDocumentJson, String documentHash) {
+    JsonCanonicalizer jsonCanonicalizer = new JsonCanonicalizer(transportDocumentJson);
+    String canonizedTransportDocument = jsonCanonicalizer.getEncodedString();
+    if(!documentHash.equals(DigestUtils.sha256Hex(canonizedTransportDocument))) {
+      throw ConcreteRequestErrorMessageException.internalServerError("The documentHash does not match the hash calculated on the canonized transport document");
+    }
   }
 }

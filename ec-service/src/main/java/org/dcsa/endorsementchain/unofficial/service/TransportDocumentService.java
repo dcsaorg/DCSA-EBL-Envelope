@@ -1,6 +1,9 @@
 package org.dcsa.endorsementchain.unofficial.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
@@ -8,6 +11,7 @@ import org.dcsa.endorsementchain.persistence.entity.enums.TransactionInstruction
 import org.dcsa.endorsementchain.persistence.repository.TransportDocumentRepository;
 import org.dcsa.endorsementchain.service.ExportService;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
+import org.erdtman.jcs.JsonCanonicalizer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +28,7 @@ import java.util.stream.Stream;
 public class TransportDocumentService {
   private final TransportDocumentRepository repository;
   private final ExportService exportService;
+  private final ObjectMapper mapper;
 
   @Value("${server.port}")
   private String port;
@@ -32,15 +37,18 @@ public class TransportDocumentService {
   private String hostname;
 
   @Transactional
-  public Optional<String> saveTransportDocument(String transportDocument, String documentHash) {
+  public Optional<String> saveTransportDocument(String transportDocument) {
 
-    verifyDocumentHash(transportDocument, List.of(documentHash));
+    String canonizedTransportDocument = canonizeJson(transportDocument);
+    String documentHash = DigestUtils.sha256Hex(canonizedTransportDocument);
 
-    return Stream.of(transportDocument)
+    verifyDocumentHash(canonizedTransportDocument, List.of(documentHash));
+
+    return Stream.of(canonizedTransportDocument)
         .map(
             jsonNode ->
                 TransportDocument.builder()
-                    .transportDocumentJson(transportDocument)
+                    .transportDocumentJson(canonizedTransportDocument)
                     .documentHash(documentHash)
                     .isExported(false)
                     .build())
@@ -82,6 +90,12 @@ public class TransportDocumentService {
         .map(TransportDocument::export)
         .map(repository::save)
         .map(transportDocument1 -> "TransportDocument exported");
+  }
+
+  @SneakyThrows
+  private String canonizeJson(String rawDocument) {
+    JsonCanonicalizer jsonCanonicalizer = new JsonCanonicalizer(rawDocument);
+    return jsonCanonicalizer.getEncodedString();
   }
 
   private Function<TransportDocument, TransportDocument> includeTransferTransaction(

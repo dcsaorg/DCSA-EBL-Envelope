@@ -70,34 +70,8 @@ This results in the following JSON structure:
 {
   "endorcementChain": [
     {
-      "signature": "eyJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdLCJhbGciOiJIUzI1NiJ9..5rPBT_XW-x7mjc1ubf4WwW1iV2YJyc4CCFxORIEaAEk", //JWS signature of the eblEnvelope signed by the sending platform
-      "envelopeHash": "20a0257b313ae08417e07f6555c4ec829a512c083f3ead16b41158018a22abe9", //sha256 hash of the eblEnvelope
-      "eblEnvelope": {
-        "documentHash": "76a7d14c83d7268d643ae7345c448de60701f955d264a743e6928a0b8268b24f", //sha256 of the transportdocument included in the export
-        "previousEnvelopeHash": null, //sha256 hash of a previous envelopeHash. null if this is the first cross-platform export
-        "transactions": [ //list of individual transactions that occurred in the platform that are exported to another platform
-          {
-            "instruction": "TRNS", //instruction for processing the transaction in this example transfer
-            "comments": "Transfer B/L from 43549850248 on exampleplatform.com to abcdefghijk on anotherplatform.com", //free text comment
-            "timestamp": 1658385166432647412, //Unix epoch with millisecond precision when the transction took place
-            "isToOrder": true, //indicator of the B/L is to order
-            "platformHost": "https://exampleblplatform.net", //platform where the transaction is performed
-            "transferee": { //information about the transferee, in this example only the eBLPlatformIdentifier is depicted.
-              "eBLPlatformIdentifier": "abcdefghijk@anotherplatform.com", //identifier of the user on the target platform and the target platform
-            }
-          },
-          {
-            "instruction": "ISSU",
-            "comments": "Issue B/L to 43549850248",
-            "timestamp": 1658385166302442200,
-            "isToOrder": true,
-            "platformHost": "https://exampleblplatform.net",
-            "transferee": {
-              "eBLPlatformIdentifier": "43549850248@exampleplatform.com",
-            }
-          }
-        ]
-      }
+      "envelopeHash": "20a0257b313ae08417e07f6555c4ec829a512c083f3ead16b41158018a22abe9",
+      "signature": "eyJhbGciOiJSUzI1NiIsImtpZCI6IlVhRVdLNmt2ZkRITzNZT2NwUGl2M1RCT2JQTzk2SFZhR2U0czFhUUxBZU0ifQ.eyJkb2N1bWVudEhhc2giOiJmZDg2OGM4MmU5OTc3N2I0NzJhMTY3NzM5MGQ5NTRkYmIwMTMxY2IzYjBmNTVjOGVmNTE5Njk4NTY0MTBkMzhlIiwicHJldmlvdXNFbnZlbG9wZUhhc2giOm51bGwsInRyYW5zYWN0aW9ucyI6W3siaW5zdHJ1Y3Rpb24iOiJJU1NVIiwiY29tbWVudHMiOiJUaGUgQi9MIGhhcyBiZWVuIGlzc3VlZC4iLCJ0aW1lc3RhbXAiOjE2NTgzODUxNjYzMDI0NDIyMDAsImlzVG9PcmRlciI6dHJ1ZSwicGxhdGZvcm1Ib3N0IjoibG9jYWxob3N0Ojg0NDMiLCJ0cmFuc2ZlcmVlIjoiNDM1NDk4NTAyNDhAbG9jYWxob3N0Ojg0NDMifV19.aybAB3RUg_UM2WcvoE4s807Kf7BhSALZq1EvF9f_AUP6ZZgOP4cFS0rlLHSVrobKlF_Og-w0K_M9SPAQS6UnY0hht6pwHTHmoxPmWoQ-ARhnsThjhB3ZYhDbrroJnYPkQAjCmKXPrhNi2z9Fn4GvaI6iRjfJMQchSWQtAEjhqSLNaHtRwec65CDYEZ6OTHX7uP5g3WZtCfmswRGrkcCLosveSxsFpezjjOfTEo2NCCtO0tAxtNtus4GsF8QIMrM6QknJ4909ZrVonvtMUoRffFoUqgemfaFggK5XriLgn2OdSn8ZBhRn_ZqVojuf26mXrVm12C9jSQPPfPGy-myrOQ"
     }
   ]
 }
