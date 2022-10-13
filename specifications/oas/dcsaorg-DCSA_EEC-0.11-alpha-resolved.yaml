@@ -35,7 +35,7 @@ paths:
           type: string
           example: "1"
       requestBody:
-        description: the transferblock containing the B/L document along with the endorsement chain.
+        description: the transferblock containing the B/L document along with the endorsement chain. The B/L document should be formatted according to [RFC8785](https://datatracker.ietf.org/doc/html/rfc8785)
         content:
           application/json:
             schema:
