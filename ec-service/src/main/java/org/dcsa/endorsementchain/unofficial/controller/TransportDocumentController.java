@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.dcsa.endorsementchain.unofficial.service.TransportDocumentService;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
+import org.erdtman.jcs.JsonCanonicalizer;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,7 @@ public class TransportDocumentController {
 
     return Optional.of(document)
         .map(this::marshalDocument)
+        .map(this::canonizeJson)
         .flatMap(
             rawDocument ->
                 transportDocumentService.saveTransportDocument(
@@ -81,5 +83,11 @@ public class TransportDocumentController {
   @SneakyThrows
   private String marshalDocument(JsonNode document) {
     return mapper.writeValueAsString(document);
+  }
+
+  @SneakyThrows
+  private String canonizeJson(String rawDocument) {
+    JsonCanonicalizer jsonCanonicalizer = new JsonCanonicalizer(rawDocument);
+    return jsonCanonicalizer.getEncodedString();
   }
 }
