@@ -42,13 +42,13 @@ public class TransportDocumentService {
     String canonizedTransportDocument = canonizeJson(transportDocument);
     String documentHash = DigestUtils.sha256Hex(canonizedTransportDocument);
 
-    verifyDocumentHash(transportDocument, List.of(documentHash));
+    verifyDocumentHash(canonizedTransportDocument, List.of(documentHash));
 
-    return Stream.of(transportDocument)
+    return Stream.of(canonizedTransportDocument)
         .map(
             jsonNode ->
                 TransportDocument.builder()
-                    .transportDocumentJson(transportDocument)
+                    .transportDocumentJson(canonizedTransportDocument)
                     .documentHash(documentHash)
                     .isExported(false)
                     .build())
