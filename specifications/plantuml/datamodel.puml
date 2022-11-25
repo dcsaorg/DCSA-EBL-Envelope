@@ -1,0 +1,34 @@
+@startuml
+  entity transportdocument {
+    *document_hash: varchar(64)
+    --
+    *transport_document_json: text
+    *is_expected: bool
+  }
+
+  entity ebl_envelope {
+    *envelope_hash: varchar(64)
+    --
+    previous_envelope_hash: varchar(64)
+    *signature: text
+    *document_hash: varchar(64) <<FK>>
+  }
+
+  entity transaction {
+    *id: uuid
+    --
+    *document_hash: varchar(64) <<FK>>
+    *envelope_hash: varchar(64) <<FK>>
+    comments: varchar(255)
+    *instruction: varchar(4)
+    is_to_order: bool
+    platform_host: varchar(255)
+    *timestamp: int8
+    transferee: varchar(255)
+  }
+
+  ' relations
+  ebl_envelope ||--o{ transaction
+  ebl_envelope |o--|| transportdocument
+  transportdocument ||--o{ transaction
+@enduml
