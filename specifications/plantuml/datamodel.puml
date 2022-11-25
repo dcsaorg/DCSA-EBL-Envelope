@@ -24,11 +24,35 @@
     is_to_order: bool
     platform_host: varchar(255)
     *timestamp: int8
-    transferee: varchar(255)
+    transferee: varchar(255) <<FK: party.ebl_platform_identifier>>
+  }
+
+  entity party {
+    *ebl_platform_identifier: varchar(255)
+    --
+    *party_name: varchar(255)
+    *registration_number: varchar(255)
+    *country_of_registration: varchar(2)
+    address: text
+    tax_reference: varchar(255)
+    lei: varchar(255)
+    cbsa: varchar(255)
+    fmc: varchar(255)
+    exis: varchar(255)
+    smdg: varchar(255)
+    itu: varchar(255)
+    itigg: varchar(255)
+    scac: varchar(255)
+    imo: varchar(255)
+    bic: varchar(255)
+    lloyd: varchar(255)
+    unece: varchar(255)
+    iso: varchar(255)
   }
 
   ' relations
   ebl_envelope ||--o{ transaction
   ebl_envelope |o--|| transportdocument
   transportdocument ||--o{ transaction
+  transaction |o--|| party
 @enduml
