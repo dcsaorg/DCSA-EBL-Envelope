@@ -28,3 +28,7 @@ Alternatively, if you are using Windows run the following command in a Powershel
 ```
 (Get-ChildItem ./*, -File) | Get-Content | psql -U [postgres_username] -p [port_number]
 ```
+
+## Datamodel
+The datamodel used in the database for this reference implementation can be depicted with the following ERD:
+![datamodel](../specifications/plantuml/datamodel.png)
