@@ -17,12 +17,14 @@ services:
       options:
         max-file: '10'
         max-size: 200k
+
   dcsa-ec-registry-test-db:
+    image: postgres:10-alpine
     container_name: ec_registry_db
     environment:
       POSTGRES_PASSWORD: "9c072fe8-c59c-11ea-b8d1-7b6577e9f3f5"
-    build:
-      datamodel/
+    volumes:
+      - ./datamodel/initdb.d:/docker-entrypoint-initdb.d:ro
     ports:
       - 5432:5432
 
