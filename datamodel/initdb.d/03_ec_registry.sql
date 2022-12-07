@@ -58,6 +58,5 @@ CREATE TABLE ec_registry."transaction" (
 
 ALTER TABLE ec_registry."transaction" ADD FOREIGN KEY (document_hash) REFERENCES ec_registry.transportdocument (document_hash);
 ALTER TABLE ec_registry."transaction" ADD FOREIGN KEY (envelope_hash) REFERENCES ec_registry.ebl_envelope (envelope_hash);
-ALTER TABLE ec_registry."transaction" ADD FOREIGN KEY (transferee) REFERENCES ec_registry.party (ebl_platform_identifier);
 
 COMMIT;
