@@ -8,7 +8,7 @@ services:
     ports:
       - 8443:8443
     environment:
-      - "db_hostname=dcsa-ec-registry-test-db-platform1"
+      - "db_hostname=dcsa-test-db1"
       - "SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-dev}"
       - "SPRING_DATASOURCE_PASSWORD=9c072fe8-c59c-11ea-b8d1-7b6577e9f3f5"
       - "ROOT_LOG_LEVEL=${ROOT_LOG_LEVEL:-INFO}"
@@ -22,14 +22,16 @@ services:
       options:
         max-file: '10'
         max-size: 200k
-  dcsa-ec-registry-test-db-platform1:
+  dcsa-test-db1:
+    image: postgres:10-alpine
     container_name: ec_registry_db-platform1
     environment:
-      POSTGRES_PASSWORD: "9c072fe8-c59c-11ea-b8d1-7b6577e9f3f5"
-    build:
-      datamodel/
+      POSTGRES_PASSWORD: "change_this_password"
+    volumes:
+      - ./datamodel/initdb.d:/docker-entrypoint-initdb.d:ro
     ports:
       - 5432:5432
+
   ec-registry-platform2:
     build:
       .
@@ -38,7 +40,7 @@ services:
     ports:
       - 8444:8444
     environment:
-      - "db_hostname=dcsa-ec-registry-test-db-platform2"
+      - "db_hostname=dcsa-test-db2"
       - "SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-dev}"
       - "SPRING_DATASOURCE_PASSWORD=9c072fe8-c59c-11ea-b8d1-7b6577e9f3f5"
       - "PORT=8444"
@@ -53,12 +55,12 @@ services:
       options:
         max-file: '10'
         max-size: 200k
-  dcsa-ec-registry-test-db-platform2:
+  dcsa-test-db2:
+    image: postgres:10-alpine
     container_name: ec_registry_db-platform2
     environment:
-      POSTGRES_PASSWORD: "9c072fe8-c59c-11ea-b8d1-7b6577e9f3f5"
-    build:
-      datamodel/
+      POSTGRES_PASSWORD: "change_this_password"
+    volumes:
+      - ./datamodel/initdb.d:/docker-entrypoint-initdb.d:ro
     ports:
       - 5433:5432
-
