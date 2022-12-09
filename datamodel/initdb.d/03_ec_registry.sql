@@ -17,8 +17,30 @@ CREATE TABLE ec_registry.ebl_envelope (
   signature text NOT NULL,
   document_hash varchar(64) NOT NULL
 );
-
 ALTER TABLE ec_registry.ebl_envelope ADD FOREIGN KEY (document_hash) REFERENCES ec_registry.transportdocument(document_hash);
+
+DROP TABLE IF EXISTS ec_registry."party" CASCADE;
+CREATE TABLE ec_registry."party" (
+  ebl_platform_identifier varchar(255) NOT NULL PRIMARY KEY,
+  party_name varchar(255) NOT NULL,
+  registration_number varchar(255) NOT NULL,
+  country_of_registration varchar(2) NOT NULL,
+  address text,
+  tax_reference varchar(255),
+  lei varchar(255),
+  cbsa varchar(255),
+  fmc varchar(255),
+  exis varchar(255),
+  smdg varchar(255),
+  itu varchar(255),
+  itigg varchar(255),
+  scac varchar(255),
+  imo varchar(255),
+  bic varchar(255),
+  lloyd varchar(255),
+  unece varchar(255),
+  iso varchar(255)
+);
 
 DROP TABLE IF EXISTS ec_registry."transaction" CASCADE;
 CREATE TABLE ec_registry."transaction" (
