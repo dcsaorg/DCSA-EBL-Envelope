@@ -4,6 +4,7 @@ import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
 import org.dcsa.endorsementchain.persistence.repository.TransactionRepository;
 import org.dcsa.endorsementchain.persistence.repository.TransportDocumentRepository;
+import org.dcsa.endorsementchain.service.PartyService;
 import org.dcsa.endorsementchain.transferobjects.EndorsementChainTransactionTO;
 import org.dcsa.endorsementchain.unofficial.datafactories.TransactionDataFactory;
 import org.dcsa.endorsementchain.unofficial.datafactories.TransportDocumentDataFactory;
@@ -32,6 +33,7 @@ class TransactionServiceTest {
   @Mock TransactionRepository transactionRepository;
 
   @Mock TransportDocumentRepository transportDocumentRepository;
+  @Mock PartyService partyService;
 
   @Spy TransactionMapper mapper = Mappers.getMapper(TransactionMapper.class);
 

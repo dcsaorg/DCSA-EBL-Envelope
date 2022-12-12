@@ -40,7 +40,7 @@ public class PartyServiceTest {
     when(partyRepository.findById(any())).thenReturn(Optional.of(PartyDataFactory.party()));
 
     // Execute
-    Optional<PartyTO> actual = partyService.findPartyByUserId("test");
+    Optional<PartyTO> actual = partyService.findLocalPartyByUserId("test");
 
     // Verify
     assertTrue(actual.isPresent());
@@ -54,7 +54,7 @@ public class PartyServiceTest {
     when(partyRepository.findById(any())).thenReturn(Optional.empty());
 
     // Execute
-    Optional<PartyTO> actual = partyService.findPartyByUserId("test");
+    Optional<PartyTO> actual = partyService.findLocalPartyByUserId("test");
 
     // Verify
     assertFalse(actual.isPresent());

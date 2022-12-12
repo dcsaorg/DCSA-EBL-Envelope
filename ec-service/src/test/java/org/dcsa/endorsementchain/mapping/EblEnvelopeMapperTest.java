@@ -1,13 +1,17 @@
 package org.dcsa.endorsementchain.mapping;
 
+import org.dcsa.endorsementchain.datafactories.PartyDataFactory;
 import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
 import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
 import org.dcsa.endorsementchain.persistence.entity.enums.TransactionAction;
 import org.dcsa.endorsementchain.transferobjects.EblEnvelopeTO;
 import org.dcsa.endorsementchain.transferobjects.enums.BlAction;
+import org.dcsa.endorsementchain.unofficial.mapping.TransactionMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Set;
 
@@ -17,6 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class EblEnvelopeMapperTest {
 
   private EblEnvelopeMapper mapper = Mappers.getMapper(EblEnvelopeMapper.class);
+  private TransactionMapper transactionMapper = Mappers.getMapper(TransactionMapper.class);
+
+  @BeforeEach
+  public void setup() {
+    ReflectionTestUtils.setField(mapper, "transactionMapper", transactionMapper);
+  }
 
   @Test
   void testEblEnvelopeMapper() {
@@ -38,7 +48,7 @@ class EblEnvelopeMapperTest {
                                 .isToOrder(true)
                                 .action(TransactionAction.ISSU)
                                 .platformHost("localhost:443")
-                                .transferee("test@test.io")
+                                .party(PartyDataFactory.party())
                                 .build()))
                     .build())
             .build();

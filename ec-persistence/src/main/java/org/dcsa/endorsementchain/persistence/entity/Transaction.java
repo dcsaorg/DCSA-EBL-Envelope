@@ -43,8 +43,11 @@ public class Transaction {
 
   private String platformHost;
 
-  //ToDo this needs to be the DCSA Party object
-  private String transferee;
+  @ToString.Exclude
+  @EqualsAndHashCode.Exclude
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "transferee")
+  private Party party;
 
   public Transaction linkTransactionToTransportDocument(TransportDocument transportDocument) {
     if (Boolean.TRUE.equals(transportDocument.getIsExported())) {

@@ -5,6 +5,7 @@ import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
 import org.dcsa.endorsementchain.persistence.repository.TransactionRepository;
 import org.dcsa.endorsementchain.persistence.repository.TransportDocumentRepository;
+import org.dcsa.endorsementchain.service.PartyService;
 import org.dcsa.endorsementchain.transferobjects.EndorsementChainTransactionTO;
 import org.dcsa.endorsementchain.unofficial.mapping.TransactionMapper;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
@@ -19,6 +20,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
+  private final PartyService partyService;
   private final TransactionRepository repository;
   private final TransportDocumentRepository transportDocumentRepository;
   private final TransactionMapper mapper;
@@ -49,7 +51,9 @@ public class TransactionService {
   private Transaction createLinkedTransaction(
       EndorsementChainTransactionTO transactionRequest, TransportDocument transportDocument) {
     Transaction transaction =
-        mapper.endorsementChainTransactionToTransaction(transactionRequest, hostname + ":" + port);
+        mapper.endorsementChainTransactionToTransaction(transactionRequest,
+          hostname + ":" + port,
+          partyService.getPartyByTransferee(transactionRequest.transferee()));
     transaction.linkTransactionToTransportDocument(transportDocument);
     return transaction;
   }
