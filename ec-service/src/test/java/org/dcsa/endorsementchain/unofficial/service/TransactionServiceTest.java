@@ -120,7 +120,7 @@ class TransactionServiceTest {
     List<Transaction> transactions = List.of(transaction);
     List<EndorsementChainTransactionTO> endorsementChainTransactionTOS = transactionService.localToEndorsementChainTransactions(transactions);
     assertEquals(1, endorsementChainTransactionTOS.size());
-    assertEquals(transaction.getInstruction().name(), endorsementChainTransactionTOS.get(0).instruction().name());
+    assertEquals(transaction.getAction().name(), endorsementChainTransactionTOS.get(0).action().name());
     assertEquals(transaction.getTimestamp(), endorsementChainTransactionTOS.get(0).timestamp());
   }
 }

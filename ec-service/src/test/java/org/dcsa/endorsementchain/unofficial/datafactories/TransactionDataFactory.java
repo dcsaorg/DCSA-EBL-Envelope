@@ -3,9 +3,9 @@ package org.dcsa.endorsementchain.unofficial.datafactories;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.experimental.UtilityClass;
 import org.dcsa.endorsementchain.persistence.entity.Transaction;
-import org.dcsa.endorsementchain.persistence.entity.enums.TransactionInstruction;
+import org.dcsa.endorsementchain.persistence.entity.enums.TransactionAction;
 import org.dcsa.endorsementchain.transferobjects.EndorsementChainTransactionTO;
-import org.dcsa.endorsementchain.transferobjects.enums.BlInstruction;
+import org.dcsa.endorsementchain.transferobjects.enums.BlAction;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +16,7 @@ public class TransactionDataFactory {
   public Transaction transactionEntity() {
     return Transaction.builder()
       .comments("this is a free text comment")
-      .instruction(TransactionInstruction.ISSU)
+      .action(TransactionAction.ISSU)
       .isToOrder(true)
       .platformHost("localhost:8443")
       .id(UUID.fromString("326137d8-bd60-4dea-88cc-52687fcb303a"))
@@ -29,7 +29,7 @@ public class TransactionDataFactory {
   public List<Transaction> transactionEntityList() {
     Transaction transaction = Transaction.builder()
       .comments("this is a free text comment")
-      .instruction(TransactionInstruction.TRNS)
+      .action(TransactionAction.TRNS)
       .isToOrder(true)
       .platformHost("localhost:8443")
       .id(UUID.fromString("cb4c7721-f87c-485e-a6ec-3d0682faa24c"))
@@ -43,7 +43,7 @@ public class TransactionDataFactory {
 
   public EndorsementChainTransactionTO endorsementChainTransaction() {
     return EndorsementChainTransactionTO.builder()
-      .instruction(BlInstruction.ISSU)
+      .action(BlAction.ISSU)
       .comments("this is a free text comment")
       .isToOrder(true)
       .transferee("Receiving party")

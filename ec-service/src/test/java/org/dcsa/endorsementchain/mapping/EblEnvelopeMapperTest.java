@@ -3,9 +3,9 @@ package org.dcsa.endorsementchain.mapping;
 import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
 import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
-import org.dcsa.endorsementchain.persistence.entity.enums.TransactionInstruction;
+import org.dcsa.endorsementchain.persistence.entity.enums.TransactionAction;
 import org.dcsa.endorsementchain.transferobjects.EblEnvelopeTO;
-import org.dcsa.endorsementchain.transferobjects.enums.BlInstruction;
+import org.dcsa.endorsementchain.transferobjects.enums.BlAction;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -36,7 +36,7 @@ class EblEnvelopeMapperTest {
                             Transaction.builder()
                                 .comments("this is a comment")
                                 .isToOrder(true)
-                                .instruction(TransactionInstruction.ISSU)
+                                .action(TransactionAction.ISSU)
                                 .platformHost("localhost:443")
                                 .transferee("test@test.io")
                                 .build()))
@@ -46,7 +46,7 @@ class EblEnvelopeMapperTest {
     EblEnvelopeTO eblEnvelopeTO = mapper.eblEnvelopeToTo(envelope);
     assertEquals(envelope.getTransportDocument().getDocumentHash(), eblEnvelopeTO.documentHash());
     assertEquals(envelope.getTransportDocument().getTransactions().size(), eblEnvelopeTO.transactions().size());
-    assertEquals(BlInstruction.ISSU, eblEnvelopeTO.transactions().get(0).instruction());
+    assertEquals(BlAction.ISSU, eblEnvelopeTO.transactions().get(0).action());
     assertNull(eblEnvelopeTO.previousEnvelopeHash());
   }
 }

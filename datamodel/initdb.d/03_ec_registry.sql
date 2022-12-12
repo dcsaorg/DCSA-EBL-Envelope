@@ -47,7 +47,7 @@ CREATE TABLE ec_registry."transaction" (
   id uuid NOT NULL PRIMARY KEY,
   "comments" varchar(255) NULL,
   document_hash varchar(64) NOT NULL,
-  instruction varchar(4) NOT NULL,
+  "action" varchar(4) NOT NULL,
   is_to_order bool NULL,
   platform_host varchar(255) NULL,
   "timestamp" int8 NOT NULL,
