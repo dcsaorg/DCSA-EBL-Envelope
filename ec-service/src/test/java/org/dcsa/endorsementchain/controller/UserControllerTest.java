@@ -35,7 +35,7 @@ public class UserControllerTest {
   public void testGetUser() throws Exception {
     // Setup
     PartyTO expected = PartyDataFactory.partyTO();
-    when(partyService.findPartyByUserId(any())).thenReturn(Optional.of(expected));
+    when(partyService.findLocalPartyByUserId(any())).thenReturn(Optional.of(expected));
 
     // Execute
     String json = mockMvc.perform(MockMvcRequestBuilders.get("/user/test"))
@@ -45,16 +45,16 @@ public class UserControllerTest {
     // Verify
     PartyTO actual = new ObjectMapper().readValue(json, PartyTO.class);
     assertEquals(expected, actual);
-    verify(partyService).findPartyByUserId("test");
+    verify(partyService).findLocalPartyByUserId("test");
   }
 
   @Test
   public void testGetUser_NotFound() throws Exception {
-    when(partyService.findPartyByUserId(any())).thenReturn(Optional.empty());
+    when(partyService.findLocalPartyByUserId(any())).thenReturn(Optional.empty());
 
     mockMvc.perform(MockMvcRequestBuilders.get("/user/test"))
       .andExpect(status().isNotFound());
 
-    verify(partyService).findPartyByUserId("test");
+    verify(partyService).findLocalPartyByUserId("test");
   }
 }

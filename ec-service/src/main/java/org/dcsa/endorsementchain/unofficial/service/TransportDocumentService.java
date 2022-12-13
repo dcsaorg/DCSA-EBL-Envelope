@@ -7,8 +7,10 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
 import org.dcsa.endorsementchain.persistence.entity.enums.TransactionAction;
+import org.dcsa.endorsementchain.persistence.repository.PartyRepository;
 import org.dcsa.endorsementchain.persistence.repository.TransportDocumentRepository;
 import org.dcsa.endorsementchain.service.ExportService;
+import org.dcsa.endorsementchain.service.PartyService;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
 import org.erdtman.jcs.JsonCanonicalizer;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +28,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class TransportDocumentService {
   private final TransportDocumentRepository repository;
+  private final PartyService partyService;
   private final ExportService exportService;
   private final ObjectMapper mapper;
 
@@ -111,7 +114,7 @@ public class TransportDocumentService {
 
   private Transaction createExportTransaction(String transferee, Set<Transaction> transactions) {
     return Transaction.builder()
-        .transferee(transferee)
+        .party(partyService.getPartyByTransferee(transferee))
         .comments("The B/L exported to: " + transferee)
         .isToOrder(
             transactions.stream()

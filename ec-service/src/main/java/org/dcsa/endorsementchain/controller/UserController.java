@@ -21,6 +21,6 @@ public class UserController {
 
   @GetMapping(value = "/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<PartyTO> getUser(@NotBlank @Size(max = 255) @PathVariable("userId") String userId) {
-    return ResponseEntity.of(partyService.findPartyByUserId(userId));
+    return ResponseEntity.of(partyService.findLocalPartyByUserId(userId));
   }
 }

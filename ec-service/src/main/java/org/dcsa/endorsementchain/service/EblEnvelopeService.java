@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EblEnvelopeService {
+  private final PartyService partyService;
   private final EblEnvelopeRepository eblEnvelopeRepository;
   private final EblEnvelopeSignature signature;
   private final TransactionMapper transactionMapper;
@@ -155,7 +156,7 @@ public class EblEnvelopeService {
             .map(
                 endorsementChainTransactionTO ->
                     transactionMapper.endorsementChainTransactionToTransaction(
-                        endorsementChainTransactionTO, platformHost))
+                        endorsementChainTransactionTO, platformHost, partyService.getPartyByTransferee(endorsementChainTransactionTO.transferee())))
             .map(transaction -> transaction.linkTransactionToTransportDocument(transportDocument))
             .collect(Collectors.toSet());
 

@@ -1,8 +1,11 @@
 package org.dcsa.endorsementchain.unofficial.service;
 
+import org.dcsa.endorsementchain.datafactories.PartyDataFactory;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
+import org.dcsa.endorsementchain.persistence.repository.PartyRepository;
 import org.dcsa.endorsementchain.persistence.repository.TransportDocumentRepository;
 import org.dcsa.endorsementchain.service.ExportService;
+import org.dcsa.endorsementchain.service.PartyService;
 import org.dcsa.endorsementchain.unofficial.datafactories.TransportDocumentDataFactory;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +25,7 @@ import static org.mockito.Mockito.when;
 class TransportDocumentServiceTest {
 
   @Mock TransportDocumentRepository repository;
+  @Mock PartyService partyService;
   @Mock ExportService exportService;
 
   @InjectMocks TransportDocumentService service;
@@ -80,6 +84,7 @@ class TransportDocumentServiceTest {
     when(repository.findById(documentHash)).thenReturn(Optional.of(transportDocumentWithTransactions));
     when(exportService.exportEbl(transferee, documentHash)).thenReturn("test signature");
     when(repository.save(transportDocumentWithTransactions)).thenReturn(transportDocumentWithTransactions);
+    when(partyService.getPartyByTransferee(transferee)).thenReturn(PartyDataFactory.party());
 
     Optional<String> exportResponse = service.export(transferee, documentHash);
 
@@ -110,6 +115,7 @@ class TransportDocumentServiceTest {
     String transferee = "test";
     when(repository.findById(documentHash)).thenReturn(Optional.of(transportDocumentWithTransactions));
     when(repository.save(transportDocumentWithTransactions)).thenReturn(null);
+    when(partyService.getPartyByTransferee(transferee)).thenReturn(PartyDataFactory.party());
 
     Optional<String> exportResponse = service.export(transferee, documentHash);
 
