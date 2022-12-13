@@ -1,6 +1,5 @@
 package org.dcsa.endorsementchain.transferobjects;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Builder;
 import org.dcsa.endorsementchain.transferobjects.enums.BlAction;
 
@@ -9,7 +8,6 @@ import javax.validation.constraints.Size;
 
 public record EndorsementChainTransactionTO(
   @NotNull
-  @JsonAlias("instruction")
   BlAction action,
 
   @Size(max = 255)

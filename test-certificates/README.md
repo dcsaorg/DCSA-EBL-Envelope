@@ -22,7 +22,7 @@ Installation instruction for the Smallstep CLI can be found [here](https://small
 using step CLI the following command can be used to generate and sign a JWS:
 ```shell
  echo -n \
-'{"documentHash":"fd868c82e99777b472a1677390d954dbb0131cb3b0f55c8ef51969856410d38e","previousEnvelopeHash":null,"transactions":[{"instruction":"ISSU","comments":"The B/L has been issued.","timestamp":1658385166302442200,"isToOrder":true,"platformHost":"localhost:8443","transferee":"43549850248@localhost:8443"}]}' \
+'{"documentHash":"fd868c82e99777b472a1677390d954dbb0131cb3b0f55c8ef51969856410d38e","previousEnvelopeHash":null,"transactions":[{"action":"ISSU","comments":"The B/L has been issued.","timestamp":1658385166302442200,"isToOrder":true,"platformHost":"localhost:8443","transferee":"43549850248@localhost:8443"}]}' \
  | step crypto jws sign --key verification-private-key.pem
 ```
 it is important to use a "minified" version of the JSON payload and set the platformhost to localhost:8443 so the correct public key is used for verification.
@@ -30,8 +30,4 @@ it is important to use a "minified" version of the JSON payload and set the plat
 The output of above command is a encoded JWS:
 ```text
 eyJhbGciOiJSUzI1NiIsImtpZCI6IlVhRVdLNmt2ZkRITzNZT2NwUGl2M1RCT2JQTzk2SFZhR2U0czFhUUxBZU0ifQ.eyJkb2N1bWVudEhhc2giOiJmZDg2OGM4MmU5OTc3N2I0NzJhMTY3NzM5MGQ5NTRkYmIwMTMxY2IzYjBmNTVjOGVmNTE5Njk4NTY0MTBkMzhlIiwicHJldmlvdXNFbnZlbG9wZUhhc2giOm51bGwsInRyYW5zYWN0aW9ucyI6W3siaW5zdHJ1Y3Rpb24iOiJJU1NVIiwiY29tbWVudHMiOiJUaGUgQi9MIGhhcyBiZWVuIGlzc3VlZC4iLCJ0aW1lc3RhbXAiOjE2NTgzODUxNjYzMDI0NDIyMDAsImlzVG9PcmRlciI6dHJ1ZSwicGxhdGZvcm1Ib3N0IjoibG9jYWxob3N0Ojg0NDMiLCJ0cmFuc2ZlcmVlIjoiNDM1NDk4NTAyNDhAbG9jYWxob3N0Ojg0NDMifV19.aybAB3RUg_UM2WcvoE4s807Kf7BhSALZq1EvF9f_AUP6ZZgOP4cFS0rlLHSVrobKlF_Og-w0K_M9SPAQS6UnY0hht6pwHTHmoxPmWoQ-ARhnsThjhB3ZYhDbrroJnYPkQAjCmKXPrhNi2z9Fn4GvaI6iRjfJMQchSWQtAEjhqSLNaHtRwec65CDYEZ6OTHX7uP5g3WZtCfmswRGrkcCLosveSxsFpezjjOfTEo2NCCtO0tAxtNtus4GsF8QIMrM6QknJ4909ZrVonvtMUoRffFoUqgemfaFggK5XriLgn2OdSn8ZBhRn_ZqVojuf26mXrVm12C9jSQPPfPGy-myrOQ
-```
-Since the reference implementation uses a detached unencoded payload in order to use the JWS in an API request to the reference implementation the payload section (between the two .) must be removed resulting in the signature:
-```text
-eyJhbGciOiJSUzI1NiIsImtpZCI6IlVhRVdLNmt2ZkRITzNZT2NwUGl2M1RCT2JQTzk2SFZhR2U0czFhUUxBZU0ifQ..aybAB3RUg_UM2WcvoE4s807Kf7BhSALZq1EvF9f_AUP6ZZgOP4cFS0rlLHSVrobKlF_Og-w0K_M9SPAQS6UnY0hht6pwHTHmoxPmWoQ-ARhnsThjhB3ZYhDbrroJnYPkQAjCmKXPrhNi2z9Fn4GvaI6iRjfJMQchSWQtAEjhqSLNaHtRwec65CDYEZ6OTHX7uP5g3WZtCfmswRGrkcCLosveSxsFpezjjOfTEo2NCCtO0tAxtNtus4GsF8QIMrM6QknJ4909ZrVonvtMUoRffFoUqgemfaFggK5XriLgn2OdSn8ZBhRn_ZqVojuf26mXrVm12C9jSQPPfPGy-myrOQ
 ```
