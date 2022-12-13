@@ -1,7 +1,7 @@
 package org.dcsa.endorsementchain.persistence.entity;
 
 import lombok.*;
-import org.dcsa.endorsementchain.persistence.entity.enums.TransactionInstruction;
+import org.dcsa.endorsementchain.persistence.entity.enums.TransactionAction;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
 
 import javax.persistence.*;
@@ -30,8 +30,8 @@ public class Transaction {
   String envelopeHash;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "instruction", length = 4, nullable = false)
-  private TransactionInstruction instruction;
+  @Column(name = "action", length = 4, nullable = false)
+  private TransactionAction action;
 
   @Column(name = "comments")
   private String comments;

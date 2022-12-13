@@ -1,13 +1,12 @@
 package org.dcsa.endorsementchain.unofficial.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
-import org.dcsa.endorsementchain.persistence.entity.enums.TransactionInstruction;
+import org.dcsa.endorsementchain.persistence.entity.enums.TransactionAction;
 import org.dcsa.endorsementchain.persistence.repository.TransportDocumentRepository;
 import org.dcsa.endorsementchain.service.ExportService;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
@@ -123,7 +122,7 @@ public class TransportDocumentService {
         // created and isToOrder will be set to true
         .platformHost(hostname+":"+port)
         .timestamp(System.currentTimeMillis())
-        .instruction(TransactionInstruction.TRNS)
+        .action(TransactionAction.TRNS)
         .build();
   }
 

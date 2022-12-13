@@ -2,7 +2,7 @@ package org.dcsa.endorsementchain.datafactories;
 
 import lombok.experimental.UtilityClass;
 import org.dcsa.endorsementchain.transferobjects.EndorsementChainTransactionTO;
-import org.dcsa.endorsementchain.transferobjects.enums.BlInstruction;
+import org.dcsa.endorsementchain.transferobjects.enums.BlAction;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public class EndorsementChainTransactionTODataFactory {
   public EndorsementChainTransactionTO endorsementChainTransactionTO() {
     return EndorsementChainTransactionTO.builder()
       .comments("This is a freetext comment")
-      .instruction(BlInstruction.SURR)
+      .action(BlAction.SURR)
       .isToOrder(false)
       .platformHost("localhost:8443")
       .timestamp(System.currentTimeMillis())
@@ -23,7 +23,7 @@ public class EndorsementChainTransactionTODataFactory {
   public List<EndorsementChainTransactionTO> endorsementChainTransactionTOList() {
     EndorsementChainTransactionTO initialTransaction = EndorsementChainTransactionTO.builder()
       .comments("The B/L is issued")
-      .instruction(BlInstruction.ISSU)
+      .action(BlAction.ISSU)
       .isToOrder(false)
       .platformHost("localhost:8443")
       .timestamp(System.currentTimeMillis())
