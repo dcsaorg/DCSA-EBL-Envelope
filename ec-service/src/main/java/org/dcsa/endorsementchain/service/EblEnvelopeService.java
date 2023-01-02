@@ -10,6 +10,7 @@ import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
 import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
 import org.dcsa.endorsementchain.persistence.repository.EblEnvelopeRepository;
+import org.dcsa.endorsementchain.persistence.repository.TransportDocumentRepository;
 import org.dcsa.endorsementchain.transferobjects.EblEnvelopeTO;
 import org.dcsa.endorsementchain.transferobjects.EndorsementChainTransactionTO;
 import org.dcsa.endorsementchain.transferobjects.SignedEblEnvelopeTO;
@@ -31,6 +32,7 @@ public class EblEnvelopeService {
   private final EblEnvelopeRepository eblEnvelopeRepository;
   private final EblEnvelopeSignature signature;
   private final TransactionMapper transactionMapper;
+  private final TransportDocumentRepository transportDocumentRepository;
   private final ObjectMapper mapper;
 
   public List<SignedEblEnvelopeTO> convertExistingEblEnvelopesToSignedEnvelopes(
@@ -144,12 +146,17 @@ public class EblEnvelopeService {
       String transportDocumentJson,
       String platformHost) {
 
-    TransportDocument transportDocument =
-      TransportDocument.builder()
+    TransportDocument transportDocument = transportDocumentRepository.findById(eblEnvelopeTO.documentHash())
+      .map(td -> {
+        td.reimported();
+        return td;
+      })
+      .orElseGet(() -> TransportDocument.builder()
         .documentHash(eblEnvelopeTO.documentHash())
         .transportDocumentJson(transportDocumentJson)
         .isExported(false)
-        .build();
+        .build()
+      );
 
     Set<Transaction> transactions =
         eblEnvelopeTO.transactions().stream()

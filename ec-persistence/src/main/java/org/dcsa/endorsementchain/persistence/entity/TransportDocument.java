@@ -1,6 +1,7 @@
 package org.dcsa.endorsementchain.persistence.entity;
 
 import lombok.*;
+import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -39,4 +40,10 @@ public class TransportDocument {
     return this;
   }
 
+  public void reimported() {
+    if (!this.getIsExported()) {
+      throw ConcreteRequestErrorMessageException.conflict("Document is already imported!?", null);
+    }
+    this.isExported = Boolean.TRUE;
+  }
 }
