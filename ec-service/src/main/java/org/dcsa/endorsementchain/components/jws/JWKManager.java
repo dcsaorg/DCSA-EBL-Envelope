@@ -86,7 +86,7 @@ public class JWKManager {
 
       jwkSet = JWKSet.load(keyStore, name -> keystorePassword);
     } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException e) {
-      throw new IllegalStateException("Unable to create the JWKSet from the JKS.");
+      throw new IllegalStateException("Unable to create the JWKSet from the JKS.", e);
     }
     return jwkSet;
   }
