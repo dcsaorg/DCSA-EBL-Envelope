@@ -32,7 +32,7 @@
 		<shared-kernel.version>${dcsa.shared-kernel.version}${dcsa.shared-kernel.tag}${dcsa.shared-kernel.artifacttype}
 		</shared-kernel.version>
 		<!-- End: Define Shared kernel version -->
-		<testcontainers.version>1.17.3</testcontainers.version>
+		<testcontainers.version>1.17.6</testcontainers.version>
 		<testcontainers.keycloak.version>2.2.2</testcontainers.keycloak.version>
 	</properties>
 
