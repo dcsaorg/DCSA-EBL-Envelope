@@ -3,8 +3,8 @@ package org.dcsa.endorsementchain.transferobjects;
 import lombok.Builder;
 import org.dcsa.endorsementchain.transferobjects.enums.BlAction;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public record EndorsementChainTransactionTO(
   @NotNull

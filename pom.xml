@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.dcsa</groupId>
 		<artifactId>dcsa-bom</artifactId>
-		<version>1.3-SNAPSHOT</version>
+		<version>1.5-SNAPSHOT</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -26,7 +26,7 @@
 		<!-- End: Define DCSA-Endorcement-Chain version -->
 
 		<!-- Define Shared Kernel version -->
-		<dcsa.shared-kernel.version>0.1.0</dcsa.shared-kernel.version>
+		<dcsa.shared-kernel.version>0.3.0</dcsa.shared-kernel.version>
 		<dcsa.shared-kernel.tag/>
 		<dcsa.shared-kernel.artifacttype>-SNAPSHOT</dcsa.shared-kernel.artifacttype>
 		<shared-kernel.version>${dcsa.shared-kernel.version}${dcsa.shared-kernel.tag}${dcsa.shared-kernel.artifacttype}

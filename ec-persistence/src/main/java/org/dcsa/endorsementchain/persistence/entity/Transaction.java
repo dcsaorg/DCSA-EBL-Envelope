@@ -4,7 +4,7 @@ import lombok.*;
 import org.dcsa.endorsementchain.persistence.entity.enums.TransactionAction;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.UUID;
 
 @Data

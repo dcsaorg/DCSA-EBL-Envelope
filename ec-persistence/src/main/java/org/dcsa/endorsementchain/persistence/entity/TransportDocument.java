@@ -3,7 +3,7 @@ package org.dcsa.endorsementchain.persistence.entity;
 import lombok.*;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Set;
 
 @Data

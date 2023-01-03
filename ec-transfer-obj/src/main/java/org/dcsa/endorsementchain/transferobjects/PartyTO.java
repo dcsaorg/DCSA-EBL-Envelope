@@ -2,8 +2,8 @@ package org.dcsa.endorsementchain.transferobjects;
 
 import lombok.Builder;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public record PartyTO(
   @NotBlank @Size(max = 255) String id,
