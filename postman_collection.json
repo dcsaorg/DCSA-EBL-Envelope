@@ -278,6 +278,51 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Create local party for transferblock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"43549850248@localhost:8443\",\r\n    \"name\": \"Bar Party\",\r\n    \"registrationNumber\": \"reg no\",\r\n    \"countryOfRegistration\": \"DK\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BASE_URL}}/{{MAJOR_VERSION}}/unofficial/party/local/",
+							"protocol": "https",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"{{MAJOR_VERSION}}",
+								"unofficial",
+								"party",
+								"local",
+								""
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"event": [
@@ -302,290 +347,277 @@
 			]
 		},
 		{
-			"name": "Mock Send Transferblock",
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"transferDocument\": \"2d2b87eb4182a68031b595fbaa3af9b649944c54a6d075add7e77045b7c8ee5b\",\r\n    \"endorcementChain\": {\r\n        \"eblEnvelopeHash\": \"e367ab5f59fd30b871f3ffb0eabdd4c765d15be62c198bb4caafd20fc589373c\",\r\n        \"eblEnvelope\": {\r\n            \"previousEblEnvelopeHash\": null,\r\n            \"documentHash\": \"2d2b87eb4182a68031b595fbaa3af9b649944c54a6d075add7e77045b7c8ee5b\",\r\n            \"transactions\": [\r\n                {\r\n                    \"instruction\": \"ISSU\",\r\n                    \"comments\": \"The B/L has been issued.\",\r\n                    \"timestamp\": 1659428989899,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"bar\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659514787154,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659520072821,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659520210311,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659520748346,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659521066815,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659521493901,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659521848600,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659528039268,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659529378165,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659602603393,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659618042929,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659618050092,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659618057132,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: foo@89861789-f173-452b-9123-a6c35ded4760.mock.pstmn.io\",\r\n                    \"timestamp\": 1659690124869,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"foo@89861789-f173-452b-9123-a6c35ded4760.mock.pstmn.io\"\r\n                }\r\n            ]\r\n        },\r\n        \"signature\": \"eyJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdLCJhbGciOiJSUzI1NiJ9..3drv46CjNYhaZ97qRKErJBH0d8SzgRuWcH0hvOYmoOvmYGEl_csXQ-aYCfabJYRrcb4RCFZCLbpq9ixKFUfcHRUeG93QSOOyvq32vW_zYiRMXKEKpGkb7Gwd82bzxVHHvpp6c3iijJwyzEy2b-u5KnnKRpjYgYZak9Kx_OMlSe92hYiXq6Id19sn-wraFW1E3d_m7ryxY54nqtQgbH8_I8cEb6R-aMzwgh_qloKhLlZswDTU2VU3qilKiPMr50DUq1qDr3fYUijovcFhXfltgWt_6LbjeYX-7ceonyVvDcoHABIivKqsHq7HvfPv89O7Y0gzpvEuN-lJGkgPYWANZg\"\r\n    }\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://89861789-f173-452b-9123-a6c35ded4760.mock.pstmn.io/v1/transferblocks",
-					"protocol": "https",
-					"host": [
-						"89861789-f173-452b-9123-a6c35ded4760",
-						"mock",
-						"pstmn",
-						"io"
-					],
-					"path": [
-						"v1",
-						"transferblocks"
-					]
-				}
-			},
-			"response": [
+			"name": "Mock requests",
+			"item": [
 				{
-					"name": "Mock Send Transferblock response",
-					"originalRequest": {
+					"name": "Mock Send Transferblock",
+					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"transferDocument\": \"2d2b87eb4182a68031b595fbaa3af9b649944c54a6d075add7e77045b7c8ee5b\",\r\n    \"endorcementChain\": {\r\n        \"eblEnvelopeHash\": \"e367ab5f59fd30b871f3ffb0eabdd4c765d15be62c198bb4caafd20fc589373c\",\r\n        \"eblEnvelope\": {\r\n            \"previousEblEnvelopeHash\": null,\r\n            \"documentHash\": \"2d2b87eb4182a68031b595fbaa3af9b649944c54a6d075add7e77045b7c8ee5b\",\r\n            \"transactions\": [\r\n                {\r\n                    \"instruction\": \"ISSU\",\r\n                    \"comments\": \"The B/L has been issued.\",\r\n                    \"timestamp\": 1659428989899,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"bar\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659514787154,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659520072821,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659520210311,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659520748346,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659521066815,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659521493901,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659521848600,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659528039268,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659529378165,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659602603393,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659618042929,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659618050092,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: \\\"foo@bar.io\\\"\",\r\n                    \"timestamp\": 1659618057132,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"\\\"foo@bar.io\\\"\"\r\n                },\r\n                {\r\n                    \"instruction\": \"TRNS\",\r\n                    \"comments\": \"The B/L exported to: foo@89861789-f173-452b-9123-a6c35ded4760.mock.pstmn.io\",\r\n                    \"timestamp\": 1659690124869,\r\n                    \"isToOrder\": true,\r\n                    \"platformHost\": \"localhost:8443\",\r\n                    \"transferee\": \"foo@89861789-f173-452b-9123-a6c35ded4760.mock.pstmn.io\"\r\n                }\r\n            ]\r\n        },\r\n        \"signature\": \"eyJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdLCJhbGciOiJSUzI1NiJ9..3drv46CjNYhaZ97qRKErJBH0d8SzgRuWcH0hvOYmoOvmYGEl_csXQ-aYCfabJYRrcb4RCFZCLbpq9ixKFUfcHRUeG93QSOOyvq32vW_zYiRMXKEKpGkb7Gwd82bzxVHHvpp6c3iijJwyzEy2b-u5KnnKRpjYgYZak9Kx_OMlSe92hYiXq6Id19sn-wraFW1E3d_m7ryxY54nqtQgbH8_I8cEb6R-aMzwgh_qloKhLlZswDTU2VU3qilKiPMr50DUq1qDr3fYUijovcFhXfltgWt_6LbjeYX-7ceonyVvDcoHABIivKqsHq7HvfPv89O7Y0gzpvEuN-lJGkgPYWANZg\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "https://localhost/v1/transferblock",
+							"raw": "https://89861789-f173-452b-9123-a6c35ded4760.mock.pstmn.io/v1/transferblocks",
 							"protocol": "https",
 							"host": [
-								"localhost"
+								"89861789-f173-452b-9123-a6c35ded4760",
+								"mock",
+								"pstmn",
+								"io"
 							],
 							"path": [
 								"v1",
-								"transferblock"
+								"transferblocks"
 							]
 						}
 					},
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "Content-Type",
-							"value": "application/json",
-							"description": "",
-							"type": "text"
-						},
-						{
-							"key": "API-VERSION",
-							"value": "0.0.1",
-							"description": "",
-							"type": "text"
+							"name": "Mock Send Transferblock response",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "https://localhost/v1/transferblock",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"v1",
+										"transferblock"
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "API-VERSION",
+									"value": "0.0.1",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "\"eyJhbGciOiJSUzI1NiIsImtpZCI6ImZ1eERKcmV1bS1FWFF4dzJFdVA4NHZwS2E3cW5NdF9Cb1VzRjVyTmNvN2MifQ.dGhpcyBpcyBhIHRlc3QgbWVzc2FnZQ.nI85d4jseqXOR3hXkyLT2uajlXCsW88nAoEwec13I1tUyt6xwbgQz4jVQ2tdKbSlLcwrVmetlbz9Moy-DRno3X3cJmW9Y9TtyVMuygP0p_BQy1TVd766O1VRpiTp_tB1Eb93Fnj0RvpUZ_ddp9YKQjdxpAYi23Rbnz33A-x3uWp-Nk6y7sy3THlw5ZwbhuBWtp7yeaNGwVL9RUegyHwojGQp3YIVzFVXomUkj-JAg8UvOE6xdd7XSZaM_Sf7ZJlyTQQxyqZ1ui-zCwVHu0zdNEbEzAm_SfgxlPUaO8nEWSmAGo29aGO8HiU2_mbVMU1lCL00LyAEoAaDFnmbnEOoWw\""
 						}
-					],
-					"cookie": [],
-					"body": "\"eyJhbGciOiJSUzI1NiIsImtpZCI6ImZ1eERKcmV1bS1FWFF4dzJFdVA4NHZwS2E3cW5NdF9Cb1VzRjVyTmNvN2MifQ.dGhpcyBpcyBhIHRlc3QgbWVzc2FnZQ.nI85d4jseqXOR3hXkyLT2uajlXCsW88nAoEwec13I1tUyt6xwbgQz4jVQ2tdKbSlLcwrVmetlbz9Moy-DRno3X3cJmW9Y9TtyVMuygP0p_BQy1TVd766O1VRpiTp_tB1Eb93Fnj0RvpUZ_ddp9YKQjdxpAYi23Rbnz33A-x3uWp-Nk6y7sy3THlw5ZwbhuBWtp7yeaNGwVL9RUegyHwojGQp3YIVzFVXomUkj-JAg8UvOE6xdd7XSZaM_Sf7ZJlyTQQxyqZ1ui-zCwVHu0zdNEbEzAm_SfgxlPUaO8nEWSmAGo29aGO8HiU2_mbVMU1lCL00LyAEoAaDFnmbnEOoWw\""
+					]
 				}
 			]
 		},
 		{
-			"name": "Create local party for transferblock",
-			"event": [
+			"name": "Official endpoints",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 201\", function () {\r",
-							"    pm.response.to.have.status(201);\r",
-							"});\r",
-							""
-						],
-						"type": "text/javascript"
-					}
+					"name": "Send Transferblock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jwksUrl = \"https://\" + pm.collectionVariables.get(\"BASE_URL\") + \"/\" + pm.collectionVariables.get(\"MAJOR_VERSION\") + pm.collectionVariables.get(\"JWKS_URL_PATH\");\r",
+									"const jsrsasignUrl = pm.collectionVariables.get(\"JSRSASIGN_URL\"); \r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json\");\r",
+									"});\r",
+									"\r",
+									"let transferblockResponse = pm.response.text();\r",
+									"let requestEnvelopeHash = JSON.parse(pm.request.body.raw).endorsementChain[0].envelopeHash;\r",
+									"\r",
+									"if(pm.collectionVariables.get(\"jsrsassign-js\") && pm.collectionVariables.get(\"JWK\")) {\r",
+									"    verifySignature();\r",
+									"} else {\r",
+									"    loadDependencies();\r",
+									"}\r",
+									"\r",
+									"//Postman handles async operations different then Javascript so custom functions are needed to handle sequential requests\r",
+									"//More information: https://community.postman.com/t/async-operations/24314\r",
+									"function _series (tasks, cb, currOperation = 0, results = []) {\r",
+									"    // Bail-out condition\r",
+									"    if (currOperation === tasks.length) {\r",
+									"        return cb(null, results);\r",
+									"    }\r",
+									"\r",
+									"    if (typeof tasks[currOperation] !== 'function') {\r",
+									"        return cb(new Error('asyncSeries: Please provide a function'));\r",
+									"    }\r",
+									"\r",
+									"    tasks[currOperation]((err, res) => {\r",
+									"        if (err) {\r",
+									"            return cb(err);\r",
+									"        }\r",
+									"\r",
+									"        results.push(res);\r",
+									"\r",
+									"        // Recursively call the next task in series till we're done executing all the operations\r",
+									"        return _series(tasks, cb, currOperation + 1, results);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"function asyncSeries (tasks, cb = () => {}) {\r",
+									"    return _series(tasks, cb);\r",
+									"}\r",
+									"\r",
+									"function loadDependencies() {\r",
+									"    asyncSeries([\r",
+									"        (cb) => pm.sendRequest(jsrsasignUrl, (err, res) => {\r",
+									"            // console.log(res.json().delay);\r",
+									"            pm.collectionVariables.set('jsrsassign-js', res.text());\r",
+									"            cb(err, res);\r",
+									"        }),\r",
+									"        (cb) => pm.sendRequest(jwksUrl, (err, res) => {\r",
+									"            // console.log(res.json().delay);\r",
+									"            pm.collectionVariables.set(\"JWK\", res.json().keys[0]);\r",
+									"            cb(err, res);\r",
+									"        })\r",
+									"    ], (err, res) => {\r",
+									"        console.log('Dependencies loaded, performing signature tests...');\r",
+									"        verifySignature();\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"function verifySignature() {\r",
+									"    var exports = {}; //needed as a stub for the jsrsassign NPM library\r",
+									"    eval(pm.collectionVariables.get(\"jsrsassign-js\"));\r",
+									"    \r",
+									"    let jwk = pm.collectionVariables.get(\"JWK\");\r",
+									"    let pubkey = KEYUTIL.getKey(jwk);\r",
+									"    let isValid = KJUR.jws.JWS.verify(transferblockResponse, pubkey, {alg: ['RS256']});\r",
+									"\r",
+									"    pm.test(\"Signature of response is valid\", function(){\r",
+									"        pm.expect(isValid).to.be.true;\r",
+									"    });\r",
+									"\r",
+									"    let jwsPayload = KJUR.jws.JWS.parse(transferblockResponse).payloadPP;\r",
+									"    pm.test(\"JWS payload contains envelopeHash\", function() {\r",
+									"        pm.expect(requestEnvelopeHash).to.eql(jwsPayload);\r",
+									"    });\r",
+									"    \r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n  \"document\": {\r\n    \"transportDocumentReference\": \"string\",\r\n    \"transportDocumentCreatedDateTime\": \"2019-11-12T07:41:00+08:30\",\r\n    \"transportDocumentUpdatedDateTime\": \"2019-11-12T07:41:00+08:30\",\r\n    \"issueDate\": \"2020-12-12\",\r\n    \"shippedOnBoardDate\": \"2020-12-12\",\r\n    \"receivedForShipmentDate\": \"2020-12-12\",\r\n    \"numberOfOriginals\": 4,\r\n    \"carrierCode\": \"MMCU\",\r\n    \"carrierCodeListProvider\": \"NMFTA\",\r\n    \"issuingParty\": {\r\n      \"partyName\": \"Asseco Denmark\",\r\n      \"taxReference1\": \"CVR-25645774\",\r\n      \"taxReference2\": \"CVR-25645774\",\r\n      \"publicKey\": \"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFzaW\",\r\n      \"address\": {\r\n        \"name\": \"Henrik\",\r\n        \"street\": \"Kronprincessegade\",\r\n        \"streetNumber\": \"54\",\r\n        \"floor\": \"5. sal\",\r\n        \"postCode\": \"1306\",\r\n        \"city\": \"København\",\r\n        \"stateRegion\": \"N/A\",\r\n        \"country\": \"Denmark\"\r\n      },\r\n      \"partyContactDetails\": [\r\n        {\r\n          \"name\": \"Henrik\",\r\n          \"phone\": \"+45 33364660\",\r\n          \"email\": \"info@dcsa.org\",\r\n          \"url\": \"https://www.dcsa.org\"\r\n        }\r\n      ],\r\n      \"identifyingCodes\": [\r\n        {\r\n          \"DCSAResponsibleAgencyCode\": \"SMDG\",\r\n          \"partyCode\": \"MSK\",\r\n          \"codeListName\": \"LCL\"\r\n        }\r\n      ]\r\n    },\r\n    \"numberOfRiderPages\": 2,\r\n    \"termsAndConditions\": \"string\",\r\n    \"receiptTypeAtOrigin\": \"CY\",\r\n    \"deliveryTypeAtDestination\": \"CY\",\r\n    \"cargoMovementTypeAtOrigin\": \"FCL\",\r\n    \"cargoMovementTypeAtDestination\": \"FCL\",\r\n    \"serviceContractReference\": \"string\",\r\n    \"vesselName\": \"King of the Seas\",\r\n    \"carrierExportVoyageNumber\": \"2103S\",\r\n    \"universalExportVoyageReference\": \"2103N\",\r\n    \"declaredValue\": 1231.1,\r\n    \"declaredValueCurrency\": \"DKK\",\r\n    \"transports\": [\r\n      {\r\n        \"transportPlanStage\": \"PRC\",\r\n        \"transportPlanStageSequenceNumber\": 5,\r\n        \"loadLocation\": {\r\n          \"locationName\": \"Shanghai Shengdong International Container Terminal\",\r\n          \"UNLocationCode\": \"CNSGH\",\r\n          \"facilityCode\": \"SHENG\",\r\n          \"facilityCodeListProvider\": \"SMDG\"\r\n        },\r\n        \"dischargeLocation\": {\r\n          \"locationName\": \"Transnet Port Terminals Cape Town\",\r\n          \"UNLocationCode\": \"ZACPT\",\r\n          \"facilityCode\": \"TNCT\",\r\n          \"facilityCodeListProvider\": \"SMDG\"\r\n        },\r\n        \"plannedDepartureDate\": \"2022-08-16\",\r\n        \"plannedArrivalDate\": \"2022-08-16\",\r\n        \"modeOfTransport\": \"VESSEL\",\r\n        \"vesselName\": \"King of the Seas\",\r\n        \"vesselIMONumber\": \"9321483\",\r\n        \"carrierImportVoyageNumber\": \"2103N\",\r\n        \"universalImportVoyageReference\": \"2103N\",\r\n        \"carrierExportVoyageNumber\": \"2103S\",\r\n        \"universalExportVoyageReference\": \"2103N\",\r\n        \"isUnderShippersResponsibility\": false\r\n      }\r\n    ],\r\n    \"shipmentLocations\": [\r\n      {\r\n        \"location\": {\r\n          \"locationName\": \"CMP Container Terminal Copenhagen\",\r\n          \"UNLocationCode\": \"DKCPH\",\r\n          \"facilityCode\": \"CMPDK\",\r\n          \"facilityCodeListProvider\": \"SMDG\"\r\n        },\r\n        \"displayedName\": \"string\",\r\n        \"shipmentLocationTypeCode\": \"PRE\",\r\n        \"eventDateTime\": \"2021-11-03T10:23:00+01:00\"\r\n      }\r\n    ],\r\n    \"invoicePayableAt\": {\r\n      \"locationName\": \"Eiffel Tower\",\r\n      \"UNLocationCode\": \"FRPAR\"\r\n    },\r\n    \"placeOfIssue\": {\r\n      \"locationName\": \"DCSA Headquarters\",\r\n      \"UNLocationCode\": \"NLAMS\"\r\n    },\r\n    \"shippingInstruction\": {\r\n      \"shippingInstructionReference\": \"e0559d83-00e2-438e-afd9-fdd610c1a008\",\r\n      \"documentStatus\": \"RECE\",\r\n      \"shippingInstructionCreatedDateTime\": \"2019-11-12T07:41:00+08:30\",\r\n      \"shippingInstructionUpdatedDateTime\": \"2019-11-12T07:41:00+08:30\",\r\n      \"amendToTransportDocument\": \"string\",\r\n      \"transportDocumentTypeCode\": \"SWB\",\r\n      \"isShippedOnBoardType\": true,\r\n      \"numberOfCopies\": 2,\r\n      \"numberOfOriginals\": 4,\r\n      \"isElectronic\": true,\r\n      \"isToOrder\": false,\r\n      \"areChargesDisplayedOnOriginals\": true,\r\n      \"areChargesDisplayedOnCopies\": true,\r\n      \"displayedNameForPlaceOfReceipt\": \"string\",\r\n      \"displayedNameForPortOfLoad\": \"string\",\r\n      \"displayedNameForPortOfDischarge\": \"string\",\r\n      \"displayedNameForPlaceOfDelivery\": \"string\",\r\n      \"carrierBookingReference\": \"ABC709951\",\r\n      \"placeOfIssue\": {\r\n        \"locationName\": \"DCSA Headquarters\",\r\n        \"UNLocationCode\": \"NLAMS\"\r\n      },\r\n      \"consignmentItems\": [\r\n        {\r\n          \"carrierBookingReference\": \"ABC709951\",\r\n          \"weight\": 13000.3,\r\n          \"volume\": 12,\r\n          \"weightUnit\": \"KGM\",\r\n          \"volumeUnit\": \"MTQ\",\r\n          \"descriptionOfGoods\": \"string\",\r\n          \"HSCode\": \"string\",\r\n          \"cargoItems\": [\r\n            {\r\n              \"cargoLineItems\": [\r\n                {\r\n                  \"cargoLineItemID\": \"string\",\r\n                  \"shippingMarks\": \"string\"\r\n                }\r\n              ],\r\n              \"equipmentReference\": \"APZU4812090\",\r\n              \"weight\": 13000.3,\r\n              \"volume\": 12,\r\n              \"weightUnit\": \"KGM\",\r\n              \"volumeUnit\": \"MTQ\",\r\n              \"numberOfPackages\": 18,\r\n              \"packageCode\": \"5H4\",\r\n              \"packageNameOnBL\": \"Bags\"\r\n            }\r\n          ],\r\n          \"references\": [\r\n            {\r\n              \"referenceType\": \"FF\",\r\n              \"referenceValue\": \"string\"\r\n            }\r\n          ]\r\n        }\r\n      ],\r\n      \"utilizedTransportEquipments\": [\r\n        {\r\n          \"equipment\": {\r\n            \"equipmentReference\": \"APZU4812090\",\r\n            \"ISOEquipmentCode\": \"22GP\",\r\n            \"tareWeight\": 12000,\r\n            \"weightUnit\": \"KGM\"\r\n          },\r\n          \"cargoGrossWeight\": 12000,\r\n          \"cargoGrossWeightUnit\": \"KGM\",\r\n          \"cargoGrossVolume\": 120,\r\n          \"cargoGrossVolumeUnit\": \"MTQ\",\r\n          \"numberOfPackages\": 18,\r\n          \"isShipperOwned\": true,\r\n          \"activeReeferSettings\": {\r\n            \"temperatureMin\": -18.1,\r\n            \"temperatureMax\": 64.3,\r\n            \"temperatureUnit\": \"CEL\",\r\n            \"humidityMin\": 80,\r\n            \"humidityMax\": 100,\r\n            \"ventilationMin\": 266,\r\n            \"ventilationMax\": 296\r\n          },\r\n          \"seals\": [\r\n            {\r\n              \"sealNumber\": \"string\",\r\n              \"sealSource\": \"CUS\",\r\n              \"sealType\": \"WIR\"\r\n            }\r\n          ]\r\n        }\r\n      ],\r\n      \"documentParties\": [\r\n        {\r\n          \"party\": {\r\n            \"partyName\": \"Asseco Denmark\",\r\n            \"taxReference1\": \"CVR-25645774\",\r\n            \"taxReference2\": \"CVR-25645774\",\r\n            \"publicKey\": \"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFzaW\",\r\n            \"address\": {\r\n              \"name\": \"Henrik\",\r\n              \"street\": \"Kronprincessegade\",\r\n              \"streetNumber\": \"54\",\r\n              \"floor\": \"5. sal\",\r\n              \"postCode\": \"1306\",\r\n              \"city\": \"København\",\r\n              \"stateRegion\": \"N/A\",\r\n              \"country\": \"Denmark\"\r\n            },\r\n            \"partyContactDetails\": [\r\n              {\r\n                \"name\": \"Henrik\",\r\n                \"phone\": \"+45 33364660\",\r\n                \"email\": \"info@dcsa.org\",\r\n                \"url\": \"https://www.dcsa.org\"\r\n              }\r\n            ],\r\n            \"identifyingCodes\": [\r\n              {\r\n                \"DCSAResponsibleAgencyCode\": \"SMDG\",\r\n                \"partyCode\": \"MSK\",\r\n                \"codeListName\": \"LCL\"\r\n              }\r\n            ]\r\n          },\r\n          \"partyFunction\": \"DDS\",\r\n          \"displayedAddress\": [\r\n            \"Kronprincessegade 54\"\r\n          ],\r\n          \"isToBeNotified\": true\r\n        }\r\n      ],\r\n      \"references\": [\r\n        {\r\n          \"referenceType\": \"FF\",\r\n          \"referenceValue\": \"string\"\r\n        }\r\n      ]\r\n    },\r\n    \"charges\": [\r\n      {\r\n        \"chargeType\": \"string\",\r\n        \"currencyAmount\": 1012.12,\r\n        \"currencyCode\": \"DKK\",\r\n        \"paymentTermCode\": \"PRE\",\r\n        \"calculationBasis\": \"Per day\",\r\n        \"unitPrice\": 3456.6,\r\n        \"quantity\": 34.4\r\n      }\r\n    ],\r\n    \"carrierClauses\": [\r\n      {\r\n        \"clauseContent\": \"string\"\r\n      }\r\n    ]\r\n  },\r\n  \"endorsementChain\": [\r\n    {\r\n      \"envelopeHash\": \"92939058e050dcdfaa836ab7d8d2da57420c6320f25b49e087af5af16f49cb1b\",\r\n      \"signature\": \"eyJhbGciOiJSUzI1NiIsImtpZCI6IlVhRVdLNmt2ZkRITzNZT2NwUGl2M1RCT2JQTzk2SFZhR2U0czFhUUxBZU0ifQ.eyJkb2N1bWVudEhhc2giOiJmZDg2OGM4MmU5OTc3N2I0NzJhMTY3NzM5MGQ5NTRkYmIwMTMxY2IzYjBmNTVjOGVmNTE5Njk4NTY0MTBkMzhlIiwicHJldmlvdXNFbnZlbG9wZUhhc2giOm51bGwsInRyYW5zYWN0aW9ucyI6W3siYWN0aW9uIjoiSVNTVSIsImNvbW1lbnRzIjoiVGhlIEIvTCBoYXMgYmVlbiBpc3N1ZWQuIiwidGltZXN0YW1wIjoxNjU4Mzg1MTY2MzAyNDQyMjAwLCJpc1RvT3JkZXIiOnRydWUsInBsYXRmb3JtSG9zdCI6ImxvY2FsaG9zdDo4NDQzIiwidHJhbnNmZXJlZSI6IjQzNTQ5ODUwMjQ4QGxvY2FsaG9zdDo4NDQzIn1dfQ.UTICZFOGEuz-Vx1FwP5UQBrHRh3M6LSd9OqicROBNgDnHLVW1jegBksl_6JSWNEyPfGPQ9GeVO4XMO4d2MIz1NATaS14qVz2no67ixC3p4EgvjSMoc1JFK7Se3-sVanlKxIGxo9vn_qV30xa2LrbGXdpm4cM1noWzRvsolTvbju-T9_Z_jC_Pch9zqBL-seMPZOpUUxjgP_ZB25IY9GJ_Ge_T2jEGGx87ud5JD8IwOc4zRISRIs21vfw6q0QGtmnPtatSXqR1kFlJILY-SZn_eGjIdPn9OzQfBnXUJ38HbqwASW5uO3o7zPIazl7VYQA2YWq92LRIyn13ZTlc-ePQw\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{BASE_URL}}/{{MAJOR_VERSION}}/transferblocks",
+							"protocol": "https",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"{{MAJOR_VERSION}}",
+								"transferblocks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get JWKS",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.be.header(\"Content-Type\", \"application/json\");\r",
+									"});\r",
+									"\r",
+									"let jwksResponse = pm.response.json();\r",
+									"\r",
+									"\r",
+									"pm.test('Number of keys in JWKS = ' + jwksResponse.keys.length, function () {\r",
+									"    pm.expect(jwksResponse.keys.length).to.greaterThan(0);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{BASE_URL}}/{{MAJOR_VERSION}}/.well-known/jwks.json",
+							"protocol": "https",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"{{MAJOR_VERSION}}",
+								".well-known",
+								"jwks.json"
+							]
+						}
+					},
+					"response": []
 				}
 			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"id\": \"43549850248@localhost:8443\",\r\n    \"name\": \"Bar Party\",\r\n    \"registrationNumber\": \"reg no\",\r\n    \"countryOfRegistration\": \"DK\"\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
 					}
 				},
-				"url": {
-					"raw": "https://{{BASE_URL}}/{{MAJOR_VERSION}}/unofficial/party/local/",
-					"protocol": "https",
-					"host": [
-						"{{BASE_URL}}"
-					],
-					"path": [
-						"{{MAJOR_VERSION}}",
-						"unofficial",
-						"party",
-						"local",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Send Transferblock",
-			"event": [
 				{
 					"listen": "test",
 					"script": {
+						"type": "text/javascript",
 						"exec": [
-							"const jwksUrl = \"https://\" + pm.collectionVariables.get(\"BASE_URL\") + \"/\" + pm.collectionVariables.get(\"MAJOR_VERSION\") + pm.collectionVariables.get(\"JWKS_URL_PATH\");\r",
-							"const jsrsasignUrl = pm.collectionVariables.get(\"JSRSASIGN_URL\"); \r",
-							"\r",
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Content-Type is present\", function () {\r",
-							"    pm.response.to.be.header(\"Content-Type\", \"application/json\");\r",
-							"});\r",
-							"\r",
-							"let transferblockResponse = pm.response.text();\r",
-							"let requestEnvelopeHash = JSON.parse(pm.request.body.raw).endorsementChain[0].envelopeHash;\r",
-							"\r",
-							"if(pm.collectionVariables.get(\"jsrsassign-js\") && pm.collectionVariables.get(\"JWK\")) {\r",
-							"    verifySignature();\r",
-							"} else {\r",
-							"    loadDependencies();\r",
-							"}\r",
-							"\r",
-							"//Postman handles async operations different then Javascript so custom functions are needed to handle sequential requests\r",
-							"//More information: https://community.postman.com/t/async-operations/24314\r",
-							"function _series (tasks, cb, currOperation = 0, results = []) {\r",
-							"    // Bail-out condition\r",
-							"    if (currOperation === tasks.length) {\r",
-							"        return cb(null, results);\r",
-							"    }\r",
-							"\r",
-							"    if (typeof tasks[currOperation] !== 'function') {\r",
-							"        return cb(new Error('asyncSeries: Please provide a function'));\r",
-							"    }\r",
-							"\r",
-							"    tasks[currOperation]((err, res) => {\r",
-							"        if (err) {\r",
-							"            return cb(err);\r",
-							"        }\r",
-							"\r",
-							"        results.push(res);\r",
-							"\r",
-							"        // Recursively call the next task in series till we're done executing all the operations\r",
-							"        return _series(tasks, cb, currOperation + 1, results);\r",
-							"    });\r",
-							"}\r",
-							"\r",
-							"function asyncSeries (tasks, cb = () => {}) {\r",
-							"    return _series(tasks, cb);\r",
-							"}\r",
-							"\r",
-							"function loadDependencies() {\r",
-							"    asyncSeries([\r",
-							"        (cb) => pm.sendRequest(jsrsasignUrl, (err, res) => {\r",
-							"            // console.log(res.json().delay);\r",
-							"            pm.collectionVariables.set('jsrsassign-js', res.text());\r",
-							"            cb(err, res);\r",
-							"        }),\r",
-							"        (cb) => pm.sendRequest(jwksUrl, (err, res) => {\r",
-							"            // console.log(res.json().delay);\r",
-							"            pm.collectionVariables.set(\"JWK\", res.json().keys[0]);\r",
-							"            cb(err, res);\r",
-							"        })\r",
-							"    ], (err, res) => {\r",
-							"        console.log('Dependencies loaded, performing signature tests...');\r",
-							"        verifySignature();\r",
-							"    });\r",
-							"}\r",
-							"\r",
-							"function verifySignature() {\r",
-							"    var exports = {}; //needed as a stub for the jsrsassign NPM library\r",
-							"    eval(pm.collectionVariables.get(\"jsrsassign-js\"));\r",
-							"    \r",
-							"    let jwk = pm.collectionVariables.get(\"JWK\");\r",
-							"    let pubkey = KEYUTIL.getKey(jwk);\r",
-							"    let isValid = KJUR.jws.JWS.verify(transferblockResponse, pubkey, {alg: ['RS256']});\r",
-							"\r",
-							"    pm.test(\"Signature of response is valid\", function(){\r",
-							"        pm.expect(isValid).to.be.true;\r",
-							"    });\r",
-							"\r",
-							"    let jwsPayload = KJUR.jws.JWS.parse(transferblockResponse).payloadPP;\r",
-							"    pm.test(\"JWS payload contains envelopeHash\", function() {\r",
-							"        pm.expect(requestEnvelopeHash).to.eql(jwsPayload);\r",
-							"    });\r",
-							"    \r",
-							"}\r",
-							""
-						],
-						"type": "text/javascript"
+							"pm.test(\"API Version is present\", function () {",
+							"    pm.response.to.be.header(\"API-Version\", \"0.0.1\");",
+							"});"
+						]
 					}
 				}
-			],
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": " {\r\n  \"document\": {\r\n    \"transportDocumentReference\": \"string\",\r\n    \"transportDocumentCreatedDateTime\": \"2019-11-12T07:41:00+08:30\",\r\n    \"transportDocumentUpdatedDateTime\": \"2019-11-12T07:41:00+08:30\",\r\n    \"issueDate\": \"2020-12-12\",\r\n    \"shippedOnBoardDate\": \"2020-12-12\",\r\n    \"receivedForShipmentDate\": \"2020-12-12\",\r\n    \"numberOfOriginals\": 4,\r\n    \"carrierCode\": \"MMCU\",\r\n    \"carrierCodeListProvider\": \"NMFTA\",\r\n    \"issuingParty\": {\r\n      \"partyName\": \"Asseco Denmark\",\r\n      \"taxReference1\": \"CVR-25645774\",\r\n      \"taxReference2\": \"CVR-25645774\",\r\n      \"publicKey\": \"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFzaW\",\r\n      \"address\": {\r\n        \"name\": \"Henrik\",\r\n        \"street\": \"Kronprincessegade\",\r\n        \"streetNumber\": \"54\",\r\n        \"floor\": \"5. sal\",\r\n        \"postCode\": \"1306\",\r\n        \"city\": \"København\",\r\n        \"stateRegion\": \"N/A\",\r\n        \"country\": \"Denmark\"\r\n      },\r\n      \"partyContactDetails\": [\r\n        {\r\n          \"name\": \"Henrik\",\r\n          \"phone\": \"+45 33364660\",\r\n          \"email\": \"info@dcsa.org\",\r\n          \"url\": \"https://www.dcsa.org\"\r\n        }\r\n      ],\r\n      \"identifyingCodes\": [\r\n        {\r\n          \"DCSAResponsibleAgencyCode\": \"SMDG\",\r\n          \"partyCode\": \"MSK\",\r\n          \"codeListName\": \"LCL\"\r\n        }\r\n      ]\r\n    },\r\n    \"numberOfRiderPages\": 2,\r\n    \"termsAndConditions\": \"string\",\r\n    \"receiptTypeAtOrigin\": \"CY\",\r\n    \"deliveryTypeAtDestination\": \"CY\",\r\n    \"cargoMovementTypeAtOrigin\": \"FCL\",\r\n    \"cargoMovementTypeAtDestination\": \"FCL\",\r\n    \"serviceContractReference\": \"string\",\r\n    \"vesselName\": \"King of the Seas\",\r\n    \"carrierExportVoyageNumber\": \"2103S\",\r\n    \"universalExportVoyageReference\": \"2103N\",\r\n    \"declaredValue\": 1231.1,\r\n    \"declaredValueCurrency\": \"DKK\",\r\n    \"transports\": [\r\n      {\r\n        \"transportPlanStage\": \"PRC\",\r\n        \"transportPlanStageSequenceNumber\": 5,\r\n        \"loadLocation\": {\r\n          \"locationName\": \"Shanghai Shengdong International Container Terminal\",\r\n          \"UNLocationCode\": \"CNSGH\",\r\n          \"facilityCode\": \"SHENG\",\r\n          \"facilityCodeListProvider\": \"SMDG\"\r\n        },\r\n        \"dischargeLocation\": {\r\n          \"locationName\": \"Transnet Port Terminals Cape Town\",\r\n          \"UNLocationCode\": \"ZACPT\",\r\n          \"facilityCode\": \"TNCT\",\r\n          \"facilityCodeListProvider\": \"SMDG\"\r\n        },\r\n        \"plannedDepartureDate\": \"2022-08-16\",\r\n        \"plannedArrivalDate\": \"2022-08-16\",\r\n        \"modeOfTransport\": \"VESSEL\",\r\n        \"vesselName\": \"King of the Seas\",\r\n        \"vesselIMONumber\": \"9321483\",\r\n        \"carrierImportVoyageNumber\": \"2103N\",\r\n        \"universalImportVoyageReference\": \"2103N\",\r\n        \"carrierExportVoyageNumber\": \"2103S\",\r\n        \"universalExportVoyageReference\": \"2103N\",\r\n        \"isUnderShippersResponsibility\": false\r\n      }\r\n    ],\r\n    \"shipmentLocations\": [\r\n      {\r\n        \"location\": {\r\n          \"locationName\": \"CMP Container Terminal Copenhagen\",\r\n          \"UNLocationCode\": \"DKCPH\",\r\n          \"facilityCode\": \"CMPDK\",\r\n          \"facilityCodeListProvider\": \"SMDG\"\r\n        },\r\n        \"displayedName\": \"string\",\r\n        \"shipmentLocationTypeCode\": \"PRE\",\r\n        \"eventDateTime\": \"2021-11-03T10:23:00+01:00\"\r\n      }\r\n    ],\r\n    \"invoicePayableAt\": {\r\n      \"locationName\": \"Eiffel Tower\",\r\n      \"UNLocationCode\": \"FRPAR\"\r\n    },\r\n    \"placeOfIssue\": {\r\n      \"locationName\": \"DCSA Headquarters\",\r\n      \"UNLocationCode\": \"NLAMS\"\r\n    },\r\n    \"shippingInstruction\": {\r\n      \"shippingInstructionReference\": \"e0559d83-00e2-438e-afd9-fdd610c1a008\",\r\n      \"documentStatus\": \"RECE\",\r\n      \"shippingInstructionCreatedDateTime\": \"2019-11-12T07:41:00+08:30\",\r\n      \"shippingInstructionUpdatedDateTime\": \"2019-11-12T07:41:00+08:30\",\r\n      \"amendToTransportDocument\": \"string\",\r\n      \"transportDocumentTypeCode\": \"SWB\",\r\n      \"isShippedOnBoardType\": true,\r\n      \"numberOfCopies\": 2,\r\n      \"numberOfOriginals\": 4,\r\n      \"isElectronic\": true,\r\n      \"isToOrder\": false,\r\n      \"areChargesDisplayedOnOriginals\": true,\r\n      \"areChargesDisplayedOnCopies\": true,\r\n      \"displayedNameForPlaceOfReceipt\": \"string\",\r\n      \"displayedNameForPortOfLoad\": \"string\",\r\n      \"displayedNameForPortOfDischarge\": \"string\",\r\n      \"displayedNameForPlaceOfDelivery\": \"string\",\r\n      \"carrierBookingReference\": \"ABC709951\",\r\n      \"placeOfIssue\": {\r\n        \"locationName\": \"DCSA Headquarters\",\r\n        \"UNLocationCode\": \"NLAMS\"\r\n      },\r\n      \"consignmentItems\": [\r\n        {\r\n          \"carrierBookingReference\": \"ABC709951\",\r\n          \"weight\": 13000.3,\r\n          \"volume\": 12,\r\n          \"weightUnit\": \"KGM\",\r\n          \"volumeUnit\": \"MTQ\",\r\n          \"descriptionOfGoods\": \"string\",\r\n          \"HSCode\": \"string\",\r\n          \"cargoItems\": [\r\n            {\r\n              \"cargoLineItems\": [\r\n                {\r\n                  \"cargoLineItemID\": \"string\",\r\n                  \"shippingMarks\": \"string\"\r\n                }\r\n              ],\r\n              \"equipmentReference\": \"APZU4812090\",\r\n              \"weight\": 13000.3,\r\n              \"volume\": 12,\r\n              \"weightUnit\": \"KGM\",\r\n              \"volumeUnit\": \"MTQ\",\r\n              \"numberOfPackages\": 18,\r\n              \"packageCode\": \"5H4\",\r\n              \"packageNameOnBL\": \"Bags\"\r\n            }\r\n          ],\r\n          \"references\": [\r\n            {\r\n              \"referenceType\": \"FF\",\r\n              \"referenceValue\": \"string\"\r\n            }\r\n          ]\r\n        }\r\n      ],\r\n      \"utilizedTransportEquipments\": [\r\n        {\r\n          \"equipment\": {\r\n            \"equipmentReference\": \"APZU4812090\",\r\n            \"ISOEquipmentCode\": \"22GP\",\r\n            \"tareWeight\": 12000,\r\n            \"weightUnit\": \"KGM\"\r\n          },\r\n          \"cargoGrossWeight\": 12000,\r\n          \"cargoGrossWeightUnit\": \"KGM\",\r\n          \"cargoGrossVolume\": 120,\r\n          \"cargoGrossVolumeUnit\": \"MTQ\",\r\n          \"numberOfPackages\": 18,\r\n          \"isShipperOwned\": true,\r\n          \"activeReeferSettings\": {\r\n            \"temperatureMin\": -18.1,\r\n            \"temperatureMax\": 64.3,\r\n            \"temperatureUnit\": \"CEL\",\r\n            \"humidityMin\": 80,\r\n            \"humidityMax\": 100,\r\n            \"ventilationMin\": 266,\r\n            \"ventilationMax\": 296\r\n          },\r\n          \"seals\": [\r\n            {\r\n              \"sealNumber\": \"string\",\r\n              \"sealSource\": \"CUS\",\r\n              \"sealType\": \"WIR\"\r\n            }\r\n          ]\r\n        }\r\n      ],\r\n      \"documentParties\": [\r\n        {\r\n          \"party\": {\r\n            \"partyName\": \"Asseco Denmark\",\r\n            \"taxReference1\": \"CVR-25645774\",\r\n            \"taxReference2\": \"CVR-25645774\",\r\n            \"publicKey\": \"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFzaW\",\r\n            \"address\": {\r\n              \"name\": \"Henrik\",\r\n              \"street\": \"Kronprincessegade\",\r\n              \"streetNumber\": \"54\",\r\n              \"floor\": \"5. sal\",\r\n              \"postCode\": \"1306\",\r\n              \"city\": \"København\",\r\n              \"stateRegion\": \"N/A\",\r\n              \"country\": \"Denmark\"\r\n            },\r\n            \"partyContactDetails\": [\r\n              {\r\n                \"name\": \"Henrik\",\r\n                \"phone\": \"+45 33364660\",\r\n                \"email\": \"info@dcsa.org\",\r\n                \"url\": \"https://www.dcsa.org\"\r\n              }\r\n            ],\r\n            \"identifyingCodes\": [\r\n              {\r\n                \"DCSAResponsibleAgencyCode\": \"SMDG\",\r\n                \"partyCode\": \"MSK\",\r\n                \"codeListName\": \"LCL\"\r\n              }\r\n            ]\r\n          },\r\n          \"partyFunction\": \"DDS\",\r\n          \"displayedAddress\": [\r\n            \"Kronprincessegade 54\"\r\n          ],\r\n          \"isToBeNotified\": true\r\n        }\r\n      ],\r\n      \"references\": [\r\n        {\r\n          \"referenceType\": \"FF\",\r\n          \"referenceValue\": \"string\"\r\n        }\r\n      ]\r\n    },\r\n    \"charges\": [\r\n      {\r\n        \"chargeType\": \"string\",\r\n        \"currencyAmount\": 1012.12,\r\n        \"currencyCode\": \"DKK\",\r\n        \"paymentTermCode\": \"PRE\",\r\n        \"calculationBasis\": \"Per day\",\r\n        \"unitPrice\": 3456.6,\r\n        \"quantity\": 34.4\r\n      }\r\n    ],\r\n    \"carrierClauses\": [\r\n      {\r\n        \"clauseContent\": \"string\"\r\n      }\r\n    ]\r\n  },\r\n  \"endorsementChain\": [\r\n    {\r\n      \"envelopeHash\": \"92939058e050dcdfaa836ab7d8d2da57420c6320f25b49e087af5af16f49cb1b\",\r\n      \"signature\": \"eyJhbGciOiJSUzI1NiIsImtpZCI6IlVhRVdLNmt2ZkRITzNZT2NwUGl2M1RCT2JQTzk2SFZhR2U0czFhUUxBZU0ifQ.eyJkb2N1bWVudEhhc2giOiJmZDg2OGM4MmU5OTc3N2I0NzJhMTY3NzM5MGQ5NTRkYmIwMTMxY2IzYjBmNTVjOGVmNTE5Njk4NTY0MTBkMzhlIiwicHJldmlvdXNFbnZlbG9wZUhhc2giOm51bGwsInRyYW5zYWN0aW9ucyI6W3siYWN0aW9uIjoiSVNTVSIsImNvbW1lbnRzIjoiVGhlIEIvTCBoYXMgYmVlbiBpc3N1ZWQuIiwidGltZXN0YW1wIjoxNjU4Mzg1MTY2MzAyNDQyMjAwLCJpc1RvT3JkZXIiOnRydWUsInBsYXRmb3JtSG9zdCI6ImxvY2FsaG9zdDo4NDQzIiwidHJhbnNmZXJlZSI6IjQzNTQ5ODUwMjQ4QGxvY2FsaG9zdDo4NDQzIn1dfQ.UTICZFOGEuz-Vx1FwP5UQBrHRh3M6LSd9OqicROBNgDnHLVW1jegBksl_6JSWNEyPfGPQ9GeVO4XMO4d2MIz1NATaS14qVz2no67ixC3p4EgvjSMoc1JFK7Se3-sVanlKxIGxo9vn_qV30xa2LrbGXdpm4cM1noWzRvsolTvbju-T9_Z_jC_Pch9zqBL-seMPZOpUUxjgP_ZB25IY9GJ_Ge_T2jEGGx87ud5JD8IwOc4zRISRIs21vfw6q0QGtmnPtatSXqR1kFlJILY-SZn_eGjIdPn9OzQfBnXUJ38HbqwASW5uO3o7zPIazl7VYQA2YWq92LRIyn13ZTlc-ePQw\"\r\n    }\r\n  ]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://{{BASE_URL}}/{{MAJOR_VERSION}}/transferblocks",
-					"protocol": "https",
-					"host": [
-						"{{BASE_URL}}"
-					],
-					"path": [
-						"{{MAJOR_VERSION}}",
-						"transferblocks"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get JWKS",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Content-Type is present\", function () {\r",
-							"    pm.response.to.be.header(\"Content-Type\", \"application/json\");\r",
-							"});\r",
-							"\r",
-							"let jwksResponse = pm.response.json();\r",
-							"\r",
-							"\r",
-							"pm.test('Number of keys in JWKS = ' + jwksResponse.keys.length, function () {\r",
-							"    pm.expect(jwksResponse.keys.length).to.greaterThan(0);\r",
-							"});\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://{{BASE_URL}}/{{MAJOR_VERSION}}/.well-known/jwks.json",
-					"protocol": "https",
-					"host": [
-						"{{BASE_URL}}"
-					],
-					"path": [
-						"{{MAJOR_VERSION}}",
-						".well-known",
-						"jwks.json"
-					]
-				}
-			},
-			"response": []
+			]
 		}
 	],
 	"event": [
@@ -603,9 +635,7 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"pm.test(\"API Version is present\", function () {",
-					"    pm.response.to.be.header(\"API-Version\", \"0.0.1\");",
-					"});"
+					""
 				]
 			}
 		}
