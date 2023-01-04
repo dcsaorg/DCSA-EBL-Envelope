@@ -3,18 +3,22 @@ package org.dcsa.endorsementchain.security;
 import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.net.URIBuilder;
 import com.nimbusds.jose.jwk.JWKSet;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
+import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.BasicHttpClientConnectionManager;
+import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
+import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.http.config.RegistryBuilder;
+import org.apache.hc.core5.ssl.SSLContextBuilder;
 import org.dcsa.endorsementchain.components.eblenvelope.EblEnvelopeSignature;
+import org.dcsa.endorsementchain.controller.JwkSetRestController;
 import org.dcsa.endorsementchain.service.EblEnvelopeService;
 import org.dcsa.endorsementchain.service.ExportService;
 import org.dcsa.endorsementchain.service.ImportService;
-import org.dcsa.endorsementchain.controller.JwkSetRestController;
 import org.dcsa.endorsementchain.unofficial.service.TransactionService;
 import org.dcsa.endorsementchain.unofficial.service.TransportDocumentService;
 import org.junit.jupiter.api.Test;
@@ -40,7 +44,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import jakarta.annotation.PostConstruct;
 import javax.net.ssl.SSLContext;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -96,9 +99,19 @@ class SecurityFlowIT {
       .loadTrustMaterial(null, (x509Certificates, s) -> true)
       .build();
 
-    HttpClient httpClient = HttpClientBuilder.create()
-      .setSSLSocketFactory(new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier()))
-      .build();
+    var sslsf = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
+
+    var socketFactoryRegistry =
+      RegistryBuilder.<ConnectionSocketFactory> create()
+        .register("https", sslsf)
+        .register("http", new PlainConnectionSocketFactory())
+        .build();
+
+    var connectionManager =
+      new BasicHttpClientConnectionManager(socketFactoryRegistry);
+    var httpClient = HttpClients.custom()
+      .setConnectionManager(connectionManager).build();
+
 
     ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
 

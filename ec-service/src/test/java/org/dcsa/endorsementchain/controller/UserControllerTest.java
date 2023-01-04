@@ -6,7 +6,7 @@ import org.dcsa.endorsementchain.service.PartyService;
 import org.dcsa.endorsementchain.transferobjects.PartyTO;
 import org.dcsa.skernel.errors.infrastructure.ConcreteRequestErrorMessageExceptionHandler;
 import org.dcsa.skernel.errors.infrastructure.FallbackExceptionHandler;
-import org.dcsa.skernel.errors.infrastructure.JavaxValidationExceptionHandler;
+import org.dcsa.skernel.errors.infrastructure.JakartaValidationExceptionHandler;
 import org.dcsa.skernel.errors.infrastructure.SpringExceptionHandler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = {UserController.class})
-@Import({SpringExceptionHandler.class, JavaxValidationExceptionHandler.class, FallbackExceptionHandler.class, ConcreteRequestErrorMessageExceptionHandler.class})
+@Import({SpringExceptionHandler.class, JakartaValidationExceptionHandler.class, FallbackExceptionHandler.class, ConcreteRequestErrorMessageExceptionHandler.class})
 public class UserControllerTest {
   @MockBean PartyService partyService;
 
