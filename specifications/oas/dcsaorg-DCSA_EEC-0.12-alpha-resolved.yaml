@@ -14,7 +14,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.11-alpha
+  version: 0.12-alpha
 servers:
 - url: /
 paths:
@@ -84,6 +84,67 @@ paths:
                 x5c:
                 - MIIDfDCCAmSgAwIBAgIJAM6iTZvk8egFMA0GCSqGSIb3DQEBCwUAMGwxCzAJBgNVBAYTAk5MMRYwFAYDVQQIEw1Ob29yZC1Ib2xsYW5kMRIwEAYDVQQHEwlBbXN0ZXJkYW0xDTALBgNVBAoTBERDU0ExCzAJBgNVBAsTAklUMRUwEwYDVQQDEwxlYmwtZW52ZWxvcGUwHhcNMjIwNzI5MTAwNjQzWhcNMjIxMDI3MTAwNjQzWjBsMQswCQYDVQQGEwJOTDEWMBQGA1UECBMNTm9vcmQtSG9sbGFuZDESMBAGA1UEBxMJQW1zdGVyZGFtMQ0wCwYDVQQKEwREQ1NBMQswCQYDVQQLEwJJVDEVMBMGA1UEAxMMZWJsLWVudmVsb3BlMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4wwZAmx07g7+rSvacPE60UvZyF02i1fTB/eg2Eu6zIuSr+np+IsEDPa5PdT4XYDSSbwa1gs1HUs7r8JY3OjUQdiXl0IgYj/YWsFJeokfne9kkSfDmFdTeiYzA+mcj68MF3wwK8UR72vprp8nWJeDxGXLjMCECr9vDGozaZ6+U15yVnAUVymBtbDlaNb2qT/OS0Nmls6pUdHfy7VM6QnYy58nBAH/PS4kdxThd1kauAN1+mUaVMYJNCbTlBSew/Y2cvC3Oh6iwe1lYkBIHMvkytGT3lbssX2mIwbht2O5EKg6b6YG2iii732w7i264i2OEKK2/+lR837Y2Es5zFR3vQIDAQABoyEwHzAdBgNVHQ4EFgQUOBRI3iOZCILGWS6ku4cdwLnyxc8wDQYJKoZIhvcNAQELBQADggEBAGIP6bQwA6FxUIJavCvmC/dLbrpkZn2b77QS9xNmDlIdtxgWHsIOK2KwOri2XqEvKhxWQ+xyEXk0F7tLmgA3soV8xDpQL32qc4/RWl3QS2dsXoRPPgMFAxY1Hu4ZAdiN8rdnWylvm7FNvTbE57PpQQXlaEF1dHR6fzBylET35W29pAuNZwdwcOyj0XzXqLHqpd87zluTq5k5JKIjjRAU2YMivLTt0986Q/ihEThVdcX00T3HiLUjRy3hE9HdbJgcdmSo094+T/sJ+rZ79SyNCnXeUYaUzFP6ZibBdf3jZhmolfqnAyJy3qHcQA61Rvn3C76bskxCG8ccspEM3VSJBzM=
                 n: 4wwZAmx07g7-rSvacPE60UvZyF02i1fTB_eg2Eu6zIuSr-np-IsEDPa5PdT4XYDSSbwa1gs1HUs7r8JY3OjUQdiXl0IgYj_YWsFJeokfne9kkSfDmFdTeiYzA-mcj68MF3wwK8UR72vprp8nWJeDxGXLjMCECr9vDGozaZ6-U15yVnAUVymBtbDlaNb2qT_OS0Nmls6pUdHfy7VM6QnYy58nBAH_PS4kdxThd1kauAN1-mUaVMYJNCbTlBSew_Y2cvC3Oh6iwe1lYkBIHMvkytGT3lbssX2mIwbht2O5EKg6b6YG2iii732w7i264i2OEKK2_-lR837Y2Es5zFR3vQ
+  /v1/user/{userId}:
+    get:
+      tags:
+      - User
+      summary: Retrieves user information based on the user Id
+      description: |
+        In order to facilitate additional verification checks before sending the BL to another party on potentially a different platform and additional endpoint is created that platforms can provide (and call on another platform). This endpoint will return a information on the user requested based on their local identifier. The receiving platform can use this information in a variety of cases
+      parameters:
+      - name: userId
+        in: path
+        description: userId of the user on the platform
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: API-Version
+        in: header
+        description: |
+          An API-Version header MAY be added to the request (optional); if added it MUST only contain MAJOR version. API-Version header MUST be aligned with the URI version.
+        required: false
+        schema:
+          type: string
+          example: "1"
+      responses:
+        "200":
+          description: Request successful
+          headers:
+            API-Version:
+              $ref: '#/components/headers/API-Version'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/partyVerification'
+              examples:
+                minimal:
+                  value:
+                    id: c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2
+                    name: Digital Container Shipping Association
+                    registrationNumber: 74567837
+                    countryOfRegistration: NL
+                full:
+                  value:
+                    id: c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2
+                    name: Digital Container Shipping Association
+                    registrationNumber: 74567837
+                    countryOfRegistration: NL
+                    address: Strawinskylaan 4117, Amsterdam
+                    taxReference: NL859951480B01
+                    lei: 254900G14ALGVKORFN62
+                    did: did:example:123456789abcdefghi
+                    unece: dummy unece
+                    lloyd: dummy lloyd
+                    bic: AAAA BB CC 123
+                    imo: IMO8712345
+                    scac: USAU
+                    itigg: dummy itigg
+                    itu: dummy itu
+                    exis: dummy exis
+                    fmc: 201288-002
+                    cbsa: dummy cbsa
 components:
   schemas:
     sha256Hash:
@@ -95,7 +156,30 @@ components:
       type: object
       properties:
         document:
-          $ref: '#/components/schemas/transportDocument'
+          discriminator:
+            propertyName: ebldocumentType
+          oneOf:
+          - allOf:
+            - type: object
+              properties:
+                ebldocumentType:
+                  type: string
+                  example: DCSA-TD-v2
+            - $ref: '#/components/schemas/transportDocument'
+          - allOf:
+            - type: object
+              properties:
+                ebldocumentType:
+                  type: string
+                  example: FIATA-v1
+            - $ref: '#/components/schemas/fiataBL'
+          - allOf:
+            - type: object
+              properties:
+                ebldocumentType:
+                  type: string
+                  example: BIMCO-v1
+            - $ref: '#/components/schemas/bimcoBL'
         endorsementChain:
           type: array
           items:
@@ -108,15 +192,16 @@ components:
       type: object
       properties:
         envelopeHash:
-          allOf:
-          - $ref: '#/components/schemas/sha256Hash'
-          - example: 20a0257b313ae08417e07f6555c4ec829a512c083f3ead16b41158018a22abe9
-          - description: sha256 hash of the eblEnvelope object
+          maxLength: 64
+          minLength: 64
+          type: string
+          description: 'sha256 hash of the eblEnvelope object formatted as sha256 hash according to: https://datatracker.ietf.org/doc/html/rfc6234'
+          example: 20a0257b313ae08417e07f6555c4ec829a512c083f3ead16b41158018a22abe9
         signature:
           pattern: ^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*)
           type: string
-          description: 'JWS with compact serialization according to: [RFC 7515](https://datatracker.ietf.org/doc/html/rfc7515#section-7.1) payload of the JWS contains the envelopeHash as received signed by the receiving platform. <BR> The content of the payload is the EBL-Envelope defined in: [eblEnvelope](#/eblEnvelope)'
-          example: eyJraWQiOiJmNjA1YmZlYi1jZjUwLTQ1MTItYTM5Zi02OGRlZGZmYjJhNDgiLCJhbGciOiJSUzI1NiJ9.ImVudmVsb3BlSGFzaCI6ICJkNTZhOTNhN2U5Zjg2YTJkODk1ZGY4MThlMDQ0MGJkY2E2ZmZlMDMyNDZlMmZlZTE0MTMxZjJlNjZjODRjNzVhIg.ff6MAR0Pwtnt3_RGzgIH0oemzusB3iiE1zsq5-q-bpRDLwKV4gS_yCYtz1TMRKF021c7CAWS-NmaTS8e1ydtTRZDEmxENVDl4z58rCIM3_oOpP6XItHkSCacBIi90kQzl97b-ZDC75a1cm1ez39pcg8izDlpUuhNvY6QqN7Dju0bw_-1kZ4YjedMyxgRHztVNNbHUe9qhpbB_yOo0sYb2KmkeOwnA6wKoRvUxWaQU-2RbuK4eAwhjWc5ZgJ3DOLZBLk3ucuz1KT6QCOwfce2oG2tIxuFBsoubStMPfvmAwuKVBMuCHl_NKKzoxRvAkExRLWNi9q6kuAyqfisHhZfBw
+          description: 'JWS with compact serialization according to: [RFC 7515](https://datatracker.ietf.org/doc/html/rfc7515#section-7.1). The content of the payload is the EBL-Envelope defined in: [eblEnvelope](#/eblEnvelope)'
+          example: eyJhbGciOiJSUzI1NiJ9.eyJwcmV2aW91c0VudmVsb3BlSGFzaCI6bnVsbCwiZG9jdW1lbnRIYXNoIjoiMDNlODJjMWRjOGJmYWM4NDZjOTcxMmM0ZGY4NzZlYjRkYmU1NzVkMWE2OWQwMGI4NjM4Nzc4YjJhZDMzZTNiNCIsInRyYW5zYWN0aW9ucyI6W3siYWN0aW9uIjoiSVNTVSIsImNvbW1lbnRzIjoiVGhlIEIvTCBoYXMgYmVlbiBpc3N1ZWQuIiwidGltZXN0YW1wIjoxNjcyODI4ODQ4ODEwLCJpc1RvT3JkZXIiOnRydWUsInBsYXRmb3JtSG9zdCI6IjE4ZDg5ZmE3YzNjNjo4NDQzIiwidHJhbnNmZXJlZSI6ImZvb0A4OTg2MTc4OS1mMTczLTQ1MmItOTEyMy1hNmMzNWRlZDQ3NjAubW9jay5wc3Rtbi5pbyJ9LHsiYWN0aW9uIjoiVFJOUyIsImNvbW1lbnRzIjoiVGhlIEIvTCBleHBvcnRlZCB0bzogZm9vQDg5ODYxNzg5LWYxNzMtNDUyYi05MTIzLWE2YzM1ZGVkNDc2MC5tb2NrLnBzdG1uLmlvIiwidGltZXN0YW1wIjoxNjcyODI4ODQ4ODk5LCJpc1RvT3JkZXIiOnRydWUsInBsYXRmb3JtSG9zdCI6IjE4ZDg5ZmE3YzNjNjo4NDQzIiwidHJhbnNmZXJlZSI6ImZvb0A4OTg2MTc4OS1mMTczLTQ1MmItOTEyMy1hNmMzNWRlZDQ3NjAubW9jay5wc3Rtbi5pbyJ9XX0.vKMYcSkHXkyFJBMVuyfHu-tmw2I5HIU-onp9h64r7fseW7BmM-fHpFCLCoY-q_eihJLxA946vYE7C3jXFUHwKxHqj9DRbj3aox3FKAu88-L4-hvY3aBQaFPlpUpW30ICBXDJuyckxWpcZqYSW8AcAJvvYG64XPDAkWVj2HeoNh4ZOv-WBDkrcKoKYO7boRRjX2rYJwclDIcgnshrHECYdBRZNCUZb2sLUO2qhNpIz-5oILoiT31jj5bVgn4zZMs4zHd5iL1FMD9QlHA5kQHEiejhFaOGzZqgvveAGJ2NhZcuBJok9yatf49QMS6Ada4w37UFQB_Ug5hp404PBDFqQQ
     eblEnvelope:
       required:
       - documentHash
@@ -125,16 +210,17 @@ components:
       type: object
       properties:
         documentHash:
-          allOf:
-          - $ref: '#/components/schemas/sha256Hash'
-          - example: 76a7d14c83d7268d643ae7345c448de60701f955d264a743e6928a0b8268b24f
-          - description: DocumentHash is the hash of he eBL according to the [DCSA eBL specification](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EBL/2.0.0-Beta-2#/Transport%20Documents/get_v2_transport_documents__transportDocumentReference_) which is also attached in the transferblock in document.
+          maxLength: 64
+          minLength: 64
+          type: string
+          description: 'DocumentHash is the hash of he eBL according to the [DCSA eBL specification](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EBL/2.0.0-Beta-2#/Transport%20Documents/get_v2_transport_documents__transportDocumentReference_) which is also attached in the transferblock in document. formatted as sha256 hash according to: https://datatracker.ietf.org/doc/html/rfc6234'
+          example: 76a7d14c83d7268d643ae7345c448de60701f955d264a743e6928a0b8268b24f
         previousEnvelopeHash:
-          allOf:
-          - $ref: '#/components/schemas/sha256Hash'
-          - {}
-          - nullable: true
-          - description: previousEnvelopeHash links to a previous envelope Hash. Tracking transactions between platforms.
+          maxLength: 64
+          minLength: 64
+          type: string
+          description: 'previousEnvelopeHash links to a previous envelope Hash. Tracking transactions between platforms. formatted as sha256 hash according to: https://datatracker.ietf.org/doc/html/rfc6234'
+          nullable: true
         transactions:
           type: array
           items:
@@ -148,15 +234,18 @@ components:
       - transferee
       type: object
       properties:
-        instruction:
+        action:
           type: string
           description: |
             instruction for processing the transaction
             - ISSU (Issue)
             - TRNS (Transfer)
             - SURR (Surrender)
+            - SREQ (Request to surrender)
             - AMND (Ammend)
+            - AREQ (Request to Amend)
             - SW2P (Switch to Paper)
+            - PREQ (Request to switch to paper)
           enum:
           - ISSU
           - TRNS
@@ -192,6 +281,8 @@ components:
                 example: 43549850248@exampleplatform.com
           - $ref: '#/components/schemas/party'
     party:
+      required:
+      - partyName
       type: object
       description: refers to a company or a legal entity.
       allOf:
@@ -338,6 +429,70 @@ components:
       type: string
       description: 'JWS with compact serialization according to: https://datatracker.ietf.org/doc/html/rfc7515#section-7.1 payload of the JWS contains the envelopeHash as received signed by the receiving platform.'
       example: eyJraWQiOiJmNjA1YmZlYi1jZjUwLTQ1MTItYTM5Zi02OGRlZGZmYjJhNDgiLCJhbGciOiJSUzI1NiJ9.ImVudmVsb3BlSGFzaCI6ICJkNTZhOTNhN2U5Zjg2YTJkODk1ZGY4MThlMDQ0MGJkY2E2ZmZlMDMyNDZlMmZlZTE0MTMxZjJlNjZjODRjNzVhIg.ff6MAR0Pwtnt3_RGzgIH0oemzusB3iiE1zsq5-q-bpRDLwKV4gS_yCYtz1TMRKF021c7CAWS-NmaTS8e1ydtTRZDEmxENVDl4z58rCIM3_oOpP6XItHkSCacBIi90kQzl97b-ZDC75a1cm1ez39pcg8izDlpUuhNvY6QqN7Dju0bw_-1kZ4YjedMyxgRHztVNNbHUe9qhpbB_yOo0sYb2KmkeOwnA6wKoRvUxWaQU-2RbuK4eAwhjWc5ZgJ3DOLZBLk3ucuz1KT6QCOwfce2oG2tIxuFBsoubStMPfvmAwuKVBMuCHl_NKKzoxRvAkExRLWNi9q6kuAyqfisHhZfBw
+    partyVerification:
+      required:
+      - countryOfRegistration
+      - name
+      - registrationNumber
+      - userId
+      type: object
+      properties:
+        id:
+          type: string
+          description: local identifier of the party or user on the platform
+          example: c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2
+        name:
+          type: string
+          description: Name of the party/user as shown on the endorsement chain
+          example: Digital Container Shipping Association
+        registrationNumber:
+          type: string
+          description: Company registration number of this party. E.g. registration number on the local chamber of commerse.
+          example: "74567837"
+        countryOfRegistration:
+          maxLength: 2
+          minLength: 2
+          type: string
+          description: country code of the country of registration according to ISO 3166-1 alpha-2
+          example: NL
+        address:
+          type: string
+          description: address used during registration
+          example: Strawinskylaan 4117, Amsterdam
+        taxReference:
+          type: string
+          description: tax reference used in the country of registration
+          example: NL859951480B01
+        lei:
+          type: string
+        did:
+          type: string
+        iso:
+          type: string
+        unece:
+          type: string
+        lloyd:
+          type: string
+        bic:
+          type: string
+        imo:
+          type: string
+        scac:
+          type: string
+        itigg:
+          type: string
+        itu:
+          type: string
+        exis:
+          type: string
+        fmc:
+          type: string
+        cbsa:
+          type: string
+    fiataBL:
+      type: object
+    bimcoBL:
+      type: object
     jwks:
       required:
       - keys
