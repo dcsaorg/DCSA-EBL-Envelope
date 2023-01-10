@@ -1,9 +1,11 @@
 package org.dcsa.endorsementchain.persistence.entity;
 
-import lombok.*;
-
 import jakarta.persistence.*;
-import java.util.Set;
+import lombok.*;
+import org.hibernate.annotations.SortComparator;
+
+import java.util.Comparator;
+import java.util.SortedSet;
 
 @Data
 @Builder
@@ -32,5 +34,6 @@ public class EblEnvelope {
   @ToString.Exclude
   @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name = "envelope_hash")
-  private Set<Transaction> transactions;
+  @SortComparator(TransactionByTimestampComparator.class)
+  private SortedSet<Transaction> transactions;
 }

@@ -7,7 +7,7 @@ import lombok.SneakyThrows;
 import org.dcsa.endorsementchain.components.eblenvelope.EblEnvelopeList;
 import org.dcsa.endorsementchain.components.eblenvelope.EblEnvelopeSignature;
 import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
-import org.dcsa.endorsementchain.persistence.entity.Transaction;
+import org.dcsa.endorsementchain.persistence.entity.TransactionByTimestampComparator;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
 import org.dcsa.endorsementchain.persistence.repository.EblEnvelopeRepository;
 import org.dcsa.endorsementchain.persistence.repository.TransportDocumentRepository;
@@ -22,7 +22,7 @@ import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @Service
@@ -158,14 +158,14 @@ public class EblEnvelopeService {
         .build()
       );
 
-    Set<Transaction> transactions =
+    var transactions =
         eblEnvelopeTO.transactions().stream()
             .map(
                 endorsementChainTransactionTO ->
                     transactionMapper.endorsementChainTransactionToTransaction(
                         endorsementChainTransactionTO, platformHost, partyService.getPartyByTransferee(endorsementChainTransactionTO.transferee())))
             .map(transaction -> transaction.linkTransactionToTransportDocument(transportDocument))
-            .collect(Collectors.toSet());
+            .collect(Collectors.toCollection(() -> new TreeSet<>(TransactionByTimestampComparator.INSTANCE)));
 
     return EblEnvelope.builder()
         .signature(signedEblEnvelopeTO.signature())
