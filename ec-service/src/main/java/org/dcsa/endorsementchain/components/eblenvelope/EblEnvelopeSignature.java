@@ -80,7 +80,7 @@ public class EblEnvelopeSignature {
 
   @SneakyThrows //ToDo this currently only works for the reference implementation. When decided the jwks.json URL becomes 'official' this needs to be refactored to take the context path into consideration
   private Optional<JWSVerifier> getJWSVerifierFromJWKS(String cn) {
-    ResponseEntity<String> jwkSetResponseEntity = restTemplate.getForEntity(new URI("https://" + cn + "/v1/unofficial/.well-known/jwks.json"), String.class);
+    ResponseEntity<String> jwkSetResponseEntity = restTemplate.getForEntity(new URI("https://" + cn + "/v1/.well-known/jwks.json"), String.class);
     var body = jwkSetResponseEntity.getBody();
     if (body == null) {
       // We could also throw here as an empty body would be invalid.
