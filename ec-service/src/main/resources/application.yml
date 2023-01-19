@@ -102,3 +102,12 @@ logging:
     org:
       hibernate:
         SQL: DEBUG
+---
+spring:
+  config:
+    activate:
+      on-profile: nosslverification
+
+dcsa:
+  client:
+    tlsVerification: false
