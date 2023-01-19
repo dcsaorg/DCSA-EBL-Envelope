@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "a95e13d2-3733-4ad9-9748-48defb5fd0d7",
+		"_postman_id": "cbb1223e-60a0-42d9-9079-487beb543558",
 		"name": "EBL Interoperability",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18186286"
 	},
 	"item": [
 		{
@@ -137,7 +138,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": \"foo@89861789-f173-452b-9123-a6c35ded4760.mock.pstmn.io\",\r\n    \"name\": \"Bar Party\",\r\n    \"registrationNumber\": \"reg no\",\r\n    \"countryOfRegistration\": \"DK\"\r\n}\r\n",
+							"raw": "{\r\n    \"id\": \"foo@localhost:8443\",\r\n    \"name\": \"Foo Party\",\r\n    \"registrationNumber\": \"reg no\",\r\n    \"countryOfRegistration\": \"DK\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -193,7 +194,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"action\": \"ISSU\",\r\n    \"comments\": \"The B/L has been issued.\",\r\n    \"isToOrder\": true,\r\n    \"transferee\": \"foo@89861789-f173-452b-9123-a6c35ded4760.mock.pstmn.io\"\r\n}",
+							"raw": "{\r\n    \"action\": \"ISSU\",\r\n    \"comments\": \"The B/L has been issued.\",\r\n    \"isToOrder\": true,\r\n    \"transferee\": \"foo@localhost:8443\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -236,8 +237,8 @@
 									"let errorResponse = pm.response.json();\r",
 									"\r",
 									"\r",
-									"pm.test('Error message is Signature not valid', function () {\r",
-									"    pm.expect(errorResponse.errors[0].message).to.equals(\"Signature not valid\");\r",
+									"pm.test('Error message is interal error', function () {\r",
+									"    pm.expect(errorResponse.errors[0].message).to.equals(\"Internal error\");\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -255,7 +256,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "\"foo@89861789-f173-452b-9123-a6c35ded4760.mock.pstmn.io\"",
+							"raw": "\"foo@localhost:8443\"",
 							"options": {
 								"raw": {
 									"language": "json"
