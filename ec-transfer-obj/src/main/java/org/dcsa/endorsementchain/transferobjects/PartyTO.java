@@ -12,7 +12,7 @@ public record PartyTO(
   @NotBlank @Size(max = 2) String countryOfRegistration,
   @Size(max = 1024) String address,
   @Size(max = 255) String taxReference,
-  @Size(max = 255) String lei,
+  @Size(max = 20, min = 20) String lei,
   @Size(max = 255) String did
 ) {
   @Builder

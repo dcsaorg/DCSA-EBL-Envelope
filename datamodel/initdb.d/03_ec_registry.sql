@@ -27,7 +27,7 @@ CREATE TABLE ec_registry."party" (
   country_of_registration varchar(2) NOT NULL,
   address text,
   tax_reference varchar(255),
-  lei varchar(255),
+  lei varchar(20),
   did varchar(255)
 );
 

@@ -38,7 +38,7 @@ public class Party {
   @Column(name = "tax_reference")
   private String taxReference;
 
-  @Column(name = "lei")
+  @Column(name = "lei", length = 20)
   private String lei;
 
   @Column(name = "did")
