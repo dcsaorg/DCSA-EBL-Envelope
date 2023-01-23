@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class PartyServiceTest {
+class PartyServiceTest {
   @Spy private PartyMapper partyMapper = Mappers.getMapper(PartyMapper.class);
   @Mock private PartyRepository partyRepository;
 
@@ -35,7 +35,7 @@ public class PartyServiceTest {
   }
 
   @Test
-  public void testFindPartyByUserId() {
+  void testFindPartyByUserId() {
     // Setup
     when(partyRepository.findById(any())).thenReturn(Optional.of(PartyDataFactory.party()));
 
@@ -49,7 +49,7 @@ public class PartyServiceTest {
   }
 
   @Test
-  public void testFindPartyByUserId_NotFound() {
+  void testFindPartyByUserId_NotFound() {
     // Setup
     when(partyRepository.findById(any())).thenReturn(Optional.empty());
 

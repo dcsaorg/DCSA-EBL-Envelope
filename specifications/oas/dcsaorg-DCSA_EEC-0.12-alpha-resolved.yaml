@@ -135,16 +135,6 @@ paths:
                     taxReference: NL859951480B01
                     lei: 254900G14ALGVKORFN62
                     did: did:example:123456789abcdefghi
-                    unece: dummy unece
-                    lloyd: dummy lloyd
-                    bic: AAAA BB CC 123
-                    imo: IMO8712345
-                    scac: USAU
-                    itigg: dummy itigg
-                    itu: dummy itu
-                    exis: dummy exis
-                    fmc: 201288-002
-                    cbsa: dummy cbsa
 components:
   schemas:
     sha256Hash:
@@ -180,6 +170,10 @@ components:
                   type: string
                   example: BIMCO-v1
             - $ref: '#/components/schemas/bimcoBL'
+        supportingDocuments:
+          type: array
+          items:
+            $ref: '#/components/schemas/transferblock_supportingDocuments'
         endorsementChain:
           type: array
           items:
@@ -246,12 +240,19 @@ components:
             - AREQ (Request to Amend)
             - SW2P (Switch to Paper)
             - PREQ (Request to switch to paper)
+            - ADOC (Add supported document)
+            - RDOC (Remove supported document)
           enum:
           - ISSU
           - TRNS
           - SURR
+          - SREQ
           - AMND
+          - AREQ
           - SW2P
+          - PREQ
+          - ADOC
+          - RDOC
         comments:
           maxLength: 255
           type: string
@@ -270,6 +271,10 @@ components:
           type: string
           description: base url of the platform which created the transaction
           example: https://exampleblplatform.net
+        supportingDocuments:
+          type: array
+          items:
+            $ref: '#/components/schemas/transaction_supportingDocuments'
         transferee:
           required:
           - eBLPlatformIdentifier
@@ -2373,6 +2378,29 @@ components:
       type: string
       description: URL for the contact
       example: https://www.dcsa.org
+    transferblock_supportingDocuments:
+      type: object
+      properties:
+        documentType:
+          type: string
+          description: The type of supporting document. TODO explore if this could be enum
+          example: customs-declaration
+        content:
+          type: string
+          example: Zm9vYmFyYmF6
+    transaction_supportingDocuments:
+      required:
+      - documentHash
+      - documentType
+      type: object
+      properties:
+        documentHash:
+          type: string
+          example: 97df3588b5a3f24babc3851b372f0ba71a9dcdded43b14b9d06961bfc1707d9d
+        documentType:
+          type: string
+          description: The type of supporting document. TODO explore if this could be enum
+          example: customs-declaration
     jwks_keys:
       required:
       - kty
