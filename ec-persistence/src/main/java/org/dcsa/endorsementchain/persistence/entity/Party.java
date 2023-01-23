@@ -38,42 +38,9 @@ public class Party {
   @Column(name = "tax_reference")
   private String taxReference;
 
-  @Column(name = "lei")
+  @Column(name = "lei", length = 20)
   private String lei;
 
-  @Column(name = "cbsa")
-  private String cbsa;
-
-  @Column(name = "fmc")
-  private String fmc;
-
-  @Column(name = "exis")
-  private String exis;
-
-  @Column(name = "smdg")
-  private String smdg;
-
-  @Column(name = "itu")
-  private String itu;
-
-  @Column(name = "itigg")
-  private String itigg;
-
-  @Column(name = "scac")
-  private String scac;
-
-  @Column(name = "imo")
-  private String imo;
-
-  @Column(name = "bic")
-  private String bic;
-
-  @Column(name = "lloyd")
-  private String lloyd;
-
-  @Column(name = "unece")
-  private String unece;
-
-  @Column(name = "iso")
-  private String iso;
+  @Column(name = "did")
+  private String did;
 }

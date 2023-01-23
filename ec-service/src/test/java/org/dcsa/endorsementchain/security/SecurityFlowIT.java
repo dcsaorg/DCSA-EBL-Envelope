@@ -19,6 +19,7 @@ import org.dcsa.endorsementchain.controller.JwkSetRestController;
 import org.dcsa.endorsementchain.service.EblEnvelopeService;
 import org.dcsa.endorsementchain.service.ExportService;
 import org.dcsa.endorsementchain.service.ImportService;
+import org.dcsa.endorsementchain.service.PartyService;
 import org.dcsa.endorsementchain.unofficial.service.TransactionService;
 import org.dcsa.endorsementchain.unofficial.service.TransportDocumentService;
 import org.junit.jupiter.api.Test;
@@ -89,6 +90,8 @@ class SecurityFlowIT {
 
   @MockBean TransportDocumentService transportDocumentService;
 
+  @MockBean PartyService partyService;
+
   @MockBean
   JwkSetRestController jwkSetRestController;
 
@@ -144,7 +147,7 @@ class SecurityFlowIT {
       headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
       URI authorizationURI =
-          new URIBuilder(keycloak.getAuthServerUrl() + "/realms/dcsa/protocol/openid-connect/token")
+          new URIBuilder(keycloak.getAuthServerUrl() + "realms/dcsa/protocol/openid-connect/token")
               .build();
       RestTemplate client = new RestTemplateBuilder().build();
       MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();

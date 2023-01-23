@@ -15,19 +15,8 @@ public class PartyDataFactory {
       .countryOfRegistration("DK")
       .address("Somewhere 314, Totally Real Town, DK")
       .taxReference("testdata is taxing")
-      .lei("lei")
-      .cbsa("cbsa")
-      .fmc("fmc")
-      .exis("t")
-      .smdg("smdg")
-      .itu("what tu?")
-      .itigg("itigg")
-      .scac("cacs")
-      .imo("asdfgh")
-      .bic("cus dikkus")
-      .lloyd("dyoll")
-      .unece("ecenu")
-      .iso("8859-1")
+      .lei("254900G14ALGVKORFN62")
+      .did("did:example:123456789abcdefghi")
       .build();
   }
 
@@ -39,19 +28,8 @@ public class PartyDataFactory {
       .countryOfRegistration("DK")
       .address("Somewhere 314, Totally Real Town, DK")
       .taxReference("testdata is taxing")
-      .lei("lei")
-      .cbsa("cbsa")
-      .fmc("fmc")
-      .exis("t")
-      .smdg("smdg")
-      .itu("what tu?")
-      .itigg("itigg")
-      .scac("cacs")
-      .imo("asdfgh")
-      .bic("cus dikkus")
-      .lloyd("dyoll")
-      .unece("ecenu")
-      .iso("8859-1")
+      .lei("254900G14ALGVKORFN62")
+      .did("did:example:123456789abcdefghi")
       .build();
   }
 }

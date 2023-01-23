@@ -27,19 +27,8 @@ CREATE TABLE ec_registry."party" (
   country_of_registration varchar(2) NOT NULL,
   address text,
   tax_reference varchar(255),
-  lei varchar(255),
-  cbsa varchar(255),
-  fmc varchar(255),
-  exis varchar(255),
-  smdg varchar(255),
-  itu varchar(255),
-  itigg varchar(255),
-  scac varchar(255),
-  imo varchar(255),
-  bic varchar(255),
-  lloyd varchar(255),
-  unece varchar(255),
-  iso varchar(255)
+  lei varchar(20),
+  did varchar(255)
 );
 
 DROP TABLE IF EXISTS ec_registry."transaction" CASCADE;
