@@ -9,13 +9,7 @@ However, for easier collaboration and the ability to add PR's and issues the res
 
 # Open points for discussion
 
-- [x] sha256 of the json structure is fragile. sha256 of base64 encoding is more robust (same goes for all hashes)
-- [ ] should the `transportdocument` be sent in a separate json document and the API has the mime type that supports this?
-- [x] response of the PUT `transferblock` is an encoded JWS with the eblEnvelopeHash signed by the receiving platform.
-- [x] response of the PUT `transferblock` is only the string representation of the encoded JWS (no wrapper JSON object)
-- [ ] transferee is represented with the [DCSA Party object](https://app.swaggerhub.com/domains/dcsaorg/DOCUMENTATION_DOMAIN/2.0.1#/components/schemas/party)
-- [ ] discuss the details of platform authentication OIDC and if further specifications are required
-- [ ] align on the standardized error responses
+- [ ] Provide supporting documents via separate download.
 
 ## Decision log
 | Date       | Decision                                                                                                                                                  |
@@ -123,9 +117,8 @@ Security on the transport level requires:
 * When using TLSv1.2 only Cipher suites that support [perfect forward secrecy](https://datatracker.ietf.org/doc/html/rfc5489.html)
 
 TLSv1.3 mandates perfect forward secrecy, when using TLSv1.2 this means the usage of the following cipher suites:
-* TLS_ECDHE_RSA_WITH_AES128_GCM_SHA256
 * TLS_ECDHE_RSA_WITH_AES256_GCM_SHA384
-* TLS_ECDHE_RSA_WITH_AES256_CBC_SHA384
+* TLS_ECDHE_RSA_WITH_AES128_GCM_SHA256
 
 ### Authentication
 Authentication between platforms require:
@@ -139,6 +132,8 @@ for the request message:
 * signature is created using the private key of the sending platform
 * the signature is transfered as a JWS (Json Web Signature as described in [RFC 7515](https://datatracker.ietf.org/doc/html/rfc7515)) in the **_signature_** field
 * the JWS is transfered in the compact serialization format (as described in [Section 7 of RFC 7515](https://datatracker.ietf.org/doc/html/rfc7515#section-7.1))
+* the signature algorithms must be `PS256` or `ES256`. Algorithms that are too weak include `RS256` and `none`.
+
 
 For the response message:
 * signature covers the envelopeHash of the last item in the endorsement chain
@@ -149,12 +144,23 @@ For the response message:
 ### Additional specifications and requirements around security
 Digital certificate standards are a balance between information security, ease of adoption, and cost. To sign an eBL envelope with a private key of a digital certificate, the following technical minimum requirements MUST be met to guarantee trustworthy eBL envelopes:
 
-|Category| Standard                                                             |
-|---------|----------------------------------------------------------------------|
-|Certificate format| X.509 (<https://www.itu.int/rec/T-REC-X.509>)                        |
-|Minimum requirements signature algorithm| SHA256withRSA or SHA256withECDSA                                     |
-|Minimum key length for signatures| 2048-bit RSA or 256-bit ECDSA                                        |
-|Certificate revocation information method| OCSP (IETF RFC 6960)                                                 |
-|Certificate validity period| Maximum of 2 years (validity MUST be part of the certificate)        |
-|Signature format| See above in the **Signatures** section                                  |
-|Archive period (for certificates & signatures) | Minimum of 10 Years for both sender and receiver of signed documents |
+| Category                                          | Standard                                                             |
+|---------------------------------------------------|----------------------------------------------------------------------|
+| Certificate format                                | X.509 (<https://www.itu.int/rec/T-REC-X.509>)                        |
+| Minimum requirements signature algorithm          | `SHA256withRSA` or `SHA256withECDSA`                                 |
+| Minimum requirements for OIDC signature algorithm | `PS256` or `ES256`                                                   |
+| Minimum key length for asymmetric keys            | 2048-bit for RSA or 256-bit for elliptic curve algorithm             |
+| Minimum key length for symmetric keys             | 128-bit, though 256-bit is recommended where possible                |
+| Certificate revocation information method         | OCSP (IETF RFC 6960)                                                 |
+| Certificate validity period                       | Maximum of 2 years (validity MUST be part of the certificate)        |
+| Signature format                                  | See above in the **Signatures** section                              |
+| Archive period (for certificates & signatures)    | Minimum of 10 Years for both sender and receiver of signed documents |
+
+### Recommended enhancements
+
+The following are a list of enhancements that implementors are recommended to consider:
+
+ * OAuth2 authentication should be done via the `private_key_jwt` Client Authentication method per [OIDC spec on Client Authentication](https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication) or use `tls_client_auth` as defined in [Mutual TLS for OAuth Client Authentication RFC 8705](https://www.rfc-editor.org/rfc/rfc8705).
+ * Implement `DNSSEC` optionally with a `CAA` record to pin the Certificate Authority used by your organization.
+ * Support the `x-fapi-interaction-id` transaction header described in [OIDC FAPI v1 spec](https://openid.net/specs/openid-financial-api-part-1-1_0.html) to have a common transaction ID for HTTP requests.
+

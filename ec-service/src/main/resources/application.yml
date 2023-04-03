@@ -5,7 +5,7 @@ dcsa:
 
 spring:
   application:
-    name: DCSA-Endorcement-Chain
+    name: DCSA-Endorsement-Chain
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${db_hostname}/dcsa_ec_registry
