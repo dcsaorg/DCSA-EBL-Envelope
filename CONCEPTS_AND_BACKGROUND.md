@@ -17,14 +17,15 @@ There are two main types of B/L:
 
 In addition to the transfer of title, there are parties in the shipping process (like banks, customs and port authorities) that may only take temporary possession/control of the B/L. Both types of B/L described above may be subject to this kind of transfer of possession. An example of a To order B/L process is as follows:
 
-- A shipper submits a booking request to the carrier. The carrier confirms the booking and prepares a B/L. The shipper is named as titleholder.
-- When the goods are loaded onto the vessel, the carrier issues the B/L to the shipper. The shipper is now also in possession of the B/L.
-- The shipper may endorse the B/L to a subsequent titleholder by putting the subsequent titleholder’s name on it. A chain of signatures is then created (an endorsement chain).
-- The new titleholder may now decide if it will surrender the B/L and pick up the goods (making it the consignee), or, in the case of an open endorsement, transfer the eBL to a new titleholder by way of further endorsing the B/L.
-- A B/L may, however, only be transferred or surrendered when the receiving party is also in possession of the B/L. For example, when a bank serves as a trustee for the parties, the consignee might be named as titleholder, but possession of the B/L will be transferred to the bank, which will only transfer it to the consignee once it has received payment
+- A shipper submits a booking request to the carrier, where the shipper designates the initial titleholder. The carrier confirms the booking and prepares a B/L.
+- When the goods are loaded onto the vessel, the carrier issues the B/L to the shipper. The shipper is now in possession of the B/L.
+- If the shipper is not the titleholder, the shipper will then transfer the B/L to the current titleholder - possibly via a bank.
+- The current titleholder may now decide if it will surrender the B/L and pick up the goods (making it the consignee), or, in the case of an open endorsement, pass the eBL to a new titleholder by way of further endorsing the B/L. In the latter step, the possession transfer may be via intermediate parties (e.g., banks) or directly to the new titleholder.
+- A B/L may only be further endorsed or surrendered when the receiving party is also in possession of the B/L. For example, when a bank serves as a trustee for the parties, the consignee might be named as titleholder, but possession of the B/L will be transferred to the bank, which will only transfer it to the consignee once it has received payment.
 - Only once the consignee is named as the titleholder, and is in possession of the B/L, may the consignee surrender the B/L to the carrier. During surrender, the carrier checks if the B/L is valid (proof of origin), if the endorsement chain includes all signatures of previous titleholders, and if the identity of the consignee matches the identity on the B/L. This is the end of the B/L transfer process.
 
-The first version of the technical interoperability standards focusses on use-cases where either the consignee is named (straight eBL) or on to order eBLs where the subsequent possessor is also the subsequent titleholder .
+The first version of the technical interoperability standards focuses on use-cases where the consignee is named (straight eBL).
+
 ## The challenge of eBL adoption
 ![BL market share](specifications/market-share.png)
 
@@ -52,7 +53,7 @@ To be able to exchange an eBL in a way that is functionally and legally equivale
 This publication provides standards and endorses existing standards for technical interoperability, existing of the following 3 eBL building blocks:
 
 - **eBL Envelope:** A standard digital data container that is transferred between eBL platforms, which includes information about the eBL titleholder & possessor and endorsement chain.
-- **Digital addresses:** Public/private key pairs used to sign and transfer eBL envelopes irrevocably between eBL platforms.
+- **Digital addresses:** Public/private key pairs used to sign and transfer eBL envelopes irrevocably between eBL platforms.
 - **Digital identities:** Standardised digital identities ensure that the Legal Identity of a titleholder & possessor is recognised across eBL platforms. Digital identities may also support banks and carriers in compliance regimes by simplifying the verification of the corresponding entity.
 
 ![Exchange eBL between platforms](specifications/cross-platform-exchange.png)
@@ -63,7 +64,7 @@ In the next section of this document the 3 building blocks to transfer eBL title
 
 # Standards for the secure transfer of eBL possession and title
 ## eBL envelope
-## eBL envelope structure
+### eBL envelope structure
 A digital envelope is a secure electronic data container. The eBL envelope is used to capture information about the eBL titleholder & possessor and endorsement chain, which is transferred between eBL platforms. For the envelope structure, the following standard is used:
 
 | Envelope structure       | Explanation                                                                                                                                                                                                                                                                                         |
@@ -74,7 +75,7 @@ _**Table 1: eBL Envelope Structure**_
 
 In the future, the eBL envelope content might also be transferred as a Non-Fungible Token (NFT), which is a cryptographic asset on a blockchain. The standardised eBL envelope content may therefore also be used within an NFT.
 
-## eBL envelope content
+### eBL envelope content
 The information transferred in the eBL envelope structure between eBL platforms is the eBL envelope content, generated by the eBL platforms based on transfers initiated by their users (carriers, shippers, banks, consignees). The content in the eBL envelope consists of several types of information:
 
 **General eBL Information**
@@ -112,21 +113,20 @@ When possession & title of an eBL are transferred, a chain of transactions is cr
 
 In table 4, a standard format for the possession and/or endorsement chain is included. The information about each transfer in the possession and/or endorsement chain is created and provided by the eBL platform that initiated each transfer.
 
-|**State changes (#)**|**eBL identifier**|**Time stamp <br>(incl. time zone)**|**Identifier Possessor (primary)**|<p>**Identifier (s)**</p><p>**possessor (additional)**</p>|**eBL platform possessor**|<p>**Identifier (s)**</p><p>**Title holder <br>(if ≠ possessor)**</p>|<p>**eBL platform Title Hold**</p><p>**(if** **≠ possessor)**</p>|**User signature (optional)**|**Platform signature**| **Status**                         |
-|---------------------|-----------------------|-------------------------------|----------------------------------|----------------------------------------------------------|---------------------------|--------------------------------------------------------------------|-----------------------------------------------------------------|-----------------------------|----------------------|------------------------------------|
-|7|#123|16:24 11-12 CET|#1E34  (Carrier)|LEI code|SP A|#5L81 (Consignee)|SP E|Sign.|PK (SP E)| Surrender                          |
-|6|#123|12:44 9-12 CET|#5L81 (Consignee)|LEI code|SP E|#5L81 (Consignee)|SP E|Sign.|PK (SP D)| Possession transferred             |
-|5|#123|12:44 9-12 CET|#3E99 (Bank 2)|LEI code|SP D|#5L81 (Consignee)|SP E|Sign.|PK (SP C)| Possession transferred             |
-|4|#123|12:25 8-12 CET|#8R54 (Bank 1)|LEI code|SP C|#5L81 (Consignee)|SP E|Sign.|PK (SP B)| Possession transferred             |
-|3|#123|09:18 8-12 CET|#6R61 (Shipper)|LEI code|SP B|#5L81 (consignee)|SP E|Sign.|PK (SP B)| Title transferred                  |
-|2|#123|10:23 7-12 CET|#6R61 (Shipper)|LEI code|SP B|#6R61 (Shipper)|SP B|Sign.|PK (SP A)| Issuance                           |
-|1|#123|07:23 7-12 CET|#1E34 (Carrier)|LEI code|SP A|X|X|Sign.|X| eBL creation                       |
+| **State changes (#)** | **eBL identifier** | **Time stamp <br>(incl. time zone)** | **Identifier Possessor (primary)** | <p>**Identifier (s)**</p><p>**possessor (additional)**</p> | **eBL platform possessor** | <p>**Identifier (s)**</p><p>**Title holder <br>(if ≠ possessor)**</p> | <p>**eBL platform Title Hold**</p><p>**(if** **≠ possessor)**</p>  | **User signature (optional)** | **Platform signature** | **Status**                         |
+|-----------------------|--------------------|--------------------------------------|------------------------------------|------------------------------------------------------------|----------------------------|-----------------------------------------------------------------------|--------------------------------------------------------------------|-------------------------------|------------------------|------------------------------------|
+| 6                     | #123               | 16:24 11-12 CET                      | #1E34  (Carrier)                   | LEI code                                                   | SP A                       | #5L81 (Consignee)                                                     | SP E                                                               | Sign.                         | PK (SP E)              | Surrender                          |
+| 5                     | #123               | 12:44 09-12 CET                      | #5L81 (Consignee)                  | LEI code                                                   | SP E                       | #5L81 (Consignee)                                                     | SP E                                                               | Sign.                         | PK (SP D)              | Possession transferred             |
+| 4                     | #123               | 12:44 09-12 CET                      | #3E99 (Bank 2)                     | LEI code                                                   | SP D                       | #5L81 (Consignee)                                                     | SP E                                                               | Sign.                         | PK (SP C)              | Possession transferred             |
+| 3                     | #123               | 12:25 08-12 CET                      | #8R54 (Bank 1)                     | LEI code                                                   | SP C                       | #5L81 (Consignee)                                                     | SP E                                                               | Sign.                         | PK (SP B)              | Possession transferred             |
+| 2                     | #123               | 09:18 08-12 CET                      | #6R61 (Shipper)                    | LEI code                                                   | SP B                       | #5L81 (consignee)                                                     | SP E                                                               | Sign.                         | PK (SP B)              | Title transferred                  |
+| 1                     | #123               | 10:23 07-12 CET                      | #1E34 (Carrier)                    | LEI code                                                   | SP A                       | #6R61 (Shipper)                                                       | SP B                                                               | Sign.                         | PK (SP A)              | Issuance                           |
 
 _**Table 4: Simple example data structure possession & endorsement chain for a to order eBL**_
 
 **Digital signature**
 
-When the eBL envelope is transferred,  the eBL envelope is signed with a private key of the sending platform to the public key of  the receiving platform. A digital signature with a public/private key pair makes the signed data immutable and ensures irrevocability of a transfer.
+When the eBL envelope is transferred,  the eBL envelope is signed with a private key of the sending platform to the public key of  the receiving platform. A digital signature with a public/private key pair makes the signed data immutable and ensures the transfer is irrevocable.
 
 |**Data field**| **Format**                         |
 |--------------|------------------------------------|
@@ -192,7 +192,7 @@ There are different variations of the transfer process depending on the type of 
 
 _**Table 7: variations of the transfer process**_
 
-The first version of the technical interoperability standards focusses on use-cases where either the consignee is named (straight eBL) or on to order eBLs where the subsequent possessor is also the subsequent titleholder.
+The first version of the technical interoperability standards focuses on use-cases where the consignee is named (straight eBL).
 
 Furthermore, the focus of these standards is on the transfer between eBL platforms. Title and possession may, however, also be transferred within a platform. An eBL envelope is only composed and transferred when eBL possession is transferred to a party on another platform.
 
@@ -206,10 +206,11 @@ _**Figure 3: Transfer process of the eBL envelope with banks involved**_
 **Step 1A: The carrier Issues the eBL to the shipper on another eBL platform**
 
 1. The carrier prepares the eBL based on the shipping instruction
-1. The carrier indicates the receiver of the eBL envelope
-   (The Name , Identifier and eBL platform of the next  possessor & title holder. This information was included in the SI)
+1. The carrier indicates the receiver of the eBL envelope (usually the shipper).
 1. The carrier platform populates and digitally signs the eBL envelope
 1. The carrier platform authenticates with the receiving platform (using OIDC over mTLS) and performs the PUT request to the API of the shipper platform
+
+Note the carrier may delegate the transfer handling to a platform. Overall the flow remains the same, but some of the steps such as eBL envelope signing might be performed by the eBL platform using the platform's key rather than a carrier managed key.
 
 **Step 1B: The shipper (platform) receives the eBL**
 
@@ -226,17 +227,9 @@ _**Figure 3: Transfer process of the eBL envelope with banks involved**_
 
 **Step 5: The consignee surrenders (transfer possession) the eBL to the carrier**
 
-_\*For this transfer the steps of 1-2 apply, with the advising bank/issuing bank/consignee/carrier as the next possessor & title holder._
+Note again for this step, the carrier may delegate the transfer step to a platform.
 
-```text
-Differences between the to order and straight eBL transfer process.
-The process of transferring a to order eBL is similar to the process of transferring a straight eBL, the difference being:
-- With a straight eBL the consignee is already named.
-- The to order eBL is a negotiable instrument, where the consignee can be changed by endorsement. Thereby taking into account that:
-   - The consignee/title holder can only be changed when the party that is doing the endorsement is also in possession of the eBL.
-   - An endorsement is completed once the endorsee has received the bl and confirmed the endorsement by I.e. signature.
-   - Every title transfer/endorsement is recorded in the endorsement chain by the eBL platform of the current possessor of the eBL.
-```
+_\*For this transfer the steps of 1-2 apply, with the advising bank/issuing bank/consignee/carrier as the next possessor._
 
 ## Exception processes
 In this section, exception processes are defined for transferring the eBL envelope.
@@ -250,6 +243,8 @@ In this section, exception processes are defined for transferring the eBL envelo
 
 - If, for some reason, the bank(s) or consignee (or other involved party) require a physical (paper) original B/L, the eBL will be surrendered to the carrier.
 - The carrier will then issue a new physical (paper) B/L, including proof of past endorsement(s) until the point of the switch to paper.
+
+Note that at the technical level, Switch to paper is considered an amendment (i.e., they use the same action code).
 
 ## Potential risks
 **How to reissue eBL to the correct party in case a wrong identifier was selected**
@@ -276,7 +271,7 @@ In this section, exception processes are defined for transferring the eBL envelo
 - Exposing the eBL envelope to more than one party should be technically impossible. Preventing this is a key task of eBL platforms. The interoperability standards include security mechanisms such as public/private key authentication and confirmation messages when the data is successfully received. Liabilities for when things do go wrong will be clearly covered in the MSPIA.
 
 # Conclusion and call to action
-This document provides standards (beta) to securely transfer eBL title and possession across eBL platforms. Standards for interoperability should benefit all stakeholders in the E2E documentation process and facilitate eBL adoption by allowing industry stakeholders to use their preferred eBL platform. This will support the container shipping industry in ultimately growing to a 100% adoption rate.
+This document provides standards (beta) to securely transfer eBL possession across eBL platforms. Standards for interoperability should benefit all stakeholders in the E2E documentation process and facilitate eBL adoption by allowing industry stakeholders to use their preferred eBL platform. This will support the container shipping industry in ultimately growing to a 100% adoption rate.
 
 DCSA invites you to share feedback on the standards introduced in this document. In 2022 DCSA will plan multiple PoCs and pilots to test and refine its eBL standards. Please reach out to DCSA if you are interested in joining one or more of these initiatives.
 
@@ -286,18 +281,18 @@ DCSA invites you to share feedback on the standards introduced in this document.
 ## Appendix A: Requirements for Identification of Legal entities
 For the identification of a Legal Entity, a trusted entity (like a government organisation or certificate authority), must acquire the information in the table below from the subject (or receive this information from the carrier if relying on the carrier’s onboarding process).
 
-|**Identity information required at registration**| **Source / contents**                               |
-|-------------------------------------------------|-----------------------------------------------------|
-|Global identifier type| Global identifiers as defined in chapter 2.4.       |
-|Global identifier| Global identifier registry (see above)              |
-|**Commercial registry number**| Government registry                                 |
-|Legal Trading Name| Government registry                                 |
-|Country of incorporation| Government registry                                 |
-|Tax ID of legal entity - including country identifier)| Tax authority                                       |
-|**Company website (Optional)**| Provided by Employee                                |
-|**Company Email address**| Provided by Employee                                |
-|Full Address of legal entity| Government registry                                 |
-|Full name of employee requesting certificate| Government issued ID document                       |
-|Employee e-mail address (Optional)| Provided by employee                                |
-|Employee phone number (Optional)| Provided by employee                                |
-|Role of employee in legal entity organisation **and proof of authorisation to request the certificate.**| Provided by employee (with evidence)                |
+| **Identity information required at registration**                                                        | **Source / contents**                               |
+|----------------------------------------------------------------------------------------------------------|-----------------------------------------------------|
+| Global identifier type                                                                                   | Global identifiers as defined in chapter 2.4.       |
+| Global identifier                                                                                        | Global identifier registry (see above)              |
+| **Commercial registry number**                                                                           | Government registry                                 |
+| Legal Trading Name                                                                                       | Government registry                                 |
+| Country of incorporation                                                                                 | Government registry                                 |
+| Tax ID of legal entity - including country identifier)                                                   | Tax authority                                       |
+| **Company website (Optional)**                                                                           | Provided by Employee                                |
+| **Company Email address**                                                                                | Provided by Employee                                |
+| Full Address of legal entity                                                                             | Government registry                                 |
+| Full name of employee requesting certificate                                                             | Government issued ID document                       |
+| Employee e-mail address (Optional)                                                                       | Provided by employee                                |
+| Employee phone number (Optional)                                                                         | Provided by employee                                |
+| Role of employee in legal entity organisation **and proof of authorisation to request the certificate.** | Provided by employee (with evidence)                |
