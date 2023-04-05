@@ -4,29 +4,23 @@ DCSA EBL Envelope
 # eB/L interoperability technical specifications
 This document provides the technical description and specifications for transferring eBL documents between platforms using the eBL Envelope.
 General concepts and backgrounds can be found [here](CONCEPTS_AND_BACKGROUND.md).
-the rendered Open API specification for the is available on the [DCSA Swaggerhub](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EEC/0.11-alpha).
-However, for easier collaboration and the ability to add PR's and issues the resolved oas specification can be found in [here](specifications/oas/dcsaorg-DCSA_EEC-0.11-alpha-resolved.yaml).
+The rendered Open API specification for the is available on the [DCSA Swaggerhub](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EEC/0.12-alpha).
 
-# Open points for discussion
+## Open points for discussion
 
 - [ ] Provide supporting documents via separate download.
-
-## Decision log
-| Date       | Decision                                                                                                                                                  |
-|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 20-07-2022 | In the initial version title and possession will be combined (=control) and transferred simultaneously                                                    |
-| 20-07-2022 | Identity is transferred with internal Identifier of the platform + Platform domain (/name of platform). Formatted as an email address localid@platform.io |
+- [ ] Title transfer - which actions are relevant?
 
 ## Contributing
 See [the contributing guide](CONTRIBUTING.md) for detailed instructions on how to get started with our project.
 
 # Transferring BL control to another platform
-Transferring the BL control (Possession & Title) is accomplished by sending a _**"Transferblock"**_ from the sending platform to the receiving platform.
+Transferring the BL control of possession is accomplished by sending a _**"Transferblock"**_ from the sending platform to the receiving platform.
 
 ## Overview of a `transferblock`
-A `transferblock` is a single JSON structure described [here](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EEC/0.11-alpha#/transferblock).
+A `transferblock` is a single JSON structure described [here](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EEC/0.12-alpha#/transferblock).
 The `transferblock` has the following structure:
-* data of the B/L according to the [DCSA transportDocument specification](https://app.swaggerhub.com/domains/dcsaorg/DOCUMENTATION_DOMAIN/2.0.1#/components/schemas/transportDocument)
+* data of the B/L according to the [DCSA transportDocument specification](https://app.swaggerhub.com/domains/dcsaorg/DOCUMENTATION_DOMAIN/2.1.0#/components/schemas/transportDocument)
 * The complete endorsement chain as signed eblEnvelopes transferred between platforms
   * signature of the eblEnvelope - signed with the private key of the sending platform
   * sha256 hash of the eblEnvelope
@@ -39,7 +33,7 @@ Which is depicted in this diagram:
 ![transferblock structure](specifications/transferblock-structure.png)
 
 ### EBL envelope
-Information regarding the B/L control (possession + title) is transferred into the EBL envelope. This envelope is signed by the sending platform.
+Information regarding the B/L control of possession is transferred into the EBL envelope. This envelope is signed by the sending platform.
 
 The EBL envelope contains:
 * the list of transactions that are transfered to another platform
@@ -50,7 +44,7 @@ the EBL envelope itself is signed by the sending platform.
 This **_signature_** and the **_hash of the EBL envelope_** are transferred alongside with the  EBL envelope so the receiving party can verify the received EBL envelope.
 
 #### Transactions
-A transaction inside the eblEnvelope are the representation of the transfer of control (possession + title).
+A transaction inside the eblEnvelope are the representation of the transfer of control of possession.
 Each transaction inside the transactions (list) of the EBL envelope consists of:
 * **instruction** - instruction for processing the transaction: `ISSU` (Issue), `TRNS` (Transfer), `SURR` (Surrender), `AMND` (Amend), `SW2P` (Switch to Paper)
 * **comments** - free text comment for the party receiving the transaction
@@ -81,7 +75,7 @@ This `transferblock` is being sent via an HTTP PUT to the receiving platform. Wh
 ### Response message
 The transfer operation: PUT `/v1/transferblock` is a synchronous operation. The transactional integrity is maintained by the client.
 
-In order to verify the transfer has been successful and the integrity of the message is maintained the response message is signed by the receiving party and verified by the sending party.
+In order to verify the transfer has been successfully processed and the integrity of the message is maintained the response message is signed by the receiving party and verified by the sending party. The signed response enables the sender to confirm this is a final response (accept or reject of the transfer).
 For more information about both the request and response signatures see the [Signatures](README.md#signatures) paragraph below
 
 ## Identity
@@ -93,7 +87,7 @@ All transferee identity information is exchanged with an **_eBLPlatformIdentifie
 
 ### eBLPlatformIdentifier
 The eBLPlatformIdentifier is a combination of the transferee user identification _on the local platform_ and the platform.
-EBLPLatformIdentifiers are formatted similar to email addresses: _**localid@platformdomain.ext**_ for example: **_gV2ZDy0jmae7@dcsaebplatform.org_**
+EBLPlatformIdentifiers are formatted similar to email addresses: _**localid@platformdomain.ext**_ for example: **_gV2ZDy0jmae7@dcsaebplatform.org_**
 In this example **_gV2ZDy0jmae7_** is the local identifier on the fictitious **_dcsaebplatform.org_**
 
 ### Additional identity information
