@@ -46,12 +46,13 @@ This **_signature_** and the **_hash of the EBL envelope_** are transferred alon
 #### Transactions
 A transaction inside the eblEnvelope are the representation of the transfer of control of possession.
 Each transaction inside the transactions (list) of the EBL envelope consists of:
-* **instruction** - instruction for processing the transaction: `ISSU` (Issue), `TRNS` (Transfer), `SURR` (Surrender), `AMND` (Amend), `SW2P` (Switch to Paper)
+* **action** - action for processing the transaction such as `TRNS` (Transfer of possession). Please see the swagger spec for the full list.
 * **comments** - free text comment for the party receiving the transaction
 * **timestamp** - Unix epoch with millisecond precision of when the transaction was created
 * **isToOrder** - indicator if the B/L is to order
 * **platformHost** - base url of the platform which created the transaction
-* **transferee** - Identity information about the party which controlled is transferred to see [Identity below](README.md#identity)
+* **actor** - Identity information about the party who performed the action.
+* **recipient** - Identity information about the party who is the recipient for the action (where applicable). See [Identity below](README.md#identity)
 
 This results in the following JSON structure:
 ```json
