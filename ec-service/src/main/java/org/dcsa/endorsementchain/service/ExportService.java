@@ -3,10 +3,10 @@ package org.dcsa.endorsementchain.service;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
+import org.dcsa.endorsementchain.persistence.entity.EndorsementChainEntry;
 import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
-import org.dcsa.endorsementchain.transferobjects.EblEnvelopeTO;
+import org.dcsa.endorsementchain.transferobjects.EndorsementChainEntryTO;
 import org.dcsa.endorsementchain.transferobjects.SignedEndorsementChainEntryTO;
 import org.dcsa.endorsementchain.transferobjects.TransferblockTO;
 import org.dcsa.endorsementchain.unofficial.service.TransactionService;
@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class ExportService {
 
-  private final EblEnvelopeService eblEnvelopeService;
+  private final EndorsementChainEntryService endorsementChainEntryService;
   private final TransactionService transactionService;
   private final RestTemplate restTemplate;
 
@@ -37,31 +37,31 @@ public class ExportService {
 
     TransportDocument transportDocument = exportedTransactions.get(0).getTransportDocument();
 
-    List<EblEnvelope> previousEblEnvelopes =
-        eblEnvelopeService.findPreviousEblEnvelopes(documentHash);
+    List<EndorsementChainEntry> previousEndorsementChainEntries =
+        endorsementChainEntryService.findPreviousEndorsementChainEntries(documentHash);
 
     checkOutGoingDocumentHash(transportDocument.getTransportDocumentJson(), documentHash);
 
-    String previousEblEnvelopeHash =
-        eblEnvelopeService.findPreviousEblEnvelopeHash(previousEblEnvelopes);
-    List<SignedEndorsementChainEntryTO> previousSignedEblEnvelopes =
-        eblEnvelopeService.convertExistingEblEnvelopesToSignedEnvelopes(previousEblEnvelopes);
+    String previousEndorsementChainEntryHash =
+        endorsementChainEntryService.findPreviousEndorsementChainEntryHash(previousEndorsementChainEntries);
+    List<SignedEndorsementChainEntryTO> previousSignedEndorsementChainEntries =
+        endorsementChainEntryService.convertExistingEndorsementChainEntriesToSignedEntries(previousEndorsementChainEntries);
 
-    EblEnvelopeTO exportingEblEnvelopeTO =
-        eblEnvelopeService.createEblEnvelope(
+    EndorsementChainEntryTO exportingEndorsementChainEntryTO =
+        endorsementChainEntryService.createEndorsementChainEntry(
             documentHash,
             transactionService.localToEndorsementChainTransactions(exportedTransactions),
-            previousEblEnvelopeHash);
+            previousEndorsementChainEntryHash);
 
     SignedEndorsementChainEntryTO signedEndorsementChainEntryTO =
-        eblEnvelopeService.exportEblEnvelope(transportDocument, exportingEblEnvelopeTO);
+        endorsementChainEntryService.exportEndorsementChainEntry(transportDocument, exportingEndorsementChainEntryTO);
 
-    List<SignedEndorsementChainEntryTO> toBeExportedEblEnvelopes =
-        Stream.concat(previousSignedEblEnvelopes.stream(), Stream.of(signedEndorsementChainEntryTO)).toList();
+    List<SignedEndorsementChainEntryTO> toBeExportedEndorsementChainEntries =
+        Stream.concat(previousSignedEndorsementChainEntries.stream(), Stream.of(signedEndorsementChainEntryTO)).toList();
 
     TransferblockTO transferblock =
         TransferblockTO.builder()
-            .endorsementChain(toBeExportedEblEnvelopes)
+            .endorsementChain(toBeExportedEndorsementChainEntries)
             .document(transportDocument.getTransportDocumentJson())
             .build();
 
@@ -69,7 +69,7 @@ public class ExportService {
 
     String signatureResponse = sendTransferBlock(platformURL, transferblock);
 
-    return eblEnvelopeService.verifyEblEnvelopeResponseSignature(
+    return endorsementChainEntryService.verifyEndorsementChainEntryResponseSignature(
         platformURL.getHost() + ":" + platformURL.getPort(),
         signedEndorsementChainEntryTO.envelopeHash(),
         signatureResponse);

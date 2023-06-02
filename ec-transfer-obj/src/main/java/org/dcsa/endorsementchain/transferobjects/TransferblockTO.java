@@ -8,20 +8,20 @@ import lombok.Builder;
 
 import java.util.List;
 
-public record TransferblockTO(
+public record EBLEnvelopeTO(
   @JsonRawValue
   String document,
   List<SignedEndorsementChainEntryTO> endorsementChain
 ) {
 
   @Builder(toBuilder = true)
-  public TransferblockTO {
+  public EBLEnvelopeTO {
   }
 
   @JsonCreator
   @Builder(toBuilder = true)
-  public TransferblockTO(@JsonProperty("document") JsonNode document,
-                         List<SignedEndorsementChainEntryTO> endorsementChain) {
+  public EBLEnvelopeTO(@JsonProperty("document") JsonNode document,
+                       List<SignedEndorsementChainEntryTO> endorsementChain) {
     this(document.toString(), endorsementChain);
   }
 }

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SortComparator;
 
-import java.util.Comparator;
 import java.util.SortedSet;
 
 @Data
@@ -14,14 +13,14 @@ import java.util.SortedSet;
 @NoArgsConstructor
 @Setter(AccessLevel.PRIVATE)
 @Table(name = "ebl_envelope")
-public class EblEnvelope {
+public class EndorsementChainEntry {
 
   @Id
   @Column(name = "envelope_hash", length = 64, nullable = false)
   private String envelopeHash;
 
   @Column(name = "previous_envelope_hash", length = 64, unique = true)
-  private String previousEnvelopeHash;
+  private String previousEnvelopeHash;  // TODO: Rename when we are ready to change the API
 
   @Column(name = "signature", nullable = false, columnDefinition = "TEXT")
   private String signature;

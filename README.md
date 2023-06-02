@@ -21,30 +21,30 @@ Transferring the BL control of possession is accomplished by sending a _**"Trans
 A `transferblock` is a single JSON structure described [here](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EEC/0.12-alpha#/transferblock).
 The `transferblock` has the following structure:
 * data of the B/L according to the [DCSA transportDocument specification](https://app.swaggerhub.com/domains/dcsaorg/DOCUMENTATION_DOMAIN/2.1.0#/components/schemas/transportDocument)
-* The complete endorsement chain as signed eblEnvelopes transferred between platforms
-  * signature of the eblEnvelope - signed with the private key of the sending platform
-  * sha256 hash of the eblEnvelope
-  * eblEnvelope
-    * sha256 hash of the previous eblEnvelope
+* The complete endorsement chain as signed endorsementChainEntries transferred between platforms
+  * signature of the endorsementChainEntry - signed with the private key of the sending platform
+  * sha256 hash of the endorsementChainEntry
+  * endorsementChainEntry
+    * sha256 hash of the previous endorsementChainEntry
     * sha256 hash of the B/L data
     * list of transactions that are exported and shared between platforms
 
 Which is depicted in this diagram:
 ![transferblock structure](specifications/transferblock-structure.png)
 
-### EBL envelope
-Information regarding the B/L control of possession is transferred into the EBL envelope. This envelope is signed by the sending platform.
+### Endorsement Chain
+Information regarding the B/L control of possession is transferred into the Endorsement Chain Entry. The latest Endorsement Chain Entry is signed by the sending platform.
 
-The EBL envelope contains:
+An Endorsement Chain Entry contains:
 * the list of transactions that are transfered to another platform
 * the hash of the B/L information (`transportdocument`)
-* the hash of the previous ebl envelope (null if this is the first cross-platform transfer)
+* the hash of the previous ebl endorsement chain (null if this is the first cross-platform transfer)
 
-the EBL envelope itself is signed by the sending platform.
-This **_signature_** and the **_hash of the EBL envelope_** are transferred alongside with the  EBL envelope so the receiving party can verify the received EBL envelope.
+The latest Endorsement Chain Entry itself is signed by the sending platform (older entries are signed by the respective platform)
+This **_signature_** and the **_hash of the EBL envelope_** are transferred alongside with the EndorsementChainEntry so the receiving party can verify the received EndorsementChainEntry.
 
 #### Transactions
-A transaction inside the eblEnvelope are the representation of the transfer of control of possession.
+A transaction inside the endorsementChainEntry are the representation of the transfer of control of possession.
 Each transaction inside the transactions (list) of the EBL envelope consists of:
 * **action** - action for processing the transaction such as `TRNS` (Transfer of possession). Please see the swagger spec for the full list.
 * **comments** - free text comment for the party receiving the transaction
@@ -123,7 +123,7 @@ Authentication between platforms require:
 ### Signatures
 The signatures used in the transfer of the B/L across platforms have the following characteristics:
 for the request message:
-* signature covers the eblEnvelope json structure
+* signature covers the endorsementChainEntry json structure
 * signature is created using the private key of the sending platform
 * the signature is transfered as a JWS (Json Web Signature as described in [RFC 7515](https://datatracker.ietf.org/doc/html/rfc7515)) in the **_signature_** field
 * the JWS is transfered in the compact serialization format (as described in [Section 7 of RFC 7515](https://datatracker.ietf.org/doc/html/rfc7515#section-7.1))

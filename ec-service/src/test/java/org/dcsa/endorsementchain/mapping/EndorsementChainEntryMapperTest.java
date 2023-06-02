@@ -1,11 +1,11 @@
 package org.dcsa.endorsementchain.mapping;
 
 import org.dcsa.endorsementchain.datafactories.PartyDataFactory;
-import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
+import org.dcsa.endorsementchain.persistence.entity.EndorsementChainEntry;
 import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
 import org.dcsa.endorsementchain.persistence.entity.enums.TransactionAction;
-import org.dcsa.endorsementchain.transferobjects.EblEnvelopeTO;
+import org.dcsa.endorsementchain.transferobjects.EndorsementChainEntryTO;
 import org.dcsa.endorsementchain.transferobjects.enums.BlAction;
 import org.dcsa.endorsementchain.unofficial.mapping.TransactionMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,9 +18,9 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-class EblEnvelopeMapperTest {
+class EndorsementChainEntryMapperTest {
 
-  private EblEnvelopeMapper mapper = Mappers.getMapper(EblEnvelopeMapper.class);
+  private EndorsementChainEntryMapper mapper = Mappers.getMapper(EndorsementChainEntryMapper.class);
   private TransactionMapper transactionMapper = Mappers.getMapper(TransactionMapper.class);
 
   @BeforeEach
@@ -29,9 +29,9 @@ class EblEnvelopeMapperTest {
   }
 
   @Test
-  void testEblEnvelopeMapper() {
-    EblEnvelope envelope =
-        EblEnvelope.builder()
+  void testEndorsementChainEntryMapper() {
+    EndorsementChainEntry envelope =
+        EndorsementChainEntry.builder()
             .previousEnvelopeHash(null)
             .envelopeHash("78cbf8e9600067b40ef9ea7d5dbf6e06213c72e5cc40b91b764680bc1f7aa31d")
             .signature("this is a dummy signature")
@@ -53,10 +53,10 @@ class EblEnvelopeMapperTest {
                     .build())
             .build();
 
-    EblEnvelopeTO eblEnvelopeTO = mapper.eblEnvelopeToTo(envelope);
-    assertEquals(envelope.getTransportDocument().getDocumentHash(), eblEnvelopeTO.documentHash());
-    assertEquals(envelope.getTransportDocument().getTransactions().size(), eblEnvelopeTO.transactions().size());
-    assertEquals(BlAction.ISSU, eblEnvelopeTO.transactions().get(0).action());
-    assertNull(eblEnvelopeTO.previousEnvelopeHash());
+    EndorsementChainEntryTO endorsementChainEntryTO = mapper.endorsementChainEntryToTO(envelope);
+    assertEquals(envelope.getTransportDocument().getDocumentHash(), endorsementChainEntryTO.documentHash());
+    assertEquals(envelope.getTransportDocument().getTransactions().size(), endorsementChainEntryTO.transactions().size());
+    assertEquals(BlAction.ISSU, endorsementChainEntryTO.transactions().get(0).action());
+    assertNull(endorsementChainEntryTO.previousEnvelopeHash());
   }
 }

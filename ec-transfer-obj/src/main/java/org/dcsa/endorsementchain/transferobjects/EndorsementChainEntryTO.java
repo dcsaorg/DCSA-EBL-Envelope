@@ -7,10 +7,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.List;
 
-public record EblEnvelopeTO(
-  @NotNull
+public record EndorsementChainEntryTO(
+  @NotNull  // TODO: This is wrong; it is nullable in some cases. Will fix in a later commit.
   @Size(max = 64, min = 64)
-  String previousEnvelopeHash,
+  String previousEnvelopeHash,  // TODO: Rename when we are ready to change the API
   @NotNull
   @Size(max = 64, min = 64)
   String documentHash,
@@ -18,5 +18,5 @@ public record EblEnvelopeTO(
   List<EndorsementChainTransactionTO> transactions
 ) {
   @Builder(toBuilder = true)
-  public EblEnvelopeTO{}
+  public EndorsementChainEntryTO {}
 }

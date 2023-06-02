@@ -14,9 +14,9 @@ import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.apache.hc.core5.http.config.RegistryBuilder;
 import org.apache.hc.core5.ssl.SSLContextBuilder;
-import org.dcsa.endorsementchain.components.eblenvelope.EblEnvelopeSignature;
+import org.dcsa.endorsementchain.components.endorsementchain.EndorsementChainEntrySignature;
 import org.dcsa.endorsementchain.controller.JwkSetRestController;
-import org.dcsa.endorsementchain.service.EblEnvelopeService;
+import org.dcsa.endorsementchain.service.EndorsementChainEntryService;
 import org.dcsa.endorsementchain.service.ExportService;
 import org.dcsa.endorsementchain.service.ImportService;
 import org.dcsa.endorsementchain.service.PartyService;
@@ -74,7 +74,8 @@ class SecurityFlowIT {
 
   private RestTemplate restTemplate;
 
-  @MockBean EblEnvelopeSignature envelopeSignature;
+  @MockBean
+  EndorsementChainEntrySignature envelopeSignature;
 
   @MockBean
   @Qualifier("verifying-jwk")
@@ -84,7 +85,8 @@ class SecurityFlowIT {
 
   @MockBean ExportService exportService;
 
-  @MockBean EblEnvelopeService eblEnvelopeService;
+  @MockBean
+  EndorsementChainEntryService endorsementChainEntryService;
 
   @MockBean TransactionService transactionService;
 

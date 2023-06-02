@@ -1,4 +1,4 @@
-package org.dcsa.endorsementchain.components.eblenvelope;
+package org.dcsa.endorsementchain.components.endorsementchain;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
@@ -23,15 +23,15 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class EblEnvelopeSignature {
+public class EndorsementChainEntrySignature {
 
   private final JWSSignerDetails jwsSignerDetails;
   private final Map<String, JWSVerifier> jwsVerifiers;
   private final RestTemplate restTemplate;
 
-  public SignedEndorsementChainEntryTO createSignedEblEnvelope(String rawEblEnvelope) {
-    String signature = sign(rawEblEnvelope);
-    String envelopeHash = DigestUtils.sha256Hex(rawEblEnvelope);
+  public SignedEndorsementChainEntryTO createSignedEndorsementChainEntry(String endorsementChainEntry) {
+    String signature = sign(endorsementChainEntry);
+    String envelopeHash = DigestUtils.sha256Hex(endorsementChainEntry);
 
     return SignedEndorsementChainEntryTO.builder()
         .envelopeHash(envelopeHash)
@@ -52,10 +52,10 @@ public class EblEnvelopeSignature {
   }
 
   @SneakyThrows
-  public boolean verifyEnvelopeHash(String cn, String signature, String eblEnvelopeHash) {
+  public boolean verifyEndorsementChainHash(String cn, String signature, String endorsementChainEntryHash) {
     JWSObject jwsObject = JWSObject.parse(signature);
     // the signed message does not contain the sent envelopeHash
-    if (!jwsObject.getPayload().toString().equals(eblEnvelopeHash)) {
+    if (!jwsObject.getPayload().toString().equals(endorsementChainEntryHash)) {
       return false;
     }
 
