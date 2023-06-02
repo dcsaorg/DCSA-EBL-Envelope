@@ -1,13 +1,13 @@
 package org.dcsa.endorsementchain.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.dcsa.endorsementchain.datafactories.EblEnvelopeDataFactory;
-import org.dcsa.endorsementchain.datafactories.EblEnvelopeTODataFactory;
+import org.dcsa.endorsementchain.datafactories.EndorsementChainEntryDataFactory;
+import org.dcsa.endorsementchain.datafactories.EndorsementChainEntryTODataFactory;
 import org.dcsa.endorsementchain.datafactories.EndorsementChainTransactionTODataFactory;
-import org.dcsa.endorsementchain.datafactories.SignedEblEnvelopeTODataFactory;
-import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
+import org.dcsa.endorsementchain.datafactories.SignedEndorsementChainEntryTODataFactory;
+import org.dcsa.endorsementchain.persistence.entity.EndorsementChainEntry;
 import org.dcsa.endorsementchain.persistence.entity.Transaction;
-import org.dcsa.endorsementchain.transferobjects.EblEnvelopeTO;
+import org.dcsa.endorsementchain.transferobjects.EndorsementChainEntryTO;
 import org.dcsa.endorsementchain.transferobjects.EndorsementChainTransactionTO;
 import org.dcsa.endorsementchain.transferobjects.SignedEndorsementChainEntryTO;
 import org.dcsa.endorsementchain.unofficial.datafactories.TransactionDataFactory;
@@ -36,7 +36,8 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ExportServiceTest {
-  @Mock EblEnvelopeService eblEnvelopeService;
+  @Mock
+  EndorsementChainEntryService endorsementChainEntryService;
   @Mock TransactionService transactionService;
   @Mock RestTemplate restTemplate;
 
@@ -45,20 +46,20 @@ class ExportServiceTest {
   private ObjectMapper mapper = new ObjectMapper();
   private List<Transaction> transactionList;
   private List<EndorsementChainTransactionTO> endorsementChainTransactionTOs;
-  private List<EblEnvelope> previousEblEnvelopes;
-  private String previousEblEnvelopeHash;
-  private EblEnvelopeTO exportingEblEnvelopeTO;
-  private List<SignedEndorsementChainEntryTO> previousSignedEblEnvelopes;
+  private List<EndorsementChainEntry> previousEndorsementChainEntries;
+  private String previousEndorsementChainEntryHash;
+  private EndorsementChainEntryTO exportingEndorsementChainEntryTO;
+  private List<SignedEndorsementChainEntryTO> previousSignedEndorsementChainEntries;
   private SignedEndorsementChainEntryTO signedEndorsementChainEntryTO;
 
   @BeforeEach
   void init() {
     transactionList = TransactionDataFactory.transactionEntityList();
-    previousEblEnvelopes = EblEnvelopeDataFactory.getEblEnvelopeList();
-    previousEblEnvelopeHash = previousEblEnvelopes.get(0).getEnvelopeHash();
-    exportingEblEnvelopeTO = EblEnvelopeTODataFactory.eblEnvelopeTO();
-    previousSignedEblEnvelopes = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList();
-    signedEndorsementChainEntryTO = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO();
+    previousEndorsementChainEntries = EndorsementChainEntryDataFactory.getEndorsementChainEntryList();
+    previousEndorsementChainEntryHash = previousEndorsementChainEntries.get(0).getEnvelopeHash();
+    exportingEndorsementChainEntryTO = EndorsementChainEntryTODataFactory.endorsementChainEntryTO();
+    previousSignedEndorsementChainEntries = SignedEndorsementChainEntryTODataFactory.signedEndorsementChainEntryTOList();
+    signedEndorsementChainEntryTO = SignedEndorsementChainEntryTODataFactory.signedEndorsementChainEntryTO();
     endorsementChainTransactionTOs = EndorsementChainTransactionTODataFactory.endorsementChainTransactionTOList();
   }
 
@@ -66,13 +67,13 @@ class ExportServiceTest {
   void testExportSuccessful() {
     String documentHash = TransportDocumentDataFactory.transportDocumentHash();
     when(transactionService.getTransactionsForExport(documentHash)).thenReturn(transactionList);
-    when(eblEnvelopeService.findPreviousEblEnvelopes(documentHash)).thenReturn(previousEblEnvelopes);
-    when(eblEnvelopeService.findPreviousEblEnvelopeHash(previousEblEnvelopes)).thenReturn(previousEblEnvelopeHash);
-    when(eblEnvelopeService.convertExistingEblEnvelopesToSignedEnvelopes(previousEblEnvelopes)).thenReturn(previousSignedEblEnvelopes);
-    when(eblEnvelopeService.createEblEnvelope(documentHash, endorsementChainTransactionTOs, previousEblEnvelopeHash)).thenReturn(exportingEblEnvelopeTO);
+    when(endorsementChainEntryService.findPreviousEndorsementChainEntries(documentHash)).thenReturn(previousEndorsementChainEntries);
+    when(endorsementChainEntryService.findPreviousEndorsementChainEntryHash(previousEndorsementChainEntries)).thenReturn(previousEndorsementChainEntryHash);
+    when(endorsementChainEntryService.convertExistingEndorsementChainEntriesToSignedEntries(previousEndorsementChainEntries)).thenReturn(previousSignedEndorsementChainEntries);
+    when(endorsementChainEntryService.createEndorsementChainEntry(documentHash, endorsementChainTransactionTOs, previousEndorsementChainEntryHash)).thenReturn(exportingEndorsementChainEntryTO);
     when(transactionService.localToEndorsementChainTransactions(transactionList)).thenReturn(endorsementChainTransactionTOs);
-    when(eblEnvelopeService.exportEblEnvelope(transactionList.get(0).getTransportDocument(), exportingEblEnvelopeTO)).thenReturn(signedEndorsementChainEntryTO);
-    when(eblEnvelopeService.verifyEblEnvelopeResponseSignature("localhost:8443", signedEndorsementChainEntryTO.envelopeHash(), "dummyResponse")).thenReturn("dummyResponse");
+    when(endorsementChainEntryService.exportEndorsementChainEntry(transactionList.get(0).getTransportDocument(), exportingEndorsementChainEntryTO)).thenReturn(signedEndorsementChainEntryTO);
+    when(endorsementChainEntryService.verifyEndorsementChainEntryResponseSignature("localhost:8443", signedEndorsementChainEntryTO.envelopeHash(), "dummyResponse")).thenReturn("dummyResponse");
     when(restTemplate.exchange((URI) any(), (HttpMethod) any(), (HttpEntity<?>) any(), (Class<Object>) any())).thenReturn(new ResponseEntity<>("dummyResponse", HttpStatus.OK));
 
     String responseSignature = exportService.exportEbl("test@localhost:8443", TransportDocumentDataFactory.transportDocumentHash());
@@ -84,12 +85,12 @@ class ExportServiceTest {
   void testExportHttpCallFailed() {
     String documentHash = TransportDocumentDataFactory.transportDocumentHash();
     when(transactionService.getTransactionsForExport(documentHash)).thenReturn(transactionList);
-    when(eblEnvelopeService.findPreviousEblEnvelopes(documentHash)).thenReturn(previousEblEnvelopes);
-    when(eblEnvelopeService.findPreviousEblEnvelopeHash(previousEblEnvelopes)).thenReturn(previousEblEnvelopeHash);
-    when(eblEnvelopeService.convertExistingEblEnvelopesToSignedEnvelopes(previousEblEnvelopes)).thenReturn(previousSignedEblEnvelopes);
-    when(eblEnvelopeService.createEblEnvelope(documentHash, endorsementChainTransactionTOs, previousEblEnvelopeHash)).thenReturn(exportingEblEnvelopeTO);
+    when(endorsementChainEntryService.findPreviousEndorsementChainEntries(documentHash)).thenReturn(previousEndorsementChainEntries);
+    when(endorsementChainEntryService.findPreviousEndorsementChainEntryHash(previousEndorsementChainEntries)).thenReturn(previousEndorsementChainEntryHash);
+    when(endorsementChainEntryService.convertExistingEndorsementChainEntriesToSignedEntries(previousEndorsementChainEntries)).thenReturn(previousSignedEndorsementChainEntries);
+    when(endorsementChainEntryService.createEndorsementChainEntry(documentHash, endorsementChainTransactionTOs, previousEndorsementChainEntryHash)).thenReturn(exportingEndorsementChainEntryTO);
     when(transactionService.localToEndorsementChainTransactions(transactionList)).thenReturn(endorsementChainTransactionTOs);
-    when(eblEnvelopeService.exportEblEnvelope(transactionList.get(0).getTransportDocument(), exportingEblEnvelopeTO)).thenReturn(signedEndorsementChainEntryTO);
+    when(endorsementChainEntryService.exportEndorsementChainEntry(transactionList.get(0).getTransportDocument(), exportingEndorsementChainEntryTO)).thenReturn(signedEndorsementChainEntryTO);
     when(restTemplate.exchange((URI) any(), (HttpMethod) any(), (HttpEntity<?>) any(), (Class<Object>) any())).thenReturn(new ResponseEntity<>("dummyResponse", HttpStatus.BAD_REQUEST));
 
     Exception returnedException =
@@ -106,12 +107,12 @@ class ExportServiceTest {
   void testExportCreatingEndorsementChainTransactionsFailed() {
     String documentHash = TransportDocumentDataFactory.transportDocumentHash();
     when(transactionService.getTransactionsForExport(documentHash)).thenReturn(transactionList);
-    when(eblEnvelopeService.findPreviousEblEnvelopes(documentHash)).thenReturn(previousEblEnvelopes);
-    when(eblEnvelopeService.findPreviousEblEnvelopeHash(previousEblEnvelopes)).thenReturn(previousEblEnvelopeHash);
-    when(eblEnvelopeService.convertExistingEblEnvelopesToSignedEnvelopes(previousEblEnvelopes)).thenReturn(previousSignedEblEnvelopes);
-    when(eblEnvelopeService.createEblEnvelope(documentHash, endorsementChainTransactionTOs, previousEblEnvelopeHash)).thenReturn(exportingEblEnvelopeTO);
+    when(endorsementChainEntryService.findPreviousEndorsementChainEntries(documentHash)).thenReturn(previousEndorsementChainEntries);
+    when(endorsementChainEntryService.findPreviousEndorsementChainEntryHash(previousEndorsementChainEntries)).thenReturn(previousEndorsementChainEntryHash);
+    when(endorsementChainEntryService.convertExistingEndorsementChainEntriesToSignedEntries(previousEndorsementChainEntries)).thenReturn(previousSignedEndorsementChainEntries);
+    when(endorsementChainEntryService.createEndorsementChainEntry(documentHash, endorsementChainTransactionTOs, previousEndorsementChainEntryHash)).thenReturn(exportingEndorsementChainEntryTO);
     when(transactionService.localToEndorsementChainTransactions(transactionList)).thenReturn(endorsementChainTransactionTOs);
-    when(eblEnvelopeService.exportEblEnvelope(transactionList.get(0).getTransportDocument(), exportingEblEnvelopeTO)).thenReturn(signedEndorsementChainEntryTO);
+    when(endorsementChainEntryService.exportEndorsementChainEntry(transactionList.get(0).getTransportDocument(), exportingEndorsementChainEntryTO)).thenReturn(signedEndorsementChainEntryTO);
     when(restTemplate.exchange((URI) any(), (HttpMethod) any(), (HttpEntity<?>) any(), (Class<Object>) any())).thenReturn(new ResponseEntity<>(null, HttpStatus.OK));
 
     Exception returnedException =

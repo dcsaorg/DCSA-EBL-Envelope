@@ -33,7 +33,7 @@ public class TransportDocument {
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
   @OneToMany(mappedBy = "transportDocument", cascade = CascadeType.ALL)
-  private Set<EblEnvelope> eblEnvelopes;
+  private Set<EndorsementChainEntry> endorsementChainEntries;
 
   public TransportDocument export() {
     this.setIsExported(true);

@@ -1,19 +1,18 @@
 package org.dcsa.endorsementchain.datafactories;
 
 import lombok.experimental.UtilityClass;
-import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
+import org.dcsa.endorsementchain.persistence.entity.EndorsementChainEntry;
 import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.persistence.entity.TransactionByTimestampComparator;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
 import org.dcsa.endorsementchain.unofficial.datafactories.TransactionDataFactory;
 
 import java.util.List;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 @UtilityClass
-public class EblEnvelopeDataFactory {
+public class EndorsementChainEntryDataFactory {
 
   private static SortedSet<Transaction> setOf(Transaction t) {
     var s = new TreeSet<>(TransactionByTimestampComparator.INSTANCE);
@@ -21,8 +20,8 @@ public class EblEnvelopeDataFactory {
     return s;
   }
 
-  public EblEnvelope getEblEnvelope() {
-    return EblEnvelope.builder()
+  public EndorsementChainEntry getEndorsementChainEntry() {
+    return EndorsementChainEntry.builder()
         .transportDocument(
             TransportDocument.builder()
                 .transportDocumentJson("{\"test\":\"testValue\"}")
@@ -36,9 +35,9 @@ public class EblEnvelopeDataFactory {
         .build();
   }
 
-  public List<EblEnvelope> getEblEnvelopeList() {
-    EblEnvelope initialEblEnvelope =
-        EblEnvelope.builder()
+  public List<EndorsementChainEntry> getEndorsementChainEntryList() {
+    EndorsementChainEntry initialEndorsementChainEntry =
+        EndorsementChainEntry.builder()
             .transportDocument(
                 TransportDocument.builder()
                     .transportDocumentJson("{\"test\":\"testValue\"}")
@@ -51,8 +50,8 @@ public class EblEnvelopeDataFactory {
             .transactions(setOf(TransactionDataFactory.transactionEntity()))
             .build();
 
-    EblEnvelope subsequentEblEnvelope =
-        EblEnvelope.builder()
+    EndorsementChainEntry subsequentEndorsementChainEntry =
+        EndorsementChainEntry.builder()
             .transportDocument(
                 TransportDocument.builder()
                     .transportDocumentJson("{\"test\":\"testValue\"}")
@@ -66,6 +65,6 @@ public class EblEnvelopeDataFactory {
             .transactions(setOf(TransactionDataFactory.transactionEntity()))
             .build();
 
-    return List.of(initialEblEnvelope, subsequentEblEnvelope);
+    return List.of(initialEndorsementChainEntry, subsequentEndorsementChainEntry);
   }
 }

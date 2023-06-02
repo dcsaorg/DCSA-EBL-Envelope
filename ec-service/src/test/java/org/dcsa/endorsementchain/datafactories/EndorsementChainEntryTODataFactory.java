@@ -1,16 +1,16 @@
 package org.dcsa.endorsementchain.datafactories;
 
 import lombok.experimental.UtilityClass;
-import org.dcsa.endorsementchain.transferobjects.EblEnvelopeTO;
+import org.dcsa.endorsementchain.transferobjects.EndorsementChainEntryTO;
 import org.dcsa.endorsementchain.unofficial.datafactories.TransportDocumentDataFactory;
 
 import java.util.List;
 
 @UtilityClass
-public class EblEnvelopeTODataFactory {
+public class EndorsementChainEntryTODataFactory {
 
-  public EblEnvelopeTO eblEnvelopeTO() {
-    return EblEnvelopeTO.builder()
+  public EndorsementChainEntryTO endorsementChainEntryTO() {
+    return EndorsementChainEntryTO.builder()
       .transactions(EndorsementChainTransactionTODataFactory.endorsementChainTransactionTOList())
       .documentHash(TransportDocumentDataFactory.transportDocumentEntityWithTransactions().getDocumentHash())
       .previousEnvelopeHash(null)
@@ -18,14 +18,14 @@ public class EblEnvelopeTODataFactory {
       .build();
   }
 
-  public List<EblEnvelopeTO> eblEnvelopeTOList() {
-    EblEnvelopeTO secondEblEnvelope = EblEnvelopeTO.builder()
+  public List<EndorsementChainEntryTO> endorsementChainEntryTOList() {
+    EndorsementChainEntryTO secondEntry = EndorsementChainEntryTO.builder()
       .previousEnvelopeHash("a25286672be331c6770fa590f8eb7ab7cf105fd76f0db4b7cabd258a5953482e")
       .documentHash(TransportDocumentDataFactory.transportDocumentHash())
       .transactions(EndorsementChainTransactionTODataFactory.endorsementChainTransactionTOList())
       .build();
 
-    return List.of(EblEnvelopeTODataFactory.eblEnvelopeTO(), secondEblEnvelope);
+    return List.of(EndorsementChainEntryTODataFactory.endorsementChainEntryTO(), secondEntry);
   }
 
 }

@@ -11,7 +11,7 @@ public class TransferblockTODataFactory {
     return TransferblockTO.builder()
         .document(TransportDocumentDataFactory.transportDocumentEntityWithoutTransactions().getTransportDocumentJson())
         .endorsementChain(
-            SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList())
+            SignedEndorsementChainEntryTODataFactory.signedEndorsementChainEntryTOList())
         .build();
   }
 
@@ -19,7 +19,7 @@ public class TransferblockTODataFactory {
     return TransferblockTO.builder()
       .document(TransportDocumentDataFactory.transportDocumentEntityWithoutTransactions().getTransportDocumentJson())
       .endorsementChain(
-        SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList())
+        SignedEndorsementChainEntryTODataFactory.signedEndorsementChainEntryTOList())
       .build();
   }
 }
