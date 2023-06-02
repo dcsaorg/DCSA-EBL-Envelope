@@ -80,21 +80,21 @@ In order to verify the transfer has been successfully processed and the integrit
 For more information about both the request and response signatures see the [Signatures](README.md#signatures) paragraph below
 
 ## Identity
-In order to transfer the B/L to another platform identity information of the receiving party, the transferee, must be known to the sending platform.
+In order to transfer the B/L to another platform identity information of the receiving party, the recipient, must be known to the sending platform.
 The exchange of identities between users of platforms is out of scope for this reference implementation.
 Next to exchanging the identities, the identities must be formatted in a manner understandable and sharable between various platforms.
 
-All transferee identity information is exchanged with an **_eBLPlatformIdentifier_** in combination with the [DCSA Party object](https://app.swaggerhub.com/domains/dcsaorg/DOCUMENTATION_DOMAIN/2.0.1#/components/schemas/party).
+All recipient identity information is exchanged with an **_eBLPlatformIdentifier_** in combination with the [DCSA Transaction Party object](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EEC/0.12-alpha#/transactionParty).
 
 ### eBLPlatformIdentifier
-The eBLPlatformIdentifier is a combination of the transferee user identification _on the local platform_ and the platform.
+The eBLPlatformIdentifier is a combination of the user identification _on the local platform_ and the platform.
 EBLPlatformIdentifiers are formatted similar to email addresses: _**localid@platformdomain.ext**_ for example: **_gV2ZDy0jmae7@dcsaebplatform.org_**
 In this example **_gV2ZDy0jmae7_** is the local identifier on the fictitious **_dcsaebplatform.org_**
 
 ### Additional identity information
-While the eBLPlatformIdentifier is required, it is optional but recommended for providing additional identity information regarding the transferee.
-This additional information can be used by the receiving platform to perform additional verification. For providing this additional information the DCSA Party object is used.
-The DCSA Party object allows of the provision of LEI, tax reference and DID and many others documented in the [DCSA Party object](https://app.swaggerhub.com/domains/dcsaorg/DOCUMENTATION_DOMAIN/2.0.1#/components/schemas/party).
+While the eBLPlatformIdentifier and legal name are required, it is optional but recommended for providing additional identity information regarding the actor and recipient.
+This additional information can be used by the receiving platform to perform additional verification. For providing this additional information the DCSA Transaction Party object is used.
+The DCSA Transaction Party object allows of the provision of LEI and DID among other as documented in the [DCSA Transaction Party object](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EEC/0.12-alpha#/transactionParty).
 
 ### Service discovery
 The platform domain part of the eBLPlatformIdentifier being a resolvable domain name can be used for DNS based service discovery.
