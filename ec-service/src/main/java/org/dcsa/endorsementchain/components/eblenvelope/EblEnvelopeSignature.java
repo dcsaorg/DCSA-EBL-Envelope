@@ -8,7 +8,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.dcsa.endorsementchain.components.jws.JWSSignerDetails;
-import org.dcsa.endorsementchain.transferobjects.SignedEblEnvelopeTO;
+import org.dcsa.endorsementchain.transferobjects.SignedEndorsementChainEntryTO;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -29,11 +29,11 @@ public class EblEnvelopeSignature {
   private final Map<String, JWSVerifier> jwsVerifiers;
   private final RestTemplate restTemplate;
 
-  public SignedEblEnvelopeTO createSignedEblEnvelope(String rawEblEnvelope) {
+  public SignedEndorsementChainEntryTO createSignedEblEnvelope(String rawEblEnvelope) {
     String signature = sign(rawEblEnvelope);
     String envelopeHash = DigestUtils.sha256Hex(rawEblEnvelope);
 
-    return SignedEblEnvelopeTO.builder()
+    return SignedEndorsementChainEntryTO.builder()
         .envelopeHash(envelopeHash)
         .signature(signature)
         .build();

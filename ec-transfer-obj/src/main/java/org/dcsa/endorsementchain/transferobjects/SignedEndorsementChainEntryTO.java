@@ -5,7 +5,7 @@ import lombok.Builder;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record SignedEblEnvelopeTO(
+public record SignedEndorsementChainEntryTO(
   @NotNull
   @Size(max = 64, min = 64)
   String envelopeHash,
@@ -14,6 +14,6 @@ public record SignedEblEnvelopeTO(
   String signature
 ) {
   @Builder(toBuilder = true)
-  public SignedEblEnvelopeTO {}
+  public SignedEndorsementChainEntryTO {}
 
 }

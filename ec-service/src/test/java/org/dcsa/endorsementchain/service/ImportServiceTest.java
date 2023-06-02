@@ -8,7 +8,7 @@ import org.dcsa.endorsementchain.datafactories.SignedEblEnvelopeTODataFactory;
 import org.dcsa.endorsementchain.datafactories.TransferblockTODataFactory;
 import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
 import org.dcsa.endorsementchain.transferobjects.EblEnvelopeTO;
-import org.dcsa.endorsementchain.transferobjects.SignedEblEnvelopeTO;
+import org.dcsa.endorsementchain.transferobjects.SignedEndorsementChainEntryTO;
 import org.dcsa.endorsementchain.transferobjects.TransferblockTO;
 import org.dcsa.endorsementchain.unofficial.service.TransportDocumentService;
 import org.junit.jupiter.api.Test;
@@ -45,7 +45,7 @@ class ImportServiceTest {
         throw new RuntimeException("Can't serialize eblEnvelope");
       }
     }).toList();
-    List<SignedEblEnvelopeTO> signedEblEnvelopes = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList();
+    List<SignedEndorsementChainEntryTO> signedEblEnvelopes = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList();
 
     TransferblockTO transferblock = TransferblockTODataFactory.transferblockTO(rawEblEnvelopes.get(0), rawEblEnvelopes.get(1));
     List<EblEnvelopeTO> eblEnvelopeTOs = EblEnvelopeTODataFactory.eblEnvelopeTOList();

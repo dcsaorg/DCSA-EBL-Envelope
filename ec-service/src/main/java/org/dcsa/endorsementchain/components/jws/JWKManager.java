@@ -22,7 +22,6 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Map;
 
 @Component
@@ -40,7 +39,7 @@ public class JWKManager {
 
   @Bean
   public Map<String, JWSVerifier> getPlatformsVerifiers(@Qualifier("verifying-jwk") JWKSet jwkSet) {
-    Map<String, JWSVerifier> platformVerifiers = new java.util.HashMap<>(Collections.emptyMap());
+    Map<String, JWSVerifier> platformVerifiers = new java.util.HashMap<>();
     for (JWK jwk : jwkSet.getKeys()) {
       String dn = jwk.getParsedX509CertChain().get(0).getSubjectX500Principal().getName(X500Principal.CANONICAL);//ToDO this now acts on a single standalone certificate and not a certificate chain
       String cn = Arrays.stream(dn.split(",")).filter(s -> s.contains("cn")).map(s -> s.substring(s.indexOf("=")+1)).findFirst().orElseThrow(() -> new IllegalStateException("CN not set on Certificate."));
