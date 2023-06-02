@@ -2,6 +2,7 @@ package org.dcsa.endorsementchain.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dcsa.endorsementchain.components.endorsementchain.EndorsementChainEntrySignature;
+import org.dcsa.endorsementchain.components.jws.SignatureVerifier;
 import org.dcsa.endorsementchain.datafactories.EndorsementChainEntryDataFactory;
 import org.dcsa.endorsementchain.datafactories.EndorsementChainEntryTODataFactory;
 import org.dcsa.endorsementchain.datafactories.SignedEndorsementChainEntryTODataFactory;
@@ -39,6 +40,9 @@ class EndorsementChainEntryServiceTest {
   EndorsementChainEntryRepository repository;
   @Mock
   EndorsementChainEntrySignature signature;
+
+  @Mock
+  SignatureVerifier signatureVerifier;
   @Spy ObjectMapper objectMapper;
 
   @Spy TransactionMapper mapper = Mappers.getMapper(TransactionMapper.class);
@@ -200,7 +204,7 @@ class EndorsementChainEntryServiceTest {
 
   @Test
   void testParseEndorsementChainEntryValidEndorsementChainEntry() {
-    when(signature.verifySignature(any(), any())).thenReturn(true);
+    when(signatureVerifier.verifySignature(any(), any())).thenReturn(true);
     EndorsementChainEntryTO endorsementChainEntryTO = service.verifyEndorsementChainSignature(SignedEndorsementChainEntryTODataFactory.signedEndorsementChainEntryTO().signature());
 
     assertNotNull(endorsementChainEntryTO);
@@ -218,7 +222,7 @@ class EndorsementChainEntryServiceTest {
         .signature(SignedEndorsementChainEntryTODataFactory.signedEndorsementChainEntryTO().signature())
         .build();
 
-    when(signature.verifySignature(any(), any())).thenReturn(false);
+    when(signatureVerifier.verifySignature(any(), any())).thenReturn(false);
     Exception returnedException =
         assertThrows(
             ConcreteRequestErrorMessageException.class,

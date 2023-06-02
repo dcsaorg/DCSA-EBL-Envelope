@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.dcsa.endorsementchain.components.endorsementchain.EndorsementChainEntryList;
 import org.dcsa.endorsementchain.components.endorsementchain.EndorsementChainEntrySignature;
+import org.dcsa.endorsementchain.components.jws.SignatureVerifier;
 import org.dcsa.endorsementchain.persistence.entity.EndorsementChainEntry;
 import org.dcsa.endorsementchain.persistence.entity.TransactionByTimestampComparator;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
@@ -31,6 +32,7 @@ public class EndorsementChainEntryService {
   private final PartyService partyService;
   private final EndorsementChainEntryRepository endorsementChainEntryRepository;
   private final EndorsementChainEntrySignature signature;
+  private final SignatureVerifier signatureVerifier;
   private final TransactionMapper transactionMapper;
   private final TransportDocumentRepository transportDocumentRepository;
   private final ObjectMapper mapper;
@@ -120,7 +122,7 @@ public class EndorsementChainEntryService {
 
     EndorsementChainEntryTO parsedEndorsementEntries = mapper.convertValue(jwsObject.getPayload().toJSONObject(), EndorsementChainEntryTO.class);
     String platformHost = parsedEndorsementEntries.transactions().get(0).platformHost();
-    if (!signature.verifySignature(platformHost, jwsObject)) {
+    if (!signatureVerifier.verifySignature(platformHost, jwsObject)) {
       throw ConcreteRequestErrorMessageException.invalidInput("Signature could not be validated");
     }
     return parsedEndorsementEntries;
