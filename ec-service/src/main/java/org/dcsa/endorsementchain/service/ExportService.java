@@ -8,7 +8,7 @@ import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
 import org.dcsa.endorsementchain.transferobjects.EndorsementChainEntryTO;
 import org.dcsa.endorsementchain.transferobjects.SignedEndorsementChainEntryTO;
-import org.dcsa.endorsementchain.transferobjects.TransferblockTO;
+import org.dcsa.endorsementchain.transferobjects.EBLEnvelopeTO;
 import org.dcsa.endorsementchain.unofficial.service.TransactionService;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
 import org.erdtman.jcs.JsonCanonicalizer;
@@ -59,15 +59,15 @@ public class ExportService {
     List<SignedEndorsementChainEntryTO> toBeExportedEndorsementChainEntries =
         Stream.concat(previousSignedEndorsementChainEntries.stream(), Stream.of(signedEndorsementChainEntryTO)).toList();
 
-    TransferblockTO transferblock =
-        TransferblockTO.builder()
+    EBLEnvelopeTO eblEnvelopeTO =
+        EBLEnvelopeTO.builder()
             .endorsementChain(toBeExportedEndorsementChainEntries)
             .document(transportDocument.getTransportDocumentJson())
             .build();
 
     URI platformURL = transfereeToPlatformHost(transferee);
 
-    String signatureResponse = sendTransferBlock(platformURL, transferblock);
+    String signatureResponse = sendEBLEnvelope(platformURL, eblEnvelopeTO);
 
     return endorsementChainEntryService.verifyEndorsementChainEntryResponseSignature(
         platformURL.getHost() + ":" + platformURL.getPort(),
@@ -75,20 +75,20 @@ public class ExportService {
         signatureResponse);
   }
 
-  private String sendTransferBlock(URI platformUrl, TransferblockTO transferblock) {
+  private String sendEBLEnvelope(URI platformUrl, EBLEnvelopeTO eblEnvelopeTO) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
-    ResponseEntity<String> transferblockResponse =
+    ResponseEntity<String> eblEnvelopeResponse =
         restTemplate.exchange(
-            platformUrl, HttpMethod.PUT, new HttpEntity<>(transferblock, headers), String.class);
+            platformUrl, HttpMethod.PUT, new HttpEntity<>(eblEnvelopeTO, headers), String.class);
 
-    if (transferblockResponse.getStatusCode().isError()) {
+    if (eblEnvelopeResponse.getStatusCode().isError()) {
       throw ConcreteRequestErrorMessageException.internalServerError("Transfer failed.");
     }
 
-    return Optional.ofNullable(transferblockResponse.getBody())
+    return Optional.ofNullable(eblEnvelopeResponse.getBody())
         .orElseThrow(
             () ->
                 ConcreteRequestErrorMessageException.internalServerError(

@@ -3,9 +3,9 @@ This directory contains a set of key material to ease a local setup and should n
 
 All keys containing in this directory are generated on a local machine and self-signed certificates.
 
-* verification-private-key.pem - the private key of the party sending the transferblock to the test application. This key is used to generate a signature that can be verified by this reference application.
+* verification-private-key.pem - the private key of the party sending the eblEnvelope to the test application. This key is used to generate a signature that can be verified by this reference application.
 * dcsa-jwk-verify.jks - the JKS containing the public certificate used by the reference implementation to perform a verification of the signature. Contains the public certificate of the keypair of which verification-private-key.pem is the private key.
-* dcsa-jwk.jks - contains the private key and public key and certificate used by the reference implementation to sign an outgoing (exporting transferblock). The public key material is available via the endpoint: https://localhost:8443/v1/unofficial/.well-known/jwks.json
+* dcsa-jwk.jks - contains the private key and public key and certificate used by the reference implementation to sign an outgoing (exporting eblEnvelope). The public key material is available via the endpoint: https://localhost:8443/v1/unofficial/.well-known/jwks.json
 * springboot-https.p12 - pkcs12 keystore containing the key material for setting up TLS. Since this is a self-signed certificate it requires disabling certificate verification checks.
 
 ## Matching public key used for verifying incoming signatures

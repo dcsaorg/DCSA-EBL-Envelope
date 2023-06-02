@@ -1,9 +1,9 @@
 package org.dcsa.endorsementchain.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.dcsa.endorsementchain.datafactories.TransferblockTODataFactory;
+import org.dcsa.endorsementchain.datafactories.EBLEnvelopeTODataFactory;
 import org.dcsa.endorsementchain.service.ImportService;
-import org.dcsa.endorsementchain.transferobjects.TransferblockTO;
+import org.dcsa.endorsementchain.transferobjects.EBLEnvelopeTO;
 import org.dcsa.skernel.errors.infrastructure.ConcreteRequestErrorMessageExceptionHandler;
 import org.dcsa.skernel.errors.infrastructure.FallbackExceptionHandler;
 import org.dcsa.skernel.errors.infrastructure.JakartaValidationExceptionHandler;
@@ -38,12 +38,12 @@ class ImportControllerTest {
 
   @Test
   void testImportController() throws Exception {
-    TransferblockTO transferblock = TransferblockTODataFactory.transferblockTO();
-    String rawTransferBlock = mapper.writeValueAsString(transferblock);
+    EBLEnvelopeTO eblEnvelope = EBLEnvelopeTODataFactory.eblEnvelopeTO();
+    String rawEBLEnvelope = mapper.writeValueAsString(eblEnvelope);
 
     when(service.importEbl(isNotNull())).thenReturn(Optional.of("Dummy signature"));
 
-    String response = mockMvc.perform(put("/transferblocks").contentType(MediaType.APPLICATION_JSON).content(rawTransferBlock))
+    String response = mockMvc.perform(put("/transferblocks").contentType(MediaType.APPLICATION_JSON).content(rawEBLEnvelope))
       .andDo(print())
       .andExpect(status().isOk())
       .andReturn()
@@ -55,12 +55,12 @@ class ImportControllerTest {
 
   @Test
   void testImportControllerError() throws Exception {
-    TransferblockTO transferblock = TransferblockTODataFactory.transferblockTO();
-    String rawTransferBlock = mapper.writeValueAsString(transferblock);
+    EBLEnvelopeTO eblEnvelope = EBLEnvelopeTODataFactory.eblEnvelopeTO();
+    String rawEBLEnvelope = mapper.writeValueAsString(eblEnvelope);
 
     when(service.importEbl(isNotNull())).thenReturn(Optional.empty());
 
-    mockMvc.perform(put("/transferblocks").contentType(MediaType.APPLICATION_JSON).content(rawTransferBlock))
+    mockMvc.perform(put("/transferblocks").contentType(MediaType.APPLICATION_JSON).content(rawEBLEnvelope))
       .andDo(print())
       .andExpect(status().isBadRequest());
 

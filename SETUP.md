@@ -183,10 +183,10 @@ keytool -genkeypair -alias dcsa-kid -keyalg RSA -keystore dcsa-jwk.jks -storepas
 ```
 
 ### Generating keystore for verifying signatures
-Verifying the signatures of either incoming transferblocks or verifying the signature in the response of an outgoing transferblock requires a JKS.
+Verifying the signatures of either incoming eblEnvelopes or verifying the signature in the response of an outgoing eblEnvelopes requires a JKS.
 This JKS can contain multiple public certificates of each platform connected. The reference implementations uses the **_'CN'_** in the certificate to determine which public key to use for verification.
-For incoming transferblocks the CN is matched with the 'platformHost' field in the transaction.
-For verifying responses of outgoing transferblocks the CN is matched to the URL the transferblock is being sent to.
+For incoming eblEnvelopes the CN is matched with the 'platformHost' field in the transaction.
+For verifying responses of outgoing eblEnvelopes the CN is matched to the URL the eblEnvelopes is being sent to.
 So when generating the key material make sure to take note of the CN used.
 
 To generate the keystore:

@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dcsa.endorsementchain.datafactories.EndorsementChainEntryDataFactory;
 import org.dcsa.endorsementchain.datafactories.EndorsementChainEntryTODataFactory;
 import org.dcsa.endorsementchain.datafactories.SignedEndorsementChainEntryTODataFactory;
-import org.dcsa.endorsementchain.datafactories.TransferblockTODataFactory;
+import org.dcsa.endorsementchain.datafactories.EBLEnvelopeTODataFactory;
 import org.dcsa.endorsementchain.persistence.entity.EndorsementChainEntry;
 import org.dcsa.endorsementchain.transferobjects.EndorsementChainEntryTO;
 import org.dcsa.endorsementchain.transferobjects.SignedEndorsementChainEntryTO;
-import org.dcsa.endorsementchain.transferobjects.TransferblockTO;
+import org.dcsa.endorsementchain.transferobjects.EBLEnvelopeTO;
 import org.dcsa.endorsementchain.unofficial.service.TransportDocumentService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,30 +48,30 @@ class ImportServiceTest {
     }).toList();
     List<SignedEndorsementChainEntryTO> signedEndorsementChainEntries = SignedEndorsementChainEntryTODataFactory.signedEndorsementChainEntryTOList();
 
-    TransferblockTO transferblock = TransferblockTODataFactory.transferblockTO(rawEndorsementChainEntries.get(0), rawEndorsementChainEntries.get(1));
+    EBLEnvelopeTO eblEnvelope = EBLEnvelopeTODataFactory.eblEnvelopeTO(rawEndorsementChainEntries.get(0), rawEndorsementChainEntries.get(1));
     List<EndorsementChainEntryTO> endorsementChainEntryTOs = EndorsementChainEntryTODataFactory.endorsementChainEntryTOList();
 
     when(endorsementChainEntryService.verifyEndorsementChainSignature(signedEndorsementChainEntries.get(0).signature()))
         .thenReturn(endorsementChainEntryTOs.get(0));
     when(endorsementChainEntryService.verifyEndorsementChainSignature(signedEndorsementChainEntries.get(1).signature()))
         .thenReturn(endorsementChainEntryTOs.get(1));
-    when(endorsementChainEntryService.signedEndorsementEntryToEndorsementChainEntry(signedEndorsementChainEntries.get(0), endorsementChainEntryTOs.get(0), transferblock.document(), "localhost:8443")).thenReturn(endorsementChainEntries.get(0));
-    when(endorsementChainEntryService.signedEndorsementEntryToEndorsementChainEntry(signedEndorsementChainEntries.get(1), endorsementChainEntryTOs.get(1), transferblock.document(), "localhost:8443")).thenReturn(endorsementChainEntries.get(1));
+    when(endorsementChainEntryService.signedEndorsementEntryToEndorsementChainEntry(signedEndorsementChainEntries.get(0), endorsementChainEntryTOs.get(0), eblEnvelope.document(), "localhost:8443")).thenReturn(endorsementChainEntries.get(0));
+    when(endorsementChainEntryService.signedEndorsementEntryToEndorsementChainEntry(signedEndorsementChainEntries.get(1), endorsementChainEntryTOs.get(1), eblEnvelope.document(), "localhost:8443")).thenReturn(endorsementChainEntries.get(1));
     when((endorsementChainEntryService.saveEndorsementEntries(endorsementChainEntries))).thenReturn("dummyHash");
 
-    Optional<String> signedResponse = importService.importEbl(transferblock);
+    Optional<String> signedResponse = importService.importEbl(eblEnvelope);
     assertTrue(signedResponse.isPresent());
     assertEquals("dummyHash", signedResponse.get());
   }
 
   @Test
   void testImportEblWithoutEndorsementChain() {
-    TransferblockTO transferblock = TransferblockTO.builder()
+    EBLEnvelopeTO eblEnvelope = EBLEnvelopeTO.builder()
       .document("Test document")
       .endorsementChain(Collections.emptyList())
       .build();
 
-    Optional<String> signedResponse = importService.importEbl(transferblock);
+    Optional<String> signedResponse = importService.importEbl(eblEnvelope);
     assertTrue(signedResponse.isEmpty());
   }
 
