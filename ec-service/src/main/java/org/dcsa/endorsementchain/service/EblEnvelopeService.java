@@ -13,7 +13,7 @@ import org.dcsa.endorsementchain.persistence.repository.EblEnvelopeRepository;
 import org.dcsa.endorsementchain.persistence.repository.TransportDocumentRepository;
 import org.dcsa.endorsementchain.transferobjects.EblEnvelopeTO;
 import org.dcsa.endorsementchain.transferobjects.EndorsementChainTransactionTO;
-import org.dcsa.endorsementchain.transferobjects.SignedEblEnvelopeTO;
+import org.dcsa.endorsementchain.transferobjects.SignedEndorsementChainEntryTO;
 import org.dcsa.endorsementchain.unofficial.mapping.TransactionMapper;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
 import org.springframework.stereotype.Service;
@@ -35,12 +35,12 @@ public class EblEnvelopeService {
   private final TransportDocumentRepository transportDocumentRepository;
   private final ObjectMapper mapper;
 
-  public List<SignedEblEnvelopeTO> convertExistingEblEnvelopesToSignedEnvelopes(
+  public List<SignedEndorsementChainEntryTO> convertExistingEblEnvelopesToSignedEnvelopes(
       List<EblEnvelope> eblEnvelopes) {
     return eblEnvelopes.stream()
         .map(
             envelope ->
-                SignedEblEnvelopeTO.builder()
+                SignedEndorsementChainEntryTO.builder()
                     .envelopeHash(envelope.getEnvelopeHash())
                     .signature(envelope.getSignature())
                     .build())
@@ -71,7 +71,7 @@ public class EblEnvelopeService {
   }
 
   @SneakyThrows
-  SignedEblEnvelopeTO exportEblEnvelope(
+  SignedEndorsementChainEntryTO exportEblEnvelope(
       TransportDocument transportDocument, EblEnvelopeTO eblEnvelopeTO) {
 
     if (!eblEnvelopeTO.documentHash().equals(transportDocument.getDocumentHash())) {
@@ -81,19 +81,19 @@ public class EblEnvelopeService {
 
     String rawEblEnvelope = mapper.writeValueAsString(eblEnvelopeTO);
 
-    SignedEblEnvelopeTO signedEblEnvelopeTO = signature.createSignedEblEnvelope(rawEblEnvelope);
+    SignedEndorsementChainEntryTO signedEndorsementChainEntryTO = signature.createSignedEblEnvelope(rawEblEnvelope);
 
     EblEnvelope envelope =
         EblEnvelope.builder()
-            .envelopeHash(signedEblEnvelopeTO.envelopeHash())
+            .envelopeHash(signedEndorsementChainEntryTO.envelopeHash())
             .previousEnvelopeHash(eblEnvelopeTO.previousEnvelopeHash())
-            .signature(signedEblEnvelopeTO.signature())
+            .signature(signedEndorsementChainEntryTO.signature())
             .transportDocument(transportDocument)
             .build();
 
     eblEnvelopeRepository.save(envelope);
 
-    return signedEblEnvelopeTO;
+    return signedEndorsementChainEntryTO;
   }
 
   public String verifyEblEnvelopeResponseSignature(
@@ -141,7 +141,7 @@ public class EblEnvelopeService {
   }
 
   EblEnvelope signedEblEnvelopeToEblEnvelope(
-      SignedEblEnvelopeTO signedEblEnvelopeTO,
+      SignedEndorsementChainEntryTO signedEndorsementChainEntryTO,
       EblEnvelopeTO eblEnvelopeTO,
       String transportDocumentJson,
       String platformHost) {
@@ -168,8 +168,8 @@ public class EblEnvelopeService {
             .collect(Collectors.toCollection(() -> new TreeSet<>(TransactionByTimestampComparator.INSTANCE)));
 
     return EblEnvelope.builder()
-        .signature(signedEblEnvelopeTO.signature())
-        .envelopeHash(signedEblEnvelopeTO.envelopeHash())
+        .signature(signedEndorsementChainEntryTO.signature())
+        .envelopeHash(signedEndorsementChainEntryTO.envelopeHash())
         .transportDocument(transportDocument)
         .transactions(transactions)
         .previousEnvelopeHash(eblEnvelopeTO.previousEnvelopeHash())

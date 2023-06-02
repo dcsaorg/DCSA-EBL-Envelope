@@ -3,7 +3,7 @@ package org.dcsa.endorsementchain.service;
 import lombok.RequiredArgsConstructor;
 import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
 import org.dcsa.endorsementchain.transferobjects.EblEnvelopeTO;
-import org.dcsa.endorsementchain.transferobjects.SignedEblEnvelopeTO;
+import org.dcsa.endorsementchain.transferobjects.SignedEndorsementChainEntryTO;
 import org.dcsa.endorsementchain.transferobjects.TransferblockTO;
 import org.dcsa.endorsementchain.unofficial.service.TransportDocumentService;
 import org.springframework.stereotype.Service;
@@ -36,15 +36,15 @@ public class ImportService {
     return eblEnvelopeList;
   }
 
-  private EblEnvelope validate(TransferblockTO transferblock, SignedEblEnvelopeTO signedEblEnvelopeTO) {
-    EblEnvelopeTO parsedEblEnvelope = eblEnvelopeService.verifyEndorsementChainSignature(signedEblEnvelopeTO.signature());
+  private EblEnvelope validate(TransferblockTO transferblock, SignedEndorsementChainEntryTO signedEndorsementChainEntryTO) {
+    EblEnvelopeTO parsedEblEnvelope = eblEnvelopeService.verifyEndorsementChainSignature(signedEndorsementChainEntryTO.signature());
 
     // Since the platformhost is the host of the originating transaction and all transactions within
     // an EBL envelope are from the same platform we can take any of the transactions to retrieve
     // the platformhost.
     String platformHost = parsedEblEnvelope.transactions().get(0).platformHost();
 
-    return eblEnvelopeService.signedEblEnvelopeToEblEnvelope(signedEblEnvelopeTO, parsedEblEnvelope, transferblock.document(), platformHost);
+    return eblEnvelopeService.signedEblEnvelopeToEblEnvelope(signedEndorsementChainEntryTO, parsedEblEnvelope, transferblock.document(), platformHost);
   }
 
   private void verifyTransportDocument(String transferDocument, List<EblEnvelope> eblEnvelopeList) {

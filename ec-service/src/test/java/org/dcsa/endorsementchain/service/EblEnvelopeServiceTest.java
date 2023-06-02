@@ -10,7 +10,7 @@ import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
 import org.dcsa.endorsementchain.persistence.repository.EblEnvelopeRepository;
 import org.dcsa.endorsementchain.transferobjects.EblEnvelopeTO;
 import org.dcsa.endorsementchain.transferobjects.EndorsementChainTransactionTO;
-import org.dcsa.endorsementchain.transferobjects.SignedEblEnvelopeTO;
+import org.dcsa.endorsementchain.transferobjects.SignedEndorsementChainEntryTO;
 import org.dcsa.endorsementchain.unofficial.datafactories.TransactionDataFactory;
 import org.dcsa.endorsementchain.unofficial.datafactories.TransportDocumentDataFactory;
 import org.dcsa.endorsementchain.unofficial.mapping.TransactionMapper;
@@ -58,7 +58,7 @@ class EblEnvelopeServiceTest {
 
   @Test
   void testConvertExistingEblEnvelopesToSignedEnvelopes() {
-    List<SignedEblEnvelopeTO> signedEnvelopes =
+    List<SignedEndorsementChainEntryTO> signedEnvelopes =
         service.convertExistingEblEnvelopesToSignedEnvelopes(eblEnvelopeList);
     assertEquals(2, signedEnvelopes.size());
     assertNotNull(signedEnvelopes.get(0).signature());
@@ -66,7 +66,7 @@ class EblEnvelopeServiceTest {
 
   @Test
   void testConvertExistingEblEnvelopesToSignedEnvelopesNull() {
-    List<SignedEblEnvelopeTO> signedEnvelopes =
+    List<SignedEndorsementChainEntryTO> signedEnvelopes =
         service.convertExistingEblEnvelopesToSignedEnvelopes(Collections.emptyList());
     assertEquals(0, signedEnvelopes.size());
   }
@@ -137,7 +137,7 @@ class EblEnvelopeServiceTest {
     when(repository.save(any())).thenAnswer(i -> i.getArguments()[0]);
     when(signature.createSignedEblEnvelope(any())).thenReturn(SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO());
 
-    SignedEblEnvelopeTO response = service.exportEblEnvelope(transportDocument, eblEnvelopeTO);
+    SignedEndorsementChainEntryTO response = service.exportEblEnvelope(transportDocument, eblEnvelopeTO);
 
     assertEquals(SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO().envelopeHash(), response.envelopeHash());
     assertEquals(SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO().signature(), response.signature());
@@ -208,8 +208,8 @@ class EblEnvelopeServiceTest {
 
   @Test
   void testVerifyEnvelopeSignatureInvalid() {
-    SignedEblEnvelopeTO invalidSignedEblEnvelope =
-      SignedEblEnvelopeTO.builder()
+    SignedEndorsementChainEntryTO invalidSignedEblEnvelope =
+      SignedEndorsementChainEntryTO.builder()
         .envelopeHash(SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO().envelopeHash())
         .signature(SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO().signature())
         .build();

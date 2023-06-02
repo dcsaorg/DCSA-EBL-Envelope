@@ -11,7 +11,7 @@ import java.util.List;
 public record TransferblockTO(
   @JsonRawValue
   String document,
-  List<SignedEblEnvelopeTO> endorsementChain
+  List<SignedEndorsementChainEntryTO> endorsementChain
 ) {
 
   @Builder(toBuilder = true)
@@ -20,7 +20,8 @@ public record TransferblockTO(
 
   @JsonCreator
   @Builder(toBuilder = true)
-  public TransferblockTO(@JsonProperty("document") JsonNode document, List<SignedEblEnvelopeTO> endorsementChain) {
+  public TransferblockTO(@JsonProperty("document") JsonNode document,
+                         List<SignedEndorsementChainEntryTO> endorsementChain) {
     this(document.toString(), endorsementChain);
   }
 }

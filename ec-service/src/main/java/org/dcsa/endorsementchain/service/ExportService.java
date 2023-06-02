@@ -7,7 +7,7 @@ import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
 import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.persistence.entity.TransportDocument;
 import org.dcsa.endorsementchain.transferobjects.EblEnvelopeTO;
-import org.dcsa.endorsementchain.transferobjects.SignedEblEnvelopeTO;
+import org.dcsa.endorsementchain.transferobjects.SignedEndorsementChainEntryTO;
 import org.dcsa.endorsementchain.transferobjects.TransferblockTO;
 import org.dcsa.endorsementchain.unofficial.service.TransactionService;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
@@ -44,7 +44,7 @@ public class ExportService {
 
     String previousEblEnvelopeHash =
         eblEnvelopeService.findPreviousEblEnvelopeHash(previousEblEnvelopes);
-    List<SignedEblEnvelopeTO> previousSignedEblEnvelopes =
+    List<SignedEndorsementChainEntryTO> previousSignedEblEnvelopes =
         eblEnvelopeService.convertExistingEblEnvelopesToSignedEnvelopes(previousEblEnvelopes);
 
     EblEnvelopeTO exportingEblEnvelopeTO =
@@ -53,11 +53,11 @@ public class ExportService {
             transactionService.localToEndorsementChainTransactions(exportedTransactions),
             previousEblEnvelopeHash);
 
-    SignedEblEnvelopeTO signedEblEnvelopeTO =
+    SignedEndorsementChainEntryTO signedEndorsementChainEntryTO =
         eblEnvelopeService.exportEblEnvelope(transportDocument, exportingEblEnvelopeTO);
 
-    List<SignedEblEnvelopeTO> toBeExportedEblEnvelopes =
-        Stream.concat(previousSignedEblEnvelopes.stream(), Stream.of(signedEblEnvelopeTO)).toList();
+    List<SignedEndorsementChainEntryTO> toBeExportedEblEnvelopes =
+        Stream.concat(previousSignedEblEnvelopes.stream(), Stream.of(signedEndorsementChainEntryTO)).toList();
 
     TransferblockTO transferblock =
         TransferblockTO.builder()
@@ -71,7 +71,7 @@ public class ExportService {
 
     return eblEnvelopeService.verifyEblEnvelopeResponseSignature(
         platformURL.getHost() + ":" + platformURL.getPort(),
-        signedEblEnvelopeTO.envelopeHash(),
+        signedEndorsementChainEntryTO.envelopeHash(),
         signatureResponse);
   }
 

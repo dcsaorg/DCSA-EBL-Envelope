@@ -9,7 +9,7 @@ import org.dcsa.endorsementchain.persistence.entity.EblEnvelope;
 import org.dcsa.endorsementchain.persistence.entity.Transaction;
 import org.dcsa.endorsementchain.transferobjects.EblEnvelopeTO;
 import org.dcsa.endorsementchain.transferobjects.EndorsementChainTransactionTO;
-import org.dcsa.endorsementchain.transferobjects.SignedEblEnvelopeTO;
+import org.dcsa.endorsementchain.transferobjects.SignedEndorsementChainEntryTO;
 import org.dcsa.endorsementchain.unofficial.datafactories.TransactionDataFactory;
 import org.dcsa.endorsementchain.unofficial.datafactories.TransportDocumentDataFactory;
 import org.dcsa.endorsementchain.unofficial.service.TransactionService;
@@ -48,8 +48,8 @@ class ExportServiceTest {
   private List<EblEnvelope> previousEblEnvelopes;
   private String previousEblEnvelopeHash;
   private EblEnvelopeTO exportingEblEnvelopeTO;
-  private List<SignedEblEnvelopeTO> previousSignedEblEnvelopes;
-  private SignedEblEnvelopeTO signedEblEnvelopeTO;
+  private List<SignedEndorsementChainEntryTO> previousSignedEblEnvelopes;
+  private SignedEndorsementChainEntryTO signedEndorsementChainEntryTO;
 
   @BeforeEach
   void init() {
@@ -58,7 +58,7 @@ class ExportServiceTest {
     previousEblEnvelopeHash = previousEblEnvelopes.get(0).getEnvelopeHash();
     exportingEblEnvelopeTO = EblEnvelopeTODataFactory.eblEnvelopeTO();
     previousSignedEblEnvelopes = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTOList();
-    signedEblEnvelopeTO = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO();
+    signedEndorsementChainEntryTO = SignedEblEnvelopeTODataFactory.signedEblEnvelopeTO();
     endorsementChainTransactionTOs = EndorsementChainTransactionTODataFactory.endorsementChainTransactionTOList();
   }
 
@@ -71,8 +71,8 @@ class ExportServiceTest {
     when(eblEnvelopeService.convertExistingEblEnvelopesToSignedEnvelopes(previousEblEnvelopes)).thenReturn(previousSignedEblEnvelopes);
     when(eblEnvelopeService.createEblEnvelope(documentHash, endorsementChainTransactionTOs, previousEblEnvelopeHash)).thenReturn(exportingEblEnvelopeTO);
     when(transactionService.localToEndorsementChainTransactions(transactionList)).thenReturn(endorsementChainTransactionTOs);
-    when(eblEnvelopeService.exportEblEnvelope(transactionList.get(0).getTransportDocument(), exportingEblEnvelopeTO)).thenReturn(signedEblEnvelopeTO);
-    when(eblEnvelopeService.verifyEblEnvelopeResponseSignature("localhost:8443", signedEblEnvelopeTO.envelopeHash(), "dummyResponse")).thenReturn("dummyResponse");
+    when(eblEnvelopeService.exportEblEnvelope(transactionList.get(0).getTransportDocument(), exportingEblEnvelopeTO)).thenReturn(signedEndorsementChainEntryTO);
+    when(eblEnvelopeService.verifyEblEnvelopeResponseSignature("localhost:8443", signedEndorsementChainEntryTO.envelopeHash(), "dummyResponse")).thenReturn("dummyResponse");
     when(restTemplate.exchange((URI) any(), (HttpMethod) any(), (HttpEntity<?>) any(), (Class<Object>) any())).thenReturn(new ResponseEntity<>("dummyResponse", HttpStatus.OK));
 
     String responseSignature = exportService.exportEbl("test@localhost:8443", TransportDocumentDataFactory.transportDocumentHash());
@@ -89,7 +89,7 @@ class ExportServiceTest {
     when(eblEnvelopeService.convertExistingEblEnvelopesToSignedEnvelopes(previousEblEnvelopes)).thenReturn(previousSignedEblEnvelopes);
     when(eblEnvelopeService.createEblEnvelope(documentHash, endorsementChainTransactionTOs, previousEblEnvelopeHash)).thenReturn(exportingEblEnvelopeTO);
     when(transactionService.localToEndorsementChainTransactions(transactionList)).thenReturn(endorsementChainTransactionTOs);
-    when(eblEnvelopeService.exportEblEnvelope(transactionList.get(0).getTransportDocument(), exportingEblEnvelopeTO)).thenReturn(signedEblEnvelopeTO);
+    when(eblEnvelopeService.exportEblEnvelope(transactionList.get(0).getTransportDocument(), exportingEblEnvelopeTO)).thenReturn(signedEndorsementChainEntryTO);
     when(restTemplate.exchange((URI) any(), (HttpMethod) any(), (HttpEntity<?>) any(), (Class<Object>) any())).thenReturn(new ResponseEntity<>("dummyResponse", HttpStatus.BAD_REQUEST));
 
     Exception returnedException =
@@ -111,7 +111,7 @@ class ExportServiceTest {
     when(eblEnvelopeService.convertExistingEblEnvelopesToSignedEnvelopes(previousEblEnvelopes)).thenReturn(previousSignedEblEnvelopes);
     when(eblEnvelopeService.createEblEnvelope(documentHash, endorsementChainTransactionTOs, previousEblEnvelopeHash)).thenReturn(exportingEblEnvelopeTO);
     when(transactionService.localToEndorsementChainTransactions(transactionList)).thenReturn(endorsementChainTransactionTOs);
-    when(eblEnvelopeService.exportEblEnvelope(transactionList.get(0).getTransportDocument(), exportingEblEnvelopeTO)).thenReturn(signedEblEnvelopeTO);
+    when(eblEnvelopeService.exportEblEnvelope(transactionList.get(0).getTransportDocument(), exportingEblEnvelopeTO)).thenReturn(signedEndorsementChainEntryTO);
     when(restTemplate.exchange((URI) any(), (HttpMethod) any(), (HttpEntity<?>) any(), (Class<Object>) any())).thenReturn(new ResponseEntity<>(null, HttpStatus.OK));
 
     Exception returnedException =
