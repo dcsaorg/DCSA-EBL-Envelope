@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.dcsa.endorsementchain.persistence.entity.EndorsementChainEntry;
 import org.dcsa.endorsementchain.transferobjects.EndorsementChainEntryTO;
 import org.dcsa.endorsementchain.transferobjects.SignedEndorsementChainEntryTO;
-import org.dcsa.endorsementchain.transferobjects.TransferblockTO;
+import org.dcsa.endorsementchain.transferobjects.EBLEnvelopeTO;
 import org.dcsa.endorsementchain.unofficial.service.TransportDocumentService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,24 +19,24 @@ public class ImportService {
   private final TransportDocumentService transportDocumentService;
 
   @Transactional
-  public Optional<String> importEbl(TransferblockTO transferblock) {
-    List<EndorsementChainEntry> parsedEndorsementChainEntries = parseEndorsementChainEntries(transferblock);
+  public Optional<String> importEbl(EBLEnvelopeTO eblEnvelope) {
+    List<EndorsementChainEntry> parsedEndorsementChainEntries = parseEndorsementChainEntries(eblEnvelope);
     return Optional.ofNullable(endorsementChainEntryService.saveEndorsementEntries(parsedEndorsementChainEntries));
   }
 
-  private List<EndorsementChainEntry> parseEndorsementChainEntries(TransferblockTO transferblock) {
+  private List<EndorsementChainEntry> parseEndorsementChainEntries(EBLEnvelopeTO eblEnvelope) {
 
-    List<EndorsementChainEntry> endorsementChainEntryList = transferblock.endorsementChain().stream()
+    List<EndorsementChainEntry> endorsementChainEntryList = eblEnvelope.endorsementChain().stream()
       .map(signedEndorsementChainEntryTO ->
-        validate(transferblock, signedEndorsementChainEntryTO))
+        validate(eblEnvelope, signedEndorsementChainEntryTO))
       .toList();
 
-    verifyTransportDocument(transferblock.document(), endorsementChainEntryList);
+    verifyTransportDocument(eblEnvelope.document(), endorsementChainEntryList);
 
     return endorsementChainEntryList;
   }
 
-  private EndorsementChainEntry validate(TransferblockTO transferblock, SignedEndorsementChainEntryTO signedEndorsementChainEntryTO) {
+  private EndorsementChainEntry validate(EBLEnvelopeTO eblEnvelope, SignedEndorsementChainEntryTO signedEndorsementChainEntryTO) {
     EndorsementChainEntryTO parsedEndorsementChainEntry = endorsementChainEntryService.verifyEndorsementChainSignature(signedEndorsementChainEntryTO.signature());
 
     // Since the platformhost is the host of the originating transaction and all transactions within
@@ -44,7 +44,7 @@ public class ImportService {
     // the platformhost.
     String platformHost = parsedEndorsementChainEntry.transactions().get(0).platformHost();
 
-    return endorsementChainEntryService.signedEndorsementEntryToEndorsementChainEntry(signedEndorsementChainEntryTO, parsedEndorsementChainEntry, transferblock.document(), platformHost);
+    return endorsementChainEntryService.signedEndorsementEntryToEndorsementChainEntry(signedEndorsementChainEntryTO, parsedEndorsementChainEntry, eblEnvelope.document(), platformHost);
   }
 
   private void verifyTransportDocument(String transferDocument, List<EndorsementChainEntry> endorsementChainEntryList) {

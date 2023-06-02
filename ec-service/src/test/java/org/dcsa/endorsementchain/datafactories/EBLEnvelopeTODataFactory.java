@@ -1,22 +1,23 @@
 package org.dcsa.endorsementchain.datafactories;
 
 import lombok.experimental.UtilityClass;
-import org.dcsa.endorsementchain.transferobjects.TransferblockTO;
+import org.dcsa.endorsementchain.transferobjects.EBLEnvelopeTO;
 import org.dcsa.endorsementchain.unofficial.datafactories.TransportDocumentDataFactory;
 
 @UtilityClass
-public class TransferblockTODataFactory {
+public class EBLEnvelopeTODataFactory {
 
-  public TransferblockTO transferblockTO() {
-    return TransferblockTO.builder()
+  public EBLEnvelopeTO eblEnvelopeTO() {
+    return EBLEnvelopeTO.builder()
         .document(TransportDocumentDataFactory.transportDocumentEntityWithoutTransactions().getTransportDocumentJson())
         .endorsementChain(
             SignedEndorsementChainEntryTODataFactory.signedEndorsementChainEntryTOList())
         .build();
   }
 
-  public TransferblockTO transferblockTO(String rawEnvelope, String secondRawEnvelope) {
-    return TransferblockTO.builder()
+  public EBLEnvelopeTO eblEnvelopeTO(String rawEnvelope, String secondRawEnvelope) {
+    // TODO: Both parameters are unused!?
+    return EBLEnvelopeTO.builder()
       .document(TransportDocumentDataFactory.transportDocumentEntityWithoutTransactions().getTransportDocumentJson())
       .endorsementChain(
         SignedEndorsementChainEntryTODataFactory.signedEndorsementChainEntryTOList())

@@ -15,11 +15,11 @@ The rendered Open API specification for the is available on the [DCSA Swaggerhub
 See [the contributing guide](CONTRIBUTING.md) for detailed instructions on how to get started with our project.
 
 # Transferring BL control to another platform
-Transferring the BL control of possession is accomplished by sending a _**"Transferblock"**_ from the sending platform to the receiving platform.
+Transferring the BL control of possession is accomplished by sending a _**"EBLEnvelope"**_ from the sending platform to the receiving platform.
 
-## Overview of a `transferblock`
-A `transferblock` is a single JSON structure described [here](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EEC/0.12-alpha#/transferblock).
-The `transferblock` has the following structure:
+## Overview of an `EBLEnvelope`
+A `eblEnvelope` is a single JSON structure described [here](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EEC/0.12-alpha#/eblEnvelope).
+The `eblEnvelope` has the following structure:
 * data of the B/L according to the [DCSA transportDocument specification](https://app.swaggerhub.com/domains/dcsaorg/DOCUMENTATION_DOMAIN/2.1.0#/components/schemas/transportDocument)
 * The complete endorsement chain as signed endorsementChainEntries transferred between platforms
   * signature of the endorsementChainEntry - signed with the private key of the sending platform
@@ -68,8 +68,8 @@ This results in the following JSON structure:
 
 ## Process of transferring
 
-Transferring a B/L between platforms consists of creating and signing the ebl Envelope and wrap it in a `transferblock`.
-This `transferblock` is being sent via an HTTP PUT to the receiving platform. Which is depicted in this diagram:
+Transferring a B/L between platforms consists of creating and signing the endorsement chain entry and wrap it in a `eblEnvelope`.
+This `eblEnvelope` is being sent via an HTTP PUT to the receiving platform. Which is depicted in this diagram:
 
 ![cross platform B/L transfer](specifications/plantuml/transfer-sequence-diagram.png)
 
