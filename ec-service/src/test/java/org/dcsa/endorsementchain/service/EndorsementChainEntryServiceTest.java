@@ -130,8 +130,6 @@ class EndorsementChainEntryServiceTest {
   @Test
   void testCreateEndorsementChainEntryWithNullTransactions() {
     String documentHash = TransportDocumentDataFactory.transportDocumentHash();
-    List<EndorsementChainTransactionTO> transactions =
-        List.of(TransactionDataFactory.endorsementChainTransaction());
     EndorsementChainEntryTO envelope =
         service.createEndorsementChainEntry(documentHash, null, endorsementChainEntry.getPreviousEnvelopeHash());
     assertEquals(documentHash, envelope.documentHash());
@@ -215,18 +213,13 @@ class EndorsementChainEntryServiceTest {
 
   @Test
   void testVerifyEnvelopeSignatureInvalid() {
-    // TODO: Double check why IntelliJ thinks this is unused and remove it if unnecessary
-    SignedEndorsementChainEntryTO invalidSignedEndorsementChainEntry =
-      SignedEndorsementChainEntryTO.builder()
-        .envelopeHash(SignedEndorsementChainEntryTODataFactory.signedEndorsementChainEntryTO().envelopeHash())
-        .signature(SignedEndorsementChainEntryTODataFactory.signedEndorsementChainEntryTO().signature())
-        .build();
-
+    var signatureToBeTested = SignedEndorsementChainEntryTODataFactory.signedEndorsementChainEntryTOWithInvalidSignature()
+      .signature();
     when(signatureVerifier.verifySignature(any(), any())).thenReturn(false);
     Exception returnedException =
         assertThrows(
             ConcreteRequestErrorMessageException.class,
-            () -> service.verifyEndorsementChainSignature(SignedEndorsementChainEntryTODataFactory.signedEndorsementChainEntryTOWithInvalidSignature().signature()));
+            () -> service.verifyEndorsementChainSignature(signatureToBeTested));
 
     assertEquals("Signature could not be validated", returnedException.getMessage());
   }
