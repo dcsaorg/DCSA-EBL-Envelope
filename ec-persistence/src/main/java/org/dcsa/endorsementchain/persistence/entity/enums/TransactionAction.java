@@ -9,11 +9,9 @@ public enum TransactionAction {
   ISSU("Issue"),
   TRNS("Transfer"),
   SURR("Surrender"),
-  AMND("Amend"),
-  SW2P("Switch to paper"),
+  SREJ("Surrender Rejected"),
   SREQ("Request to surrender"),
   AREQ("Request to Amend"),
-  PREQ("Request to switch to paper")
   ;
 
   @Getter
