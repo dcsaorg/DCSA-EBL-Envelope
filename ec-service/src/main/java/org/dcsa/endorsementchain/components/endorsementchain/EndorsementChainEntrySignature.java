@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.dcsa.endorsementchain.components.jws.JWSSignerDetails;
+import org.dcsa.endorsementchain.components.jws.PayloadSigner;
 import org.dcsa.endorsementchain.components.jws.SignatureVerifier;
 import org.dcsa.endorsementchain.transferobjects.SignedEndorsementChainEntryTO;
 import org.dcsa.skernel.errors.exceptions.ConcreteRequestErrorMessageException;
@@ -16,29 +17,17 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class EndorsementChainEntrySignature {
 
-  private final JWSSignerDetails jwsSignerDetails;
   private final SignatureVerifier signatureVerifier;
+  private final PayloadSigner payloadSigner;
 
   public SignedEndorsementChainEntryTO createSignedEndorsementChainEntry(String endorsementChainEntry) {
-    String signature = sign(endorsementChainEntry);
+    String signature = payloadSigner.sign(endorsementChainEntry);
     String envelopeHash = DigestUtils.sha256Hex(endorsementChainEntry);
 
     return SignedEndorsementChainEntryTO.builder()
         .envelopeHash(envelopeHash)
         .signature(signature)
         .build();
-  }
-
-  public String sign(String payload) {
-    JWSHeader header = new JWSHeader.Builder(jwsSignerDetails.algorithm()).build();
-    JWSObject jwsObject = new JWSObject(header, new Payload(payload));
-    try {
-      jwsObject.sign(jwsSignerDetails.signer());
-    } catch (JOSEException e) {
-      throw ConcreteRequestErrorMessageException.internalServerError(
-          "Unable to generate the JWS Object");
-    }
-    return jwsObject.serialize();
   }
 
   @SneakyThrows
