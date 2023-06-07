@@ -507,7 +507,7 @@
 									"    \r",
 									"    let jwk = pm.collectionVariables.get(\"JWK\");\r",
 									"    let pubkey = KEYUTIL.getKey(jwk);\r",
-									"    let isValid = KJUR.jws.JWS.verify(transferblockResponse, pubkey, {alg: ['RS256']});\r",
+									"    let isValid = KJUR.jws.JWS.verify(transferblockResponse, pubkey, {alg: ['PS256']});\r",
 									"\r",
 									"    pm.test(\"Signature of response is valid\", function(){\r",
 									"        pm.expect(isValid).to.be.true;\r",
