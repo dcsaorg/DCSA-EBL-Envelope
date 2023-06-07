@@ -55,7 +55,7 @@ public class TransactionDataFactory {
 
     return """
       {
-        "instruction": "ISSU",
+        "action": "ISSU",
         "comments": "The B/L has been issued.",
         "isToOrder": true,
         "transferee": "dummy transferee"
