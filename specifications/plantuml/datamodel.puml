@@ -20,7 +20,7 @@
     *document_hash: varchar(64) <<FK>>
     *envelope_hash: varchar(64) <<FK>>
     comments: varchar(255)
-    *instruction: varchar(4)
+    *action: varchar(4)
     is_to_order: bool
     platform_host: varchar(255)
     *timestamp: int8
