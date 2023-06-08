@@ -138,7 +138,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": \"foo@localhost:8443\",\r\n    \"name\": \"Foo Party\",\r\n    \"registrationNumber\": \"reg no\",\r\n    \"countryOfRegistration\": \"DK\"\r\n}\r\n",
+							"raw": "{\r\n    \"id\": \"foo@localhost:8443\",\r\n    \"legalName\": \"Foo Party\",\r\n    \"registrationNumber\": \"reg no\",\r\n    \"locationOfRegistration\": \"DK\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -301,7 +301,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": \"43549850248@localhost:8443\",\r\n    \"name\": \"Bar Party\",\r\n    \"registrationNumber\": \"reg no\",\r\n    \"countryOfRegistration\": \"DK\"\r\n}\r\n",
+							"raw": "{\r\n    \"id\": \"43549850248@localhost:8443\",\r\n    \"legalName\": \"Bar Party\",\r\n    \"registrationNumber\": \"reg no\",\r\n    \"locationOfRegistration\": \"DK\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"

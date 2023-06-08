@@ -7,10 +7,9 @@ import jakarta.validation.constraints.Size;
 
 public record PartyTO(
   @NotBlank @Size(max = 255) String id,
-  @NotBlank @Size(max = 255) String name,
+  @NotBlank @Size(max = 255) String legalName,
   @NotBlank @Size(max = 255) String registrationNumber,
-  @NotBlank @Size(max = 2) String countryOfRegistration,
-  @Size(max = 1024) String address,
+  @NotBlank @Size(max = 2) String locationOfRegistration,
   @Size(max = 255) String taxReference,
   @Size(max = 20, min = 20) String lei,
   @Size(max = 255) String did

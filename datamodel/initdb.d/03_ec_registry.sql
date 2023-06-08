@@ -24,8 +24,7 @@ CREATE TABLE ec_registry."party" (
   ebl_platform_identifier varchar(255) NOT NULL PRIMARY KEY,
   party_name varchar(255) NOT NULL,
   registration_number varchar(255) NOT NULL,
-  country_of_registration varchar(2) NOT NULL,
-  address text,
+  location_of_registration varchar(2) NOT NULL,
   tax_reference varchar(255),
   lei varchar(20),
   did varchar(255)
