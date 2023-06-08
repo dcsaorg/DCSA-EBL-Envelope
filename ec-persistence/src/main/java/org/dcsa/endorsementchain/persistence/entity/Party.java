@@ -24,16 +24,13 @@ public class Party {
   private String id;
 
   @Column(name = "party_name", nullable = false)
-  private String name;
+  private String legalName;
 
   @Column(name = "registration_number", nullable = false)
   private String registrationNumber;
 
-  @Column(name = "country_of_registration", nullable = false, length = 2)
-  private String countryOfRegistration;
-
-  @Column(name = "address")
-  private String address;
+  @Column(name = "location_of_registration", nullable = false, length = 2)
+  private String locationOfRegistration;
 
   @Column(name = "tax_reference")
   private String taxReference;
