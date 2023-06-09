@@ -23,7 +23,10 @@ public record EndorsementChainTransactionTO(
   String platformHost,
 
   @NotNull
-  String transferee //ToDo must be a (subset of) the party object
+  String transferee, //ToDo must be a (subset of) the party object
+
+  // @NotNull // TODO: Add this when we are ready.
+  PartyTO actor
 ) {
   @Builder(toBuilder = true)
   public EndorsementChainTransactionTO {}

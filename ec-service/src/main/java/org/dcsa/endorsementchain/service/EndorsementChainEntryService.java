@@ -162,6 +162,7 @@ public class EndorsementChainEntryService {
         .build()
       );
 
+    // FIXME: we should only resolve the latest transferee.
     var transactions =
         endorsementChainEntryTO.transactions().stream()
             .map(
