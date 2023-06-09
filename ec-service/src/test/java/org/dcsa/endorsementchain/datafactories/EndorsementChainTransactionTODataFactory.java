@@ -17,6 +17,7 @@ public class EndorsementChainTransactionTODataFactory {
       .platformHost("localhost:8443")
       .timestamp(System.currentTimeMillis())
       .transferee("Transferee@localhost:8443")
+      .actor(PartyDataFactory.partyTO())
       .build();
   }
 
@@ -28,6 +29,7 @@ public class EndorsementChainTransactionTODataFactory {
       .platformHost("localhost:8443")
       .timestamp(System.currentTimeMillis())
       .transferee("initialTransferee@localhost:8443")
+      .actor(PartyDataFactory.partyTO())
       .build();
 
     return List.of(initialTransaction, EndorsementChainTransactionTODataFactory.endorsementChainTransactionTO());

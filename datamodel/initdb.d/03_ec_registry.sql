@@ -46,6 +46,7 @@ CREATE TABLE ec_registry."transaction" (
   platform_host varchar(255) NULL,
   "timestamp" int8 NOT NULL,
   transferee varchar(255) NULL,
+  actor varchar(255) NULL,
   envelope_hash varchar(64) NULL,
   CONSTRAINT uniquetimestampanddocumenthash UNIQUE ("timestamp", document_hash)
 );

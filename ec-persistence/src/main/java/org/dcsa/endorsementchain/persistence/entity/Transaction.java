@@ -49,6 +49,12 @@ public class Transaction {
   @JoinColumn(name = "transferee")
   private Party party;
 
+  @ToString.Exclude
+  @EqualsAndHashCode.Exclude
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "actor")
+  private Party actor;
+
   public Transaction linkTransactionToTransportDocument(TransportDocument transportDocument) {
     if (Boolean.TRUE.equals(transportDocument.getIsExported())) {
       throw ConcreteRequestErrorMessageException.internalServerError("Cannot link a transaction to an exported transportDocument");
