@@ -22,7 +22,7 @@ Installation instruction for the Smallstep CLI can be found [here](https://small
 using step CLI the following command can be used to generate and sign a JWS:
 ```shell
  echo -n \
-'{"documentHash":"8dc99d8ac922240c55c03845f49def64187146651bae4f9a63131277cf00d9df","previousEnvelopeHash":null,"transactions":[{"action":"ISSU","comments":"The B/L has been issued.","timestamp":1658385166302442200,"isToOrder":true,"platformHost":"localhost:8443","transferee":"43549850248@localhost:8443"}]}' \
+'{"documentHash":"8dc99d8ac922240c55c03845f49def64187146651bae4f9a63131277cf00d9df","previousEnvelopeHash":null,"transactions":[{"action":"ISSU","comments":"The B/L has been issued.","timestamp":1658385166302442200,"platformHost":"localhost:8443","transferee":"43549850248@localhost:8443"}]}' \
  | step crypto jws sign --key verification-private-key.pem
 ```
 it is important to use a "minified" version of the JSON payload and set the platformhost to localhost:8443 so the correct public key is used for verification.
