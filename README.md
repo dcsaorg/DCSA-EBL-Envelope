@@ -49,7 +49,6 @@ Each transaction inside the transactions (list) of the EBL envelope consists of:
 * **action** - action for processing the transaction such as `TRNS` (Transfer of possession). Please see the swagger spec for the full list.
 * **comments** - free text comment for the party receiving the transaction
 * **timestamp** - Unix epoch with millisecond precision of when the transaction was created
-* **isToOrder** - indicator if the B/L is to order
 * **platformHost** - base url of the platform which created the transaction
 * **actor** - Identity information about the party who performed the action.
 * **recipient** - Identity information about the party who is the recipient for the action (where applicable). See [Identity below](README.md#identity)
