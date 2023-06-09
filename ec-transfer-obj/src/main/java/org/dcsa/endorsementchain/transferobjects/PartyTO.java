@@ -5,14 +5,15 @@ import lombok.Builder;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 public record PartyTO(
   @NotBlank @Size(max = 255) String id,
   @NotBlank @Size(max = 255) String legalName,
   @NotBlank @Size(max = 255) String registrationNumber,
   @NotBlank @Size(max = 2) String locationOfRegistration,
   @Size(max = 255) String taxReference,
-  @Size(max = 20, min = 20) String lei,
-  @Size(max = 255) String did
+  List<SupportingPartyCodeTO> supportingPartyCodes
 ) {
   @Builder
   public PartyTO { }

@@ -1,15 +1,13 @@
 package org.dcsa.endorsementchain.persistence.entity;
 
+import jakarta.persistence.*;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 
 @Data
 @Builder
@@ -35,9 +33,7 @@ public class Party {
   @Column(name = "tax_reference")
   private String taxReference;
 
-  @Column(name = "lei", length = 20)
-  private String lei;
-
-  @Column(name = "did")
-  private String did;
+  @OneToMany
+  @JoinColumn(name = "party_id", referencedColumnName = "ebl_platform_identifier")
+  private List<SupportingPartyCode> supportingPartyCodes;
 }
