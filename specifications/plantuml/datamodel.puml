@@ -34,19 +34,13 @@
     *registration_number: varchar(255)
     *location_of_registration: varchar(2)
     tax_reference: varchar(255)
-    lei: varchar(255)
-    cbsa: varchar(255)
-    fmc: varchar(255)
-    exis: varchar(255)
-    smdg: varchar(255)
-    itu: varchar(255)
-    itigg: varchar(255)
-    scac: varchar(255)
-    imo: varchar(255)
-    bic: varchar(255)
-    lloyd: varchar(255)
-    unece: varchar(255)
-    iso: varchar(255)
+  }
+
+  entity supporting_party_code {
+    *id: uuid
+    *party_id: varchar(255) <<FK: party.ebl_platform_identifier>>
+    *party_code: varchar(100)
+    *party_code_list_provider: varchar(3)
   }
 
   ' relations
@@ -54,4 +48,5 @@
   ebl_envelope |o--|| transportdocument
   transportdocument ||--o{ transaction
   transaction |o--|| party
+  party ||--o{ supporting_party_code
 @enduml
