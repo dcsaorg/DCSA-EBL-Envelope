@@ -99,7 +99,7 @@ public class ExportService {
     String host = transferee.substring(transferee.indexOf("@") + 1);
     return UriComponentsBuilder.fromHttpUrl("https://" + host)
         .scheme("https")
-        .path("/v1/transferblocks")
+        .path("/v1/transfer-transactions")
         .build()
         .toUri();
   }

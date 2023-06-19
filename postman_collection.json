@@ -381,7 +381,7 @@
 							],
 							"path": [
 								"v1",
-								"transferblocks"
+								"transfer-transactions"
 							]
 						}
 					},
@@ -538,14 +538,14 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{BASE_URL}}/{{MAJOR_VERSION}}/transferblocks",
+							"raw": "https://{{BASE_URL}}/{{MAJOR_VERSION}}/transfer-transactions",
 							"protocol": "https",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"{{MAJOR_VERSION}}",
-								"transferblocks"
+								"transfer-transactions"
 							]
 						}
 					},

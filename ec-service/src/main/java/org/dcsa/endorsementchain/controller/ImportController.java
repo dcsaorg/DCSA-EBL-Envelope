@@ -17,7 +17,7 @@ public class ImportController {
 
   private final ImportService importService;
 
-  @PutMapping(value = "/transferblocks",  // TODO: Rename when we are ready to change the API
+  @PutMapping(value = "/transfer-transactions",
   produces = MediaType.APPLICATION_JSON_VALUE,
   consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> importEBLEnvelope(@RequestBody @Valid EBLEnvelopeTO eblEnvelopeTO) {

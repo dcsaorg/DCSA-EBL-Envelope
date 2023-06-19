@@ -43,7 +43,7 @@ class ImportControllerTest {
 
     when(service.importEbl(isNotNull())).thenReturn(Optional.of("Dummy signature"));
 
-    String response = mockMvc.perform(put("/transferblocks").contentType(MediaType.APPLICATION_JSON).content(rawEBLEnvelope))
+    String response = mockMvc.perform(put("/transfer-transactions").contentType(MediaType.APPLICATION_JSON).content(rawEBLEnvelope))
       .andDo(print())
       .andExpect(status().isOk())
       .andReturn()
@@ -60,7 +60,7 @@ class ImportControllerTest {
 
     when(service.importEbl(isNotNull())).thenReturn(Optional.empty());
 
-    mockMvc.perform(put("/transferblocks").contentType(MediaType.APPLICATION_JSON).content(rawEBLEnvelope))
+    mockMvc.perform(put("/transfer-transactions").contentType(MediaType.APPLICATION_JSON).content(rawEBLEnvelope))
       .andDo(print())
       .andExpect(status().isBadRequest());
 
@@ -68,11 +68,11 @@ class ImportControllerTest {
 
   @Test
   void testImportControllerInvalidInput() throws Exception {
-    mockMvc.perform(put("/transferblocks").contentType(MediaType.APPLICATION_JSON).content("invalid request"))
+    mockMvc.perform(put("/transfer-transactions").contentType(MediaType.APPLICATION_JSON).content("invalid request"))
       .andDo(print())
       .andExpect(status().isBadRequest())
       .andExpect(jsonPath("$.httpMethod").value("PUT"))
-      .andExpect(jsonPath("$.requestUri").value("/transferblocks"))
+      .andExpect(jsonPath("$.requestUri").value("/transfer-transactions"))
       .andExpect(jsonPath("$.errors[0].reason").value("invalidInput"))
       .andExpect(
         jsonPath("$.errors[0].message")

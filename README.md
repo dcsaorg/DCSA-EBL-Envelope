@@ -95,13 +95,6 @@ While the eBLPlatformIdentifier and legal name are required, it is optional but 
 This additional information can be used by the receiving platform to perform additional verification. For providing this additional information the DCSA Transaction Party object is used.
 The DCSA Transaction Party object allows of the provision of LEI and DID among other as documented in the [DCSA Transaction Party object](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EEC/0.12-alpha#/transactionParty).
 
-### Service discovery
-The platform domain part of the eBLPlatformIdentifier being a resolvable domain name can be used for DNS based service discovery.
-With this an additional TXT record can be created linking to the API endpoint providing the PUT `/v1/transferblock` operation.
-
-Example:
-dcsaeblplatform.org can link to a TXT record containing the full API endpoint -> `api.dcsaeblplatform.org/v1/transferblocks`
-
 ## Security considerations
 
 ### Transport level security
