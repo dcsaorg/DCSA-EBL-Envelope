@@ -49,7 +49,6 @@ Each transaction inside the transactions (list) of the EBL envelope consists of:
 * **action** - action for processing the transaction such as `TRNS` (Transfer of possession). Please see the swagger spec for the full list.
 * **comments** - free text comment for the party receiving the transaction
 * **timestamp** - Unix epoch with millisecond precision of when the transaction was created
-* **isToOrder** - indicator if the B/L is to order
 * **platformHost** - base url of the platform which created the transaction
 * **actor** - Identity information about the party who performed the action.
 * **recipient** - Identity information about the party who is the recipient for the action (where applicable). See [Identity below](README.md#identity)
@@ -95,13 +94,6 @@ In this example **_gV2ZDy0jmae7_** is the local identifier on the fictitious **_
 While the eBLPlatformIdentifier and legal name are required, it is optional but recommended for providing additional identity information regarding the actor and recipient.
 This additional information can be used by the receiving platform to perform additional verification. For providing this additional information the DCSA Transaction Party object is used.
 The DCSA Transaction Party object allows of the provision of LEI and DID among other as documented in the [DCSA Transaction Party object](https://app.swaggerhub.com/apis/dcsaorg/DCSA_EEC/0.12-alpha#/transactionParty).
-
-### Service discovery
-The platform domain part of the eBLPlatformIdentifier being a resolvable domain name can be used for DNS based service discovery.
-With this an additional TXT record can be created linking to the API endpoint providing the PUT `/v1/transferblock` operation.
-
-Example:
-dcsaeblplatform.org can link to a TXT record containing the full API endpoint -> `api.dcsaeblplatform.org/v1/transferblocks`
 
 ## Security considerations
 

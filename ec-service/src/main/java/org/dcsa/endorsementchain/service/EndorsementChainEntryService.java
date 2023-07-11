@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.dcsa.endorsementchain.components.endorsementchain.EndorsementChainEntryList;
 import org.dcsa.endorsementchain.components.endorsementchain.EndorsementChainEntrySignature;
+import org.dcsa.endorsementchain.components.jws.PayloadSigner;
 import org.dcsa.endorsementchain.components.jws.SignatureVerifier;
 import org.dcsa.endorsementchain.persistence.entity.EndorsementChainEntry;
 import org.dcsa.endorsementchain.persistence.entity.TransactionByTimestampComparator;
@@ -33,6 +34,7 @@ public class EndorsementChainEntryService {
   private final EndorsementChainEntryRepository endorsementChainEntryRepository;
   private final EndorsementChainEntrySignature signature;
   private final SignatureVerifier signatureVerifier;
+  private final PayloadSigner payloadSigner;
   private final TransactionMapper transactionMapper;
   private final TransportDocumentRepository transportDocumentRepository;
   private final ObjectMapper mapper;
@@ -139,7 +141,7 @@ public class EndorsementChainEntryService {
                     ConcreteRequestErrorMessageException.internalServerError(
                         "Could not find a Envelope Hash on the EndorsementChainEntry"));
 
-    return signature.sign(envelopeHash);
+    return payloadSigner.sign(envelopeHash);
   }
 
   EndorsementChainEntry signedEndorsementEntryToEndorsementChainEntry(
@@ -160,6 +162,7 @@ public class EndorsementChainEntryService {
         .build()
       );
 
+    // FIXME: we should only resolve the latest transferee.
     var transactions =
         endorsementChainEntryTO.transactions().stream()
             .map(

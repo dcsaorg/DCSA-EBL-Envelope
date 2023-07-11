@@ -2,6 +2,7 @@ package org.dcsa.endorsementchain.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dcsa.endorsementchain.components.endorsementchain.EndorsementChainEntrySignature;
+import org.dcsa.endorsementchain.components.jws.PayloadSigner;
 import org.dcsa.endorsementchain.components.jws.SignatureVerifier;
 import org.dcsa.endorsementchain.datafactories.EndorsementChainEntryDataFactory;
 import org.dcsa.endorsementchain.datafactories.EndorsementChainEntryTODataFactory;
@@ -40,6 +41,9 @@ class EndorsementChainEntryServiceTest {
   EndorsementChainEntryRepository repository;
   @Mock
   EndorsementChainEntrySignature signature;
+
+  @Mock
+  PayloadSigner payloadSigner;
 
   @Mock
   SignatureVerifier signatureVerifier;
@@ -227,7 +231,7 @@ class EndorsementChainEntryServiceTest {
   @Test
   void testSaveEndorsementChainEntry() {
     when(repository.saveAll(any())).thenAnswer(i -> i.getArguments()[0]);
-    when(signature.sign(any())).thenReturn("dummySignature");
+    when(payloadSigner.sign(any())).thenReturn("dummySignature");
 
     String signature = service.saveEndorsementEntries(endorsementChainEntryList);
     assertNotNull(signature);

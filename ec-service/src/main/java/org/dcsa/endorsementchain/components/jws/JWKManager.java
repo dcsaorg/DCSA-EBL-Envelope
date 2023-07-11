@@ -67,7 +67,7 @@ public class JWKManager {
     KeyType keyType = getValidKeyType(jwk);
 
     return switch (keyType.getValue()) {
-      case "RSA" -> new JWSSignerDetails(JWSAlgorithm.RS256, new RSASSASigner(jwk.toRSAKey()));
+      case "RSA" -> new JWSSignerDetails(JWSAlgorithm.PS256, new RSASSASigner(jwk.toRSAKey()));
       case "EC" -> {
         ECKey ecKey = jwk.toECKey();
         yield new JWSSignerDetails(getESAlgorithm(ecKey.getCurve()), new ECDSASigner(ecKey));

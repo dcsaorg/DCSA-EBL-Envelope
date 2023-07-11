@@ -13,10 +13,10 @@ public class EndorsementChainTransactionTODataFactory {
     return EndorsementChainTransactionTO.builder()
       .comments("This is a freetext comment")
       .action(BlAction.SURR)
-      .isToOrder(false)
       .platformHost("localhost:8443")
       .timestamp(System.currentTimeMillis())
       .transferee("Transferee@localhost:8443")
+      .actor(PartyDataFactory.partyTO())
       .build();
   }
 
@@ -24,10 +24,10 @@ public class EndorsementChainTransactionTODataFactory {
     EndorsementChainTransactionTO initialTransaction = EndorsementChainTransactionTO.builder()
       .comments("The B/L is issued")
       .action(BlAction.ISSU)
-      .isToOrder(false)
       .platformHost("localhost:8443")
       .timestamp(System.currentTimeMillis())
       .transferee("initialTransferee@localhost:8443")
+      .actor(PartyDataFactory.partyTO())
       .build();
 
     return List.of(initialTransaction, EndorsementChainTransactionTODataFactory.endorsementChainTransactionTO());

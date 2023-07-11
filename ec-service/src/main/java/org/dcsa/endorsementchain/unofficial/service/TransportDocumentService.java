@@ -116,13 +116,6 @@ public class TransportDocumentService {
     return Transaction.builder()
         .party(partyService.getPartyByTransferee(transferee))
         .comments("The B/L exported to: " + transferee)
-        .isToOrder(
-            transactions.stream()
-                .map(Transaction::getIsToOrder)
-                .findAny()
-                .orElse(
-                    true)) // When no local transactions exist only the export transaction will be
-        // created and isToOrder will be set to true
         .platformHost(hostname+":"+port)
         .timestamp(System.currentTimeMillis())
         .action(TransactionAction.TRNS)

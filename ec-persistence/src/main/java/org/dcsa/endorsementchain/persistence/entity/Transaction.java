@@ -39,8 +39,6 @@ public class Transaction {
   @Column(name = "timestamp", nullable = false)
   private Long timestamp;
 
-  private Boolean isToOrder;
-
   private String platformHost;
 
   @ToString.Exclude
@@ -48,6 +46,12 @@ public class Transaction {
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "transferee")
   private Party party;
+
+  @ToString.Exclude
+  @EqualsAndHashCode.Exclude
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "actor")
+  private Party actor;
 
   public Transaction linkTransactionToTransportDocument(TransportDocument transportDocument) {
     if (Boolean.TRUE.equals(transportDocument.getIsExported())) {

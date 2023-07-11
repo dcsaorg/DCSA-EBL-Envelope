@@ -24,11 +24,16 @@ CREATE TABLE ec_registry."party" (
   ebl_platform_identifier varchar(255) NOT NULL PRIMARY KEY,
   party_name varchar(255) NOT NULL,
   registration_number varchar(255) NOT NULL,
-  country_of_registration varchar(2) NOT NULL,
-  address text,
-  tax_reference varchar(255),
-  lei varchar(20),
-  did varchar(255)
+  location_of_registration varchar(2) NOT NULL,
+  tax_reference varchar(255)
+);
+
+DROP TABLE IF EXISTS ec_registry.supporting_party_code CASCADE;
+CREATE TABLE ec_registry.supporting_party_code (
+  id uuid NOT NULL PRIMARY KEY,
+  party_id varchar(255) NOT NULL REFERENCES ec_registry."party" (ebl_platform_identifier),
+  party_code varchar(100) NOT NULL,
+  party_code_list_provider varchar(3) NOT NULL
 );
 
 DROP TABLE IF EXISTS ec_registry."transaction" CASCADE;
@@ -41,6 +46,7 @@ CREATE TABLE ec_registry."transaction" (
   platform_host varchar(255) NULL,
   "timestamp" int8 NOT NULL,
   transferee varchar(255) NULL,
+  actor varchar(255) NULL,
   envelope_hash varchar(64) NULL,
   CONSTRAINT uniquetimestampanddocumenthash UNIQUE ("timestamp", document_hash)
 );

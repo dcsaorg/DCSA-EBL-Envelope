@@ -2,6 +2,7 @@ package org.dcsa.endorsementchain.service;
 
 import org.dcsa.endorsementchain.datafactories.PartyDataFactory;
 import org.dcsa.endorsementchain.mapping.PartyMapper;
+import org.dcsa.endorsementchain.mapping.SupportingPartyCodeMapper;
 import org.dcsa.endorsementchain.persistence.repository.PartyRepository;
 import org.dcsa.endorsementchain.transferobjects.PartyTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +25,8 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PartyServiceTest {
-  @Spy private PartyMapper partyMapper = Mappers.getMapper(PartyMapper.class);
+  @Spy private SupportingPartyCodeMapper supportingPartyCodeMapper = Mappers.getMapper(SupportingPartyCodeMapper.class);
+  @InjectMocks @Spy private PartyMapper partyMapper = Mappers.getMapper(PartyMapper.class);
   @Mock private PartyRepository partyRepository;
 
   @InjectMocks private PartyService partyService;
