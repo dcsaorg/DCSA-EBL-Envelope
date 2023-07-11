@@ -45,7 +45,6 @@ class EndorsementChainEntryMapperTest {
                         Set.of(
                             Transaction.builder()
                                 .comments("this is a comment")
-                                .isToOrder(true)
                                 .action(TransactionAction.ISSU)
                                 .platformHost("localhost:443")
                                 .party(PartyDataFactory.party())

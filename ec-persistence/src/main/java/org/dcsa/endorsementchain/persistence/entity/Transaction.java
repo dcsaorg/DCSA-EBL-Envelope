@@ -39,8 +39,6 @@ public class Transaction {
   @Column(name = "timestamp", nullable = false)
   private Long timestamp;
 
-  private Boolean isToOrder;
-
   private String platformHost;
 
   @ToString.Exclude

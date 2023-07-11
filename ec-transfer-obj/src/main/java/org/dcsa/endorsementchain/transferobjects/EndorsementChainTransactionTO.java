@@ -17,9 +17,6 @@ public record EndorsementChainTransactionTO(
   Long timestamp,
 
   @NotNull
-  Boolean isToOrder,
-
-  @NotNull
   String platformHost,
 
   @NotNull
