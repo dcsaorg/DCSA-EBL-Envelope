@@ -9,6 +9,5 @@ import org.mapstruct.Mapping;
 public interface SupportingPartyCodeMapper {
   SupportingPartyCodeTO toDTO(SupportingPartyCode supportingPartyCode);
 
-  @Mapping(source = "partyId", target = "partyId")
   SupportingPartyCode toDAO(SupportingPartyCodeTO supportingPartyCodeTO, String partyId);
 }
